@@ -79,6 +79,18 @@ Output JSON Interface (Draft)
 }
 ```
 
+```json
+[
+  {
+    "drug": "와파린",
+    "intake": "시금치",
+    "risk_level": "high",
+    "description": "와파린 복용 시 비타민 K가 많은 시금치 섭취는 항응고 효과를 감소시킬 수 있습니다.",
+    "evidence": "비타민 K는 혈액 응고를 촉진함"
+  }
+]
+```
+
 기술 구성 (초안)
 - OCR: 처방전 및 성분표 이미지 텍스트 추출
 - NLP: 약물명 및 성분명 구조화
