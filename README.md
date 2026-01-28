@@ -57,6 +57,7 @@ Output JSON Interface (Draft)
 이 JSON은 시스템의 최종 판단 결과 형식에 대한 초안이며
 구현을 위한 고정 스펙이 아닌 팀 합의용 인터페이스이다.
 
+```json
 {
   "input": {
     "drug": ["string"],
@@ -76,6 +77,7 @@ Output JSON Interface (Draft)
   "source": ["e약은요"],
   "disclaimer": "의료적 판단이 아닙니다"
 }
+```
 
 기술 구성 (초안)
 - OCR: 처방전 및 성분표 이미지 텍스트 추출
