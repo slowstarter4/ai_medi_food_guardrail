@@ -1,0 +1,16 @@
+[
+  {
+    "drug": "와파린",
+    "intake": "시금치",
+    "risk_level": "high",
+    "description": "비타민 K가 와파린의 항응고 효과를 감소시킬 수 있음",
+    "evidence": "식약처 의약품 정보"
+  },
+  {
+    "drug": "아목시실린",
+    "intake": "유제품",
+    "risk_level": "caution",
+    "description": "유제품은 일부 항생제의 흡수를 저해할 수 있음",
+    "evidence": "의약품안전나라"
+  }
+]
