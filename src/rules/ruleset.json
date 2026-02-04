@@ -1,0 +1,50 @@
+[
+  {
+    "rule_id": "FDI_METABOLISM_CYP3A4_GRAPEFRUIT",
+    "category": "METABOLISM_ENZYME",
+    "condition": {
+      "foods": ["자몽", "자몽주스"],
+      "drugs": ["암로디핀", "심바스타틴"]
+    },
+    "risk_level": "RED",
+    "risk_code": "FOOD_DRUG_INTERACTION",
+    "description": "자몽 성분이 CYP3A4 효소를 억제하여 약물 혈중 농도가 과도하게 증가할 수 있음",
+    "evidence_key": "cyp3a4_grapefruit"
+  },
+  {
+    "rule_id": "FDI_ABSORPTION_CALCIUM_LEVOTHYROXINE",
+    "category": "ABSORPTION_INHIBITION",
+    "condition": {
+      "foods": ["우유", "칼슘보충제"],
+      "drugs": ["레보티록신"]
+    },
+    "risk_level": "YELLOW",
+    "risk_code": "REDUCED_DRUG_ABSORPTION",
+    "description": "칼슘이 레보티록신과 결합하여 장내 흡수를 저해할 수 있음",
+    "evidence_key": "calcium_levothyroxine"
+  },
+  {
+    "rule_id": "FDI_CNS_ALCOHOL_BENZODIAZEPINE",
+    "category": "CNS_POTENTIATION",
+    "condition": {
+      "foods": ["알코올"],
+      "drugs": ["디아제팜", "알프라졸람"]
+    },
+    "risk_level": "RED",
+    "risk_code": "CNS_DEPRESSANT_SYNERGY",
+    "description": "알코올과 벤조디아제핀 병용 시 중추신경 억제 효과가 과도하게 증폭될 수 있음",
+    "evidence_key": "alcohol_benzodiazepine"
+  },
+  {
+    "rule_id": "FDI_PHYSIOLOGICAL_VITK_WARFARIN",
+    "category": "PHYSIOLOGICAL",
+    "condition": {
+      "foods": ["녹황색채소", "비타민K"],
+      "drugs": ["와파린"]
+    },
+    "risk_level": "YELLOW",
+    "risk_code": "ANTICOAGULATION_VARIABILITY",
+    "description": "비타민 K 섭취 변화로 항응고 효과가 불안정해질 수 있음",
+    "evidence_key": "vitaminK_warfarin"
+  }
+]

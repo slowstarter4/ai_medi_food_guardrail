@@ -6,6 +6,13 @@ def load_rules():
         return json.load(f)
 
 def match_risk(drug, intake, rules):
+    """
+    MVP v0.1:
+    - 단일 drug + 단일 intake
+    - 정확 일치 치반 rule matching
+    - 다중 rule, 점수화, 우선순위 이후 확장
+    """
+    
     for rule in rules:
         if rule['drug'] == drug and rule['intake'] == intake:
             return rule

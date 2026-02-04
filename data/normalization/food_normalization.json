@@ -1,0 +1,156 @@
+{
+  "자몽": {
+    "normalized": "자몽",
+    "entity_type": "food",
+    "category": "citrus",
+    "confidence": "high",
+    "note": "자몽 및 자몽류 식품"
+  },
+  "자몽농축액": {
+    "normalized": "자몽",
+    "entity_type": "food",
+    "category": "citrus",
+    "confidence": "high",
+    "note": "자몽 추출물/농축액"
+  },
+  "자몽추출물": {
+    "normalized": "자몽",
+    "entity_type": "food",
+    "category": "citrus",
+    "confidence": "high",
+    "note": "자몽 추출 성분"
+  },
+  "grapefruit": {
+    "normalized": "자몽",
+    "entity_type": "food",
+    "category": "citrus",
+    "confidence": "high",
+    "note": "영문 표기"
+  },
+
+  "우유": {
+    "normalized": "우유",
+    "entity_type": "food",
+    "category": "dairy",
+    "confidence": "high",
+    "note": "우유 및 기본 유제품"
+  },
+  "유제품": {
+    "normalized": "우유",
+    "entity_type": "food",
+    "category": "dairy",
+    "confidence": "medium",
+    "note": "치즈, 요거트 등 포괄"
+  },
+  "치즈": {
+    "normalized": "우유",
+    "entity_type": "food",
+    "category": "dairy",
+    "confidence": "medium",
+    "note": "유제품"
+  },
+
+  "칼슘": {
+    "normalized": "칼슘",
+    "entity_type": "food",
+    "category": "mineral",
+    "confidence": "high",
+    "note": "무기질 칼슘"
+  },
+  "탄산칼슘": {
+    "normalized": "칼슘",
+    "entity_type": "food",
+    "category": "mineral",
+    "confidence": "high",
+    "note": "칼슘 보충제 성분"
+  },
+
+  "비타민K": {
+    "normalized": "비타민K",
+    "entity_type": "food",
+    "category": "vitamin",
+    "confidence": "high",
+    "note": "혈액응고 관련 비타민"
+  },
+  "비타민C": {
+    "normalized": "비타민C",
+    "entity_type": "food",
+    "category": "vitamin",
+    "confidence": "high",
+    "note": "항산화 비타민"
+  },
+  "아스코르브산": {
+    "normalized": "비타민C",
+    "entity_type": "food",
+    "category": "vitamin",
+    "confidence": "medium",
+    "note": "비타민C 화학명"
+  },
+
+  "철분": {
+    "normalized": "철분",
+    "entity_type": "food",
+    "category": "mineral",
+    "confidence": "high",
+    "note": "무기질 철"
+  },
+  "황산철": {
+    "normalized": "철분",
+    "entity_type": "food",
+    "category": "mineral",
+    "confidence": "medium",
+    "note": "철분 보충제 성분"
+  },
+
+  "알코올": {
+    "normalized": "알코올",
+    "entity_type": "food",
+    "category": "alcohol",
+    "confidence": "high",
+    "note": "에탄올 포함 식품"
+  },
+  "술": {
+    "normalized": "알코올",
+    "entity_type": "food",
+    "category": "alcohol",
+    "confidence": "medium",
+    "note": "일반적 표현"
+  },
+  "에탄올": {
+    "normalized": "알코올",
+    "entity_type": "food",
+    "category": "alcohol",
+    "confidence": "medium",
+    "note": "화학명"
+  },
+
+  "카페인": {
+    "normalized": "카페인",
+    "entity_type": "food",
+    "category": "stimulant",
+    "confidence": "high",
+    "note": "중추신경 자극 성분"
+  },
+  "커피": {
+    "normalized": "카페인",
+    "entity_type": "food",
+    "category": "stimulant",
+    "confidence": "medium",
+    "note": "카페인 함유 음료"
+  },
+
+  "설탕": {
+    "normalized": "설탕",
+    "entity_type": "food",
+    "category": "sugar",
+    "confidence": "high",
+    "note": "당류"
+  },
+  "포도당": {
+    "normalized": "설탕",
+    "entity_type": "food",
+    "category": "sugar",
+    "confidence": "medium",
+    "note": "단당류"
+  }
+}
