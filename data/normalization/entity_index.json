@@ -1,0 +1,44 @@
+{
+  "drugs": {
+    "로사르탄": "DRUG_LOSARTAN",
+    "엔알라프릴": "DRUG_ENALAPRIL",
+    "암로디핀": "DRUG_AMLODIPINE",
+    "히드로크로로티아지드": "DRUG_HYDROCHLOROTHIAZIDE",
+    "메트포르민": "DRUG_METFORMIN",
+    "다파글리플로진": "DRUG_DAPAGLIFLOZIN",
+    "이부프로펜": "DRUG_IBUPROFEN",
+    "나프록센": "DRUG_NAPROXEN"
+  },
+
+  "foods": {
+    "바나나": "FOOD_BANANA",
+    "토마토": "FOOD_TOMATO",
+    "오렌지": "FOOD_ORANGE",
+    "감자": "FOOD_POTATO",
+    "코코넛워터": "FOOD_COCONUT_WATER",
+    "자몽": "FOOD_GRAPEFRUIT",
+    "자몽주스": "FOOD_GRAPEFRUIT",
+    "자몽청": "FOOD_GRAPEFRUIT",
+    "자몽캔디": "FOOD_GRAPEFRUIT",
+    "케이크": "FOOD_CAKE",
+    "사탕": "FOOD_CANDY",
+    "탄산음료": "FOOD_CARB_DRINK",
+    "단음료": "FOOD_CARB_DRINK",
+    "디저트": "FOOD_DESSERT"
+  },
+
+  "situations": {
+    "동시 섭취": "SITUATION_CONCURRENT",
+    "병용": "SITUATION_CONCURRENT",
+    "병용 복용": "SITUATION_CONCURRENT",
+    "중복 복용": "SITUATION_CONCURRENT",
+
+    "공복 복용": "SITUATION_FASTING",
+    "식사 미섭취": "SITUATION_FASTING",
+
+    "과도한 음주": "SITUATION_EXCESS_ALCOHOL",
+    "공복 음주": "SITUATION_FASTING_ALCOHOL",
+
+    "탈수 상태": "SITUATION_DEHYDRATION"
+  }
+}

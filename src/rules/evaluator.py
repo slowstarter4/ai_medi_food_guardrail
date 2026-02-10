@@ -1,48 +1,36 @@
-from typing import Dict, List, Any
+from typing import Dict, List
 
-def _match_condition(
-        entity_values: List[str],
-        rule_values: List[str]
-) -> bool:
-    """
-    rule_values가 비어 있으면 조건 없음 → True
-    rule_values ⊆ entity_values 인지 검사
-    """
-    if not rule_values:
-        return True
+def evaluate_rules(entities, rules):
 
-    entity_set = set(entity_values)
-    rule_set = set(rule_values)
+    food_ids = {v["entity_id"] for v in entities.get("foods", [])}
+    drug_ids = {v["entity_id"] for v in entities.get("drugs", [])}
+    situation_ids = {v["entity_id"] for v in entities.get("situations", [])}
 
-    return rule_set.issubset(entity_set)
-
-def evaluate_rules(
-    entities: Dict[str, List[str]],
-    rules: List[Dict[str, Any]]
-) -> List[Dict[str, Any]]:
-    """
-    entities와 rules를 비교하여 매칭된 룰만 반환
-    판단 로직은 포함하지 않는다
-    """
-    matched_rules = []
+    matched = []
 
     for rule in rules:
-        conditions = rule.get("conditions", {})
+        cond = rule["conditions"]
 
-        if not (
-            _match_condition(entities.get("foods", []), conditions.get("foods", [])) and
-            _match_condition(entities.get("drugs", []), conditions.get("drugs", [])) and
-            _match_condition(entities.get("supplements", []), conditions.get("supplements", []))
-        ):
+        rule_foods = set(cond.get("foods", []))
+        rule_drugs = set(cond.get("drugs", []))
+        rule_situations = set(cond.get("situations", []))
+
+        # 1️⃣ 핵심 도메인 매칭 (foods / drugs 중 하나는 반드시)
+        domain_matched = False
+
+        if rule_foods and (rule_foods & food_ids):
+            domain_matched = True
+
+        if rule_drugs and (rule_drugs & drug_ids):
+            domain_matched = True
+
+        if not domain_matched:
+            continue  # ❌ 핵심 엔티티 매칭 없으면 탈락
+
+        # 2️⃣ 상황 조건은 보조
+        if rule_situations and not (rule_situations & situation_ids):
             continue
 
-        matched_rules.append({
-            "rule_id": rule["rule_id"],
-            "category": rule.get("category"),
-            "risk_level_hint": rule.get("risk_level_hint"),
-            "risk_code": rule.get("risk_code"),
-            "description": rule.get("description"),
-            "evidence_keys": rule.get("evidence_keys", [])
-        })
+        matched.append(rule)
 
-    return matched_rules
+    return matched

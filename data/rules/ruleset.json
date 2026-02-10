@@ -1,57 +1,273 @@
 {
-  "version": "1.0",
   "rules": [
     {
-      "rule_id": "FDI_METABOLISM_CYP3A4_GRAPEFRUIT",
-      "category": "METABOLISM_ENZYME",
+      "rule_id": "HTN_001",
+      "persona": "고령_고혈압",
       "conditions": {
-        "foods": ["자몽", "자몽주스"],
-        "drugs": ["암로디핀", "심바스타틴"],
-        "supplements": []
+        "drugs": [
+          "DRUG_LOSARTAN",
+          "DRUG_ENALAPRIL"
+        ],
+        "foods": [
+          "FOOD_BANANA",
+          "FOOD_TOMATO",
+          "FOOD_ORANGE",
+          "FOOD_POTATO",
+          "FOOD_COCONUT_WATER"
+        ],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
       },
-      "risk_level_hint": "HIGH",
-      "risk_code": "FOOD_DRUG_INTERACTION",
-      "description": "자몽 성분이 CYP3A4 효소를 억제하여 약물 혈중 농도가 과도하게 증가할 수 있음",
-      "evidence_keys": ["cyp3a4_grapefruit"]
+      "risk_type": "전해질 이상",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_HTN_POTASSIUM",
+      "description": "고칼륨 식품으로 혈중 칼륨 상승 가능"
     },
     {
-      "rule_id": "FDI_ABSORPTION_CALCIUM_LEVOTHYROXINE",
-      "category": "ABSORPTION_INHIBITION",
+      "rule_id": "HTN_002",
+      "persona": "고령_고혈압",
       "conditions": {
-        "foods": ["우유"],
-        "drugs": ["레보티록신"],
-        "supplements": ["칼슘보충제"]
+        "drugs": [
+          "DRUG_ENALAPRIL"
+        ],
+        "foods": [],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
       },
-      "risk_level_hint": "MEDIUM",
-      "risk_code": "REDUCED_DRUG_ABSORPTION",
-      "description": "칼슘이 레보티록신과 결합하여 장내 흡수를 저해할 수 있음",
-      "evidence_keys": ["calcium_levothyroxine"]
+      "risk_type": "고칼륨혈증",
+      "risk_level_hint": "RED",
+      "message_id": "RED_HTN_POTASSIUM",
+      "description": "칼륨 과다로 심각한 부정맥 위험"
     },
     {
-      "rule_id": "FDI_CNS_ALCOHOL_BENZODIAZEPINE",
-      "category": "CNS_POTENTIATION",
+      "rule_id": "HTN_003",
+      "persona": "고령_고혈압",
       "conditions": {
-        "foods": ["알코올"],
-        "drugs": ["디아제팜", "알프라졸람"],
-        "supplements": []
+        "drugs": [
+          "DRUG_AMLODIPINE"
+        ],
+        "foods": [
+          "FOOD_GRAPEFRUIT",
+          "FOOD_GRAPEFRUIT",
+          "FOOD_GRAPEFRUIT",
+          "FOOD_GRAPEFRUIT"
+        ],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
       },
-      "risk_level_hint": "HIGH",
-      "risk_code": "CNS_DEPRESSANT_SYNERGY",
-      "description": "알코올과 벤조디아제핀 병용 시 중추신경 억제 효과가 과도하게 증폭될 수 있음",
-      "evidence_keys": ["alcohol_benzodiazepine"]
+      "risk_type": "부작용 증가",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_HTN_GRAPEFRUIT",
+      "description": "CYP3A4 억제로 혈중 약물 농도 증가"
     },
     {
-      "rule_id": "FDI_PHYSIOLOGICAL_VITK_WARFARIN",
-      "category": "PHYSIOLOGICAL",
+      "rule_id": "HTN_004",
+      "persona": "고령_고혈압",
       "conditions": {
-        "foods": ["녹황색채소", "비타민K"],
-        "drugs": ["와파린"],
-        "supplements": []
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
       },
-      "risk_level_hint": "MEDIUM",
-      "risk_code": "ANTICOAGULATION_VARIABILITY",
-      "description": "비타민 K 섭취 변화로 항응고 효과가 불안정해질 수 있음",
-      "evidence_keys": ["vitaminK_warfarin"]
+      "risk_type": "혈압 상승",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_HTN_DECONGESTANT",
+      "description": "교감신경 자극으로 혈압 상승 가능"
+    },
+    {
+      "rule_id": "HTN_005",
+      "persona": "고령_고혈압",
+      "conditions": {
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
+      },
+      "risk_type": "효과 감소",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_HTN_NSAID",
+      "description": "혈압약 효과 저하 및 혈압 조절 실패 가능"
+    },
+    {
+      "rule_id": "HTN_006",
+      "persona": "고령_고혈압",
+      "conditions": {
+        "drugs": [
+          "DRUG_HYDROCHLOROTHIAZIDE"
+        ],
+        "foods": [],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
+      },
+      "risk_type": "혈압 상승",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_HTN_LICORICE",
+      "description": "나트륨 저류로 혈압 상승 가능"
+    },
+    {
+      "rule_id": "HTN_007",
+      "persona": "고령_고혈압",
+      "conditions": {
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_DEHYDRATION"
+        ]
+      },
+      "risk_type": "전해질 불균형",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_HTN_DEHYDRATION",
+      "description": "탈수로 어지럼 및 전해질 이상 가능"
+    },
+    {
+      "rule_id": "DM_001",
+      "persona": "고령_당뇨",
+      "conditions": {
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_FASTING_ALCOHOL"
+        ]
+      },
+      "risk_type": "저혈당",
+      "risk_level_hint": "RED",
+      "message_id": "RED_DM_HYPOGLYCEMIA",
+      "description": "알코올로 인한 심각한 저혈당 위험"
+    },
+    {
+      "rule_id": "DM_002",
+      "persona": "고령_당뇨",
+      "conditions": {
+        "drugs": [],
+        "foods": [
+          "FOOD_CAKE",
+          "FOOD_CANDY",
+          "FOOD_CARB_DRINK",
+          "FOOD_CARB_DRINK",
+          "FOOD_DESSERT"
+        ],
+        "situations": []
+      },
+      "risk_type": "혈당 급상승",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_DM_HYPERGLYCEMIA",
+      "description": "당류 과다로 혈당 변동성 증가"
+    },
+    {
+      "rule_id": "DM_003",
+      "persona": "고령_당뇨",
+      "conditions": {
+        "drugs": [
+          "DRUG_METFORMIN"
+        ],
+        "foods": [],
+        "situations": [
+          "SITUATION_EXCESS_ALCOHOL"
+        ]
+      },
+      "risk_type": "독성 증가",
+      "risk_level_hint": "RED",
+      "message_id": "RED_DM_LATIC_ACIDOSIS",
+      "description": "젖산산증 위험 증가"
+    },
+    {
+      "rule_id": "DM_004",
+      "persona": "고령_당뇨",
+      "conditions": {
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_FASTING"
+        ]
+      },
+      "risk_type": "저혈당",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_DM_MEAL_SKIP",
+      "description": "식사 없이 복용 시 저혈당 가능"
+    },
+    {
+      "rule_id": "DM_005",
+      "persona": "고령_당뇨",
+      "conditions": {
+        "drugs": [
+          "DRUG_DAPAGLIFLOZIN"
+        ],
+        "foods": [],
+        "situations": [
+          "SITUATION_DEHYDRATION"
+        ]
+      },
+      "risk_type": "부작용 증가",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_DM_DEHYDRATION",
+      "description": "탈수 및 신장 부담 증가"
+    },
+    {
+      "rule_id": "NSAID_001",
+      "persona": "고령_관절염",
+      "conditions": {
+        "drugs": [
+          "DRUG_IBUPROFEN",
+          "DRUG_NAPROXEN"
+        ],
+        "foods": [],
+        "situations": []
+      },
+      "risk_type": "위장 출혈",
+      "risk_level_hint": "RED",
+      "message_id": "RED_NSAID_BLEEDING",
+      "description": "알코올 병용 시 위장 출혈 위험 증가"
+    },
+    {
+      "rule_id": "NSAID_002",
+      "persona": "고령_관절염",
+      "conditions": {
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_FASTING"
+        ]
+      },
+      "risk_type": "위 점막 손상",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_NSAID_GI",
+      "description": "위 점막 자극 및 통증 가능"
+    },
+    {
+      "rule_id": "NSAID_003",
+      "persona": "고령_관절염",
+      "conditions": {
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
+      },
+      "risk_type": "독성 증가",
+      "risk_level_hint": "RED",
+      "message_id": "RED_NSAID_DUPLICATION",
+      "description": "동일 계열 중복 복용으로 출혈 위험"
+    },
+    {
+      "rule_id": "NSAID_004",
+      "persona": "고령_관절염",
+      "conditions": {
+        "drugs": [],
+        "foods": [],
+        "situations": [
+          "SITUATION_DEHYDRATION"
+        ]
+      },
+      "risk_type": "신장 부담",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_NSAID_RENAL",
+      "description": "신장 기능 저하 가능"
     }
   ]
 }

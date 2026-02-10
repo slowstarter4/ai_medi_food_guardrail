@@ -1,0 +1,17 @@
+rule_id,persona,drug_category,drug_name,food_keyword_match,condition,risk_type,risk_level,message_id,description
+HTN_001,고령_고혈압,ACE/ARB,로사르탄|엔알라프릴,바나나|토마토|오렌지|감자|코코넛워터,동시 섭취,전해질 이상,YELLOW,YELLOW_HTN_POTASSIUM,고칼륨 식품으로 혈중 칼륨 상승 가능
+HTN_002,고령_고혈압,ACE/ARB,엔알라프릴,칼륨보충제|소금대체제|KCl,동시 섭취,고칼륨혈증,RED,RED_HTN_POTASSIUM,칼륨 과다로 심각한 부정맥 위험
+HTN_003,고령_고혈압,CCB,암로디핀,자몽|자몽주스|자몽청|자몽캔디,동시 섭취,부작용 증가,YELLOW,YELLOW_HTN_GRAPEFRUIT,CYP3A4 억제로 혈중 약물 농도 증가
+HTN_004,고령_고혈압,ALL,ALL,감기약|충혈제거제|코막힘약,병용 복용,혈압 상승,YELLOW,YELLOW_HTN_DECONGESTANT,교감신경 자극으로 혈압 상승 가능
+HTN_005,고령_고혈압,ALL,ALL,이부프로펜|나프록센|NSAIDs,병용 복용,효과 감소,YELLOW,YELLOW_HTN_NSAID,혈압약 효과 저하 및 혈압 조절 실패 가능
+HTN_006,고령_고혈압,이뇨제,히드로크로로티아지드,감초|한약|감초캔디,동시 섭취,혈압 상승,YELLOW,YELLOW_HTN_LICORICE,나트륨 저류로 혈압 상승 가능
+HTN_007,고령_고혈압,이뇨제,ALL,탈수|수분부족|사우나,탈수 상태,전해질 불균형,YELLOW,YELLOW_HTN_DEHYDRATION,탈수로 어지럼 및 전해질 이상 가능
+DM_001,고령_당뇨,설폰요소제,ALL,술|알코올|소주|맥주,공복 음주,저혈당,RED,RED_DM_HYPOGLYCEMIA,알코올로 인한 심각한 저혈당 위험
+DM_002,고령_당뇨,ALL,ALL,케이크|사탕|탄산음료|단음료|디저트,다량 섭취,혈당 급상승,YELLOW,YELLOW_DM_HYPERGLYCEMIA,당류 과다로 혈당 변동성 증가
+DM_003,고령_당뇨,비구아나이드,메트포르민,술|알코올,과도한 음주,독성 증가,RED,RED_DM_LATIC_ACIDOSIS,젖산산증 위험 증가
+DM_004,고령_당뇨,ALL,ALL,공복|식사거름,식사 미섭취,저혈당,YELLOW,YELLOW_DM_MEAL_SKIP,식사 없이 복용 시 저혈당 가능
+DM_005,고령_당뇨,SGLT2,다파글리플로진,탈수|수분부족|사우나,탈수 상태,부작용 증가,YELLOW,YELLOW_DM_DEHYDRATION,탈수 및 신장 부담 증가
+NSAID_001,고령_관절염,NSAIDs,이부프로펜|나프록센,술|알코올,병용 섭취,위장 출혈,RED,RED_NSAID_BLEEDING,알코올 병용 시 위장 출혈 위험 증가
+NSAID_002,고령_관절염,NSAIDs,ALL,공복,공복 복용,위 점막 손상,YELLOW,YELLOW_NSAID_GI,위 점막 자극 및 통증 가능
+NSAID_003,고령_관절염,NSAIDs,ALL,이부프로펜|나프록센|진통제,중복 복용,독성 증가,RED,RED_NSAID_DUPLICATION,동일 계열 중복 복용으로 출혈 위험
+NSAID_004,고령_관절염,NSAIDs,ALL,탈수|수분부족|사우나,탈수 상태,신장 부담,YELLOW,YELLOW_NSAID_RENAL,신장 기능 저하 가능

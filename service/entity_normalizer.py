@@ -1,26 +1,70 @@
-FOOD_SUFFIXES = [
-    "주스", "즙", "차", "분말", "환", "정", "캡슐", "보충제"
-]
+import json
+from pathlib import Path
+from typing import Dict, List
 
-FOOD_ANCHOR_MAP = {
-    "그레이프프루트": "자몽",
-    "녹황색채소": "비타민K",
-}
+BASE_DIR = Path(__file__).resolve().parents[1]
+ENTITY_INDEX_PATH = BASE_DIR / "data" / "normalization" / "entity_index.json"
 
-def normalize_food(food:str) -> str:
-    f = food.strip()
+FOOD_SUFFIXES = ["주스", "즙", "차", "분말", "환", "정", "캡슐", "보충제"]
 
-    # suffix 제거
-    for suffix in FOOD_SUFFIXES:
-        if f.endswith(suffix):
-            f = f[:-len(suffix)]
+# =========================
+# 1. Surface Normalization
+# =========================
+def normalize_food_surface(text: str) -> str:
+    t = text.strip()
+    for s in FOOD_SUFFIXES:
+        if t.endswith(s):
+            t = t[:-len(s)]
+    return t
 
-    # 앵커 매핑
-    return FOOD_ANCHOR_MAP.get(f, f)
+def normalize_surface(entity_type: str, text: str) -> str:
+    if entity_type == "foods":
+        return normalize_food_surface(text)
+    return text.strip()
 
-def normalize_entities(entities: dict) -> dict:
-    return {
-        "foods": [normalize_food(f) for f in entities.get("foods", [])],
-        "drugs": entities.get("drugs", []),
-        "supplements": entities.get("supplements", [])
+# =========================
+# 2. Entity Index 로딩
+# =========================
+def load_entity_index() -> Dict[str, Dict[str, str]]:
+    """
+    {
+      "drugs": { "로사르탄": "DRUG_LOSARTAN" },
+      "foods": { "자몽": "FOOD_GRAPEFRUIT" },
+      "situations": { "공복 복용": "SITU_FASTING" }
     }
+    """
+    with open(ENTITY_INDEX_PATH, encoding="utf-8") as f:
+        return json.load(f)
+
+# =========================
+# 3. Entity Normalization
+# =========================
+def normalize_entities(
+    parsed_entities: Dict[str, List[str]]
+) -> Dict[str, List[Dict]]:
+
+    index = load_entity_index()
+
+    normalized = {
+        "foods": [],
+        "drugs": [],
+        "situations": []
+    }
+
+    for entity_type, values in parsed_entities.items():
+        lookup = index.get(entity_type, {})
+
+        for raw in values:
+            surface = normalize_surface(entity_type, raw)
+
+            if surface not in lookup:
+                continue
+
+            entity_id = lookup[surface]
+
+            normalized[entity_type].append({
+                "raw": raw,
+                "entity_id": entity_id
+            })
+
+    return normalized

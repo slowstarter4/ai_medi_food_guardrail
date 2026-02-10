@@ -1,22 +1,37 @@
-# demo_runner.py
-# from src.nlp.entity_extractor import extract_entities
-from src.rules.rule_engine import assess_risk
-from src.pipeline.message_builder import build_user_message
+# src/pipeline/demo_runner.py
+from main import main
 
-# 시연용 고정 입력
-foods = ["자몽", "녹황색채소"]
-drugs = ["와파린", "암로디핀"]
+DEMO_SCENARIOS = [
+    {
+        "id": "DEMO_1_GRAPEFRUIT",
+        "title": "자몽 + 혈압약",
+        "input": "암로디핀 복용 중 자몽주스를 마셨습니다"
+    },
+    {
+        "id": "DEMO_2_NSAID_DUP",
+        "title": "진통제 중복 복용",
+        "input": "이부프로펜 먹고 있는데 나프록센도 같이 먹어도 되나요?"
+    },
+    {
+        "id": "DEMO_3_COLD_MED",
+        "title": "고혈압 + 감기약",
+        "input": "고혈압약 먹고 있는데 감기약 같이 먹어도 괜찮을까요?"
+    }
+]
+
+
+def run_demo():
+    for s in DEMO_SCENARIOS:
+        print("\n" + "=" * 60)
+        print(f"[SCENARIO] {s['id']} — {s['title']}")
+        print("=" * 60)
+        print(f"[INPUT]\n{s['input']}\n")
+
+        main({
+            "source": "demo",
+            "raw_text": s["input"]
+        })
+
 
 if __name__ == "__main__":
-    print("DEBUG foods:", foods)
-    print("DEBUG drugs:", drugs)
-
-    result = assess_risk(foods, drugs)
-
-    print("\n[RISK RESULT]")
-    print(result)
-
-    user_message = build_user_message(result)
-
-    print("\n[USER MESSAGE]")
-    print(user_message)
+    run_demo()
