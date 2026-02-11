@@ -32,18 +32,13 @@ def fetch_drug_info_from_api(drug_name: str) -> Optional[Dict]:
 
     try:
         response = requests.get(BASE_URL, params=params, timeout=5)
-        print(f"[DEBUG] API URL: {response.url}") # URL 확인 (키 인코딩 확인용)
-        print(f"[DEBUG] Status Code: {response.status_code}")
-        
         response.raise_for_status()
         
         # JSON Parsing (공공데이터 포털은 가끔 JSON 형식이 깨질 수 있음)
         try:
             data = response.json()
-            print(f"[DEBUG] Raw Response: {json.dumps(data, ensure_ascii=False)[:200]}...")
         except json.JSONDecodeError:
             print(f"[ERROR] Failed to parse JSON response for {drug_name}")
-            print(f"[DEBUG] Raw Body: {response.text[:500]}")
             return None
 
         return extract_drug_fields(data, drug_name)

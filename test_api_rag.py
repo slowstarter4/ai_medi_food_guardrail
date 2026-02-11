@@ -6,10 +6,10 @@ def test_custom_drug_retrieval():
     # Windows 한글 출력 깨짐 방지
     sys.stdout.reconfigure(encoding='utf-8')
 
-    print("Testing External API Retrieval for '암로디핀' (Not in Internal DB)...")
+    print("Testing External API Retrieval for '아스피린' (Not in Internal DB)...")
     
     # "타이레놀"은 evidence_db.json에 없는 키임 -> API 호출 유도
-    evidence = retrieve_evidence(["암로디핀"])
+    evidence = retrieve_evidence(["아스피린"])
     
     if evidence:
         print("\n[SUCCESS] Retrieved Evidence:")
