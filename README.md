@@ -36,122 +36,78 @@
 
 ---
 
-## 프로젝트 범위 (MVP)
+## 주요 기능 (MVP)
 
-### 포함 범위
-
-- 특정 약물 카테고리 1종
-- 금기·주의 사례 약 20~30개
-- 이미지 기반 입력 (OCR)
-- **룰 기반 위험 판단 로직**
-
-### 제외 범위
-
-- 질병 진단
-- 복약 또는 식단 추천
-- 의료적 의사결정 및 치료 판단
+- **AI 기반 정밀 분석 (Hybrid RAG)**
+  - **Rule-based Guardrail**: 사전에 정의된 안전 규칙(`ruleset.json`)을 통한 즉각적인 위험 탐지.
+  - **External API Fallback**: 내부 규칙에 없는 약물은 **식약처 'e약은요' API**를 통해 실시간 데이터 조회.
+  - **LLM Explanation**: OpenAI `gpt-4o-mini`를 사용하여 의학적 근거 기반의 쉽고 강력한 경고 메시지 생성.
+- **다국어 및 상황 대응**: 한국어 기반의 친절하고 전문적인 설명 제공.
+- **Persona 기반 테스트**: 고혈압, 당뇨 환자 등 실제 사용자 페르소나를 반영한 8가지 MVP 시나리오 검증 완료.
 
 ---
 
-## Input
+## 설치 및 설정
 
-- **이미지 입력**
-  - 처방전
-  - 약 봉투
-  - 식품·건강기능식품 성분표
-- **텍스트 입력 (선택)**
-  - 사용자의 현재 상태
-  - 기저 질환 정보 (참고용)
-- **공공 데이터**
-  - 의약품 정보
-  - 약물–성분 상호작용 데이터
+본 프로젝트를 실행하기 위해서는 다음의 API 키가 필요합니다.
 
----
+1.  **OpenAI API Key**: LLM 설명 생성용
+2.  **공공데이터포털 API Key**: 식약처 'e약은요' 의약품 정보 조회용
 
-## Output
+### 환경 변수 설정
+프로젝트 루트 디렉토리에 `.env` 파일을 생성하고 다음과 같이 설정합니다.
 
-- 위험 수준 표시 (`high / caution / none`)
-- 위험 요약 설명
-- 위험 발생 근거 및 출처
-- 사용자 경고 메시지
-
----
-
-## Output JSON Interface (Draft)
-
-본 JSON은 **시스템의 최종 판단 결과 형식에 대한 초안**이며,  
-구현을 위한 고정 스펙이 아닌 **팀 합의 및 구조 설계용 인터페이스**이다.
-
-```json
-{
-  "input": {
-    "drug": ["string"],
-    "intake": ["string"]
-  },
-  "result": {
-    "risk_level": "high | caution | none",
-    "risk_summary": "string"
-  },
-  "reason": [
-    {
-      "type": "drug-food | drug-supplement",
-      "description": "string",
-      "evidence": "string"
-    }
-  ],
-  "source": ["e약은요"],
-  "disclaimer": "의료적 판단이 아닙니다"
-}
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+DATA_GO_KR_API_KEY=your_public_data_api_key_here
 ```
 
-## 예시
-
-```json
-[
-  {
-    "drug": "와파린",
-    "intake": "시금치",
-    "risk_level": "high",
-    "description": "와파린 복용 시 비타민 K가 많은 시금치 섭취는 항응고 효과를 감소시킬 수 있습니다.",
-    "evidence": "비타민 K는 혈액 응고를 촉진함"
-  }
-]
+### 라이브러리 설치
+```bash
+pip install -r requirements.txt
 ```
 
-## 시스템 설계 원칙
+---
 
-- Rule-based 판단을 시스템의 핵심 안전망(Core Guardrail)으로 유지
-- AI/LLM은 설명 보조 또는 확장 요소로만 사용
-- 모든 위험 판단은 설명 가능하고 근거 추적이 가능해야 함
-- 의료적 판단을 대체하지 않으며, 정보 제공 및 사고 예방 목적에 한정
+## 시스템 아키텍처
 
-## 기술 구성(초안)
+시스템은 **Hybrid RAG(Retrieval-Augmented Generation)** 구조를 따릅니다.
 
-- OCR
-  - 처방전 및 성분표 이미지 텍스트 추출
-- NLP
-  - 약물명, 성분명, 섭취 항목 구조화
-- Rule-based Logic
-  - 공공 의료 데이터 기반 위험 판단
-- UI / Console
-  - 위험 요약 및 경고 메시지 출력
+1.  **Entity Parsing**: 사용자의 질문에서 약물, 식품, 상황 엔티티를 추출.
+2.  **Risk Assessment**: 추출된 엔티티를 바탕으로 내부 룰셋 매칭.
+3.  **Knowledge Retrieval**: 
+    - 내부 DB(`evidence_db.json`) 검색.
+    - 검색 실패 시 **식약처 API**를 통해 외부 지식 획득.
+4.  **Explanation Generation**: 수집된 근거(Evidence)와 위험 등급을 LLM에 전달하여 사용자 맞춤형 설명 생성.
 
-## 팀 역할
+---
 
-- NLP
-  - 텍스트 구조화
-  - 엔티티 추출 파이프라인 설계
-- CV
-  - OCR 처리
-- Data Analysis
-  - 위험 케이스 정의
-  - 룰 정리 및 근거 문서화
-- Planning
-  - 사용자 시나리오
-  - 경고 메시지 및 UX 설계
+## 기술 스택
+
+- **Language**: Python 3.11+
+- **LLM**: OpenAI GPT-4o-mini
+- **External API**: 식약처 의약품개요정보(e약은요) 서비스
+- **Data Conversion**: Rule-based matching, JSON/XML parsing
+
+---
+
+## 실행 방법
+
+### MVP 시나리오 테스트
+정의된 8가지 시나리오에 대한 통합 테스트를 수행합니다. (LLM 설명 포함)
+```bash
+python mvp_test.py
+```
+
+### API 연동 테스트
+새로운 약물(예: 타이레놀)에 대한 외부 API 연동 기능을 테스트합니다.
+```bash
+python test_api_rag.py
+```
+
+---
 
 ## Disclaimer
 
-본 시스템은 의료적 진단이나 처방을 제공하지 않으며,
-참고용 정보 제공 및 사고 예방 목적의 가드레일 시스템이다.
-의학적 판단이 필요한 경우 반드시 전문가와 상담해야 한다.
+본 시스템은 의료적 진단이나 처방을 제공하지 않으며, 참고용 정보 제공 및 사고 예방 목적의 가드레일 시스템이다. 의학적 판단이 필요한 경우 반드시 전문가와 상담해야 한다.
+
