@@ -14,12 +14,24 @@ with open(EVIDENCE_DB_PATH, "r", encoding="utf-8") as f:
 def assess_risk(normalized_entities, matched_rules):
     if not matched_rules:
         final_risk = "LOW"
+        top_rule = None
     else:
-        # 가장 높은 우선순위 룰 선택
-        final_risk = max(
+        # 룰 매칭 우선순위 규칙 적용:
+        # 1. Level (1 > 2 > 3) - 오름차순
+        # 2. Risk Level (RED > YELLOW > LOW) - 내림차순 (PRIORITY 점수 이용)
+        # 3. Rule ID (알파벳 오름차순) - 안정성 확보
+        
+        sorted_rules = sorted(
             matched_rules,
-            key=lambda r: PRIORITY.get(r.get("risk_level_hint"), 0)
-        )["risk_level_hint"]
+            key=lambda r: (
+                r.get("level", 3), 
+                -PRIORITY.get(r.get("risk_level_hint"), 0), 
+                r.get("rule_id", "")
+            )
+        )
+        
+        top_rule = sorted_rules[0]
+        final_risk = top_rule["risk_level_hint"]
 
     evidence_keys = list({
         r.get("evidence_key")
@@ -32,6 +44,7 @@ def assess_risk(normalized_entities, matched_rules):
     return {
         "risk_level": final_risk,
         "risk_code": final_risk,
+        "representative_rule": top_rule["rule_id"] if top_rule else None,
         "decision_basis": {
             "rule_based": True,
             "matched_rules": [r["rule_id"] for r in matched_rules]

@@ -2,6 +2,7 @@
   "rules": [
     {
       "rule_id": "HTN_001",
+      "level": 1,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [
@@ -27,6 +28,7 @@
     },
     {
       "rule_id": "HTN_002",
+      "level": 1,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [
@@ -45,6 +47,7 @@
     },
     {
       "rule_id": "HTN_003",
+      "level": 1,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [
@@ -68,6 +71,7 @@
     },
     {
       "rule_id": "HTN_004",
+      "level": 3,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [
@@ -86,6 +90,7 @@
     },
     {
       "rule_id": "HTN_005",
+      "level": 1,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [
@@ -105,6 +110,7 @@
     },
     {
       "rule_id": "HTN_006",
+      "level": 1,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [
@@ -125,6 +131,7 @@
     },
     {
       "rule_id": "HTN_007",
+      "level": 3,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [],
@@ -141,6 +148,7 @@
     },
     {
       "rule_id": "DM_001",
+      "level": 2,
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [],
@@ -157,6 +165,7 @@
     },
     {
       "rule_id": "DM_002",
+      "level": 3,
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [],
@@ -177,6 +186,7 @@
     },
     {
       "rule_id": "DM_003",
+      "level": 1,
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [
@@ -195,6 +205,7 @@
     },
     {
       "rule_id": "DM_004",
+      "level": 3,
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [],
@@ -211,6 +222,7 @@
     },
     {
       "rule_id": "DM_005",
+      "level": 1,
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [
@@ -229,6 +241,7 @@
     },
     {
       "rule_id": "NSAID_001",
+      "level": 1,
       "persona": "고령_관절염",
       "conditions": {
         "drugs": [
@@ -250,6 +263,7 @@
     },
     {
       "rule_id": "NSAID_002",
+      "level": 2,
       "persona": "고령_관절염",
       "conditions": {
         "drugs": [
@@ -269,6 +283,7 @@
     },
     {
       "rule_id": "NSAID_003",
+      "level": 1,
       "persona": "고령_관절염",
       "conditions": {
         "drugs": [
@@ -288,6 +303,7 @@
     },
     {
       "rule_id": "NSAID_004",
+      "level": 1,
       "persona": "고령_관절염",
       "conditions": {
         "drugs": [

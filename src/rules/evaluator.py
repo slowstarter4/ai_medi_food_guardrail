@@ -41,9 +41,10 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
         # matched_rule에 필요한 key만 안전하게 포함
         matched.append({
             "rule_id": rule.get("rule_id"),
+            "level": rule.get("level", 3),  # 기본값 Level 3 (가장 낮음)
             "risk_level_hint": rule.get("risk_level_hint"),
             "description": rule.get("description"),
-            "evidence_key": rule.get("evidence_key")  # 존재하지 않으면 None
+            "evidence_key": rule.get("evidence_key")
         })
 
     return matched

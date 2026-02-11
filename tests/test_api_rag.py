@@ -1,4 +1,11 @@
 import sys
+import os
+from pathlib import Path
+
+# 프로젝트 루트를 sys.path에 추가
+root_dir = Path(__file__).parent.parent
+sys.path.append(str(root_dir))
+
 from src.rag.retriever import retrieve_evidence
 import json
 
