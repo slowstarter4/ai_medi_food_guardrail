@@ -1,0 +1,875 @@
+============================================================
+ AI Food-Medication Guardrail MVP Service Test
+============================================================
+
+
+[SCENARIO] MVP_RED_01 - 당뇨약 공복 음주
+Input: 아침 식사 안 하고 소주 한잔 했는데 당뇨약 먹어도 되나요?
+------------------------------------------------------------
+Risk Level: RED
+
+[EXPLANATION]
+**결론**: 현재 상황에 대한 명확한 판단이 어렵습니다.
+
+**이유**: 아침 식사를 하지 않고 소주를 마신 후 당뇨약을 복용하는 것은 여러 변수에 따라 혈당 수치에 영향을 미칠 수 있으며, 당뇨약의 효과와 부작용이 달라질 수 있습니다. 특히 음주와 당뇨약 복용은 건강에 위험을 초래할 수 있습니다.
+
+**대처**: 당분간 당뇨약 복용을 피하고, 반드시 전문의와 상담하여 개인의 상황에 맞는 안전한 조치를 취하세요.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "아침 식사 안 하고 소주 한잔 했는데 당뇨약 먹어도 되나요?",
+  "risk_result": {
+    "risk_level": "RED",
+    "risk_code": "RED",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "DM_001",
+        "DM_004"
+      ]
+    },
+    "entities_involved": {
+      "foods": [
+        {
+          "raw": "소주",
+          "entity_id": "FOOD_ALCOHOL"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "당뇨약",
+          "entity_id": "DRUG_SULFONYLUREA"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "식사 안 하고",
+          "entity_id": "SITUATION_FASTING"
+        },
+        {
+          "raw": "아침 식사 안 하고",
+          "entity_id": "SITUATION_FASTING"
+        },
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        },
+        {
+          "raw": "공복 음주",
+          "canonical": "공복 상태에서 음주",
+          "entity_id": "SITUATION_FASTING_ALCOHOL"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "YELLOW_DM_MEAL_SKIP",
+      "RED_DM_HYPOGLYCEMIA"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "YELLOW_DM_MEAL_SKIP",
+        "source": "MFDS",
+        "title": "식사 거름과 저혈당",
+        "summary": "당뇨약 복용 후 식사를 거르면 저혈당이 발생할 수 있습니다. 떨림, 식은땀 등 증상이 나타나면 당분을 섭취하세요.",
+        "url": null
+      },
+      {
+        "evidence_key": "RED_DM_HYPOGLYCEMIA",
+        "source": "MFDS",
+        "title": "당뇨약 복용 중 공복 음주 위험",
+        "summary": "공복 상태에서 음주 시 설폰요소제 등 당뇨약이 혈당을 과도하게 낮춰 의식 저하 및 낙상 위험이 있습니다. 매우 위험하며 즉시 당분 섭취가 필요합니다.",
+        "url": null
+      }
+    ],
+    "input_text": "아침 식사 안 하고 소주 한잔 했는데 당뇨약 먹어도 되나요?"
+  },
+  "explanation": "**결론**: 현재 상황에 대한 명확한 판단이 어렵습니다.\n\n**이유**: 아침 식사를 하지 않고 소주를 마신 후 당뇨약을 복용하는 것은 여러 변수에 따라 혈당 수치에 영향을 미칠 수 있으며, 당뇨약의 효과와 부작용이 달라질 수 있습니다. 특히 음주와 당뇨약 복용은 건강에 위험을 초래할 수 있습니다.\n\n**대처**: 당분간 당뇨약 복용을 피하고, 반드시 전문의와 상담하여 개인의 상황에 맞는 안전한 조치를 취하세요.",
+  "debug_info": {
+    "entities": {
+      "foods": [
+        {
+          "raw": "소주",
+          "entity_id": "FOOD_ALCOHOL"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "당뇨약",
+          "entity_id": "DRUG_SULFONYLUREA"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "식사 안 하고",
+          "entity_id": "SITUATION_FASTING"
+        },
+        {
+          "raw": "아침 식사 안 하고",
+          "entity_id": "SITUATION_FASTING"
+        },
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        },
+        {
+          "raw": "공복 음주",
+          "canonical": "공복 상태에서 음주",
+          "entity_id": "SITUATION_FASTING_ALCOHOL"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "DM_001",
+        "risk_level_hint": "RED",
+        "description": "알코올로 인한 심각한 저혈당 위험",
+        "evidence_key": "RED_DM_HYPOGLYCEMIA"
+      },
+      {
+        "rule_id": "DM_004",
+        "risk_level_hint": "YELLOW",
+        "description": "식사 없이 복용 시 저혈당 가능",
+        "evidence_key": "YELLOW_DM_MEAL_SKIP"
+      }
+    ]
+  }
+}
+============================================================
+
+
+[SCENARIO] MVP_RED_02 - 진통제 중복 + 알코올
+Input: 이부프로펜 먹고 나프록센도 먹었는데 술 마셔도 돼요?
+------------------------------------------------------------
+Risk Level: RED
+
+[EXPLANATION]
+- **결론**: 위험할 수 있으므로 섭취를 자제해야 합니다.
+- **이유**: 이부프로펜과 나프록센은 모두 비스테로이드 항염증제(NSAIDs)이며, 술과 함께 복용할 경우 위장 출혈이나 간 손상의 위험이 증가할 수 있습니다.
+- **대처**: 즉시 술 섭취를 중단하고, 복용한 약물에 대해 의사와 상담하세요.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "이부프로펜 먹고 나프록센도 먹었는데 술 마셔도 돼요?",
+  "risk_result": {
+    "risk_level": "RED",
+    "risk_code": "RED",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "HTN_005",
+        "NSAID_001",
+        "NSAID_003"
+      ]
+    },
+    "entities_involved": {
+      "foods": [
+        {
+          "raw": "술",
+          "entity_id": "FOOD_ALCOHOL"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "이부프로펜",
+          "entity_id": "DRUG_IBUPROFEN"
+        },
+        {
+          "raw": "나프록센",
+          "entity_id": "DRUG_NAPROXEN"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "RED_NSAID_BLEEDING",
+      "RED_NSAID_DUPLICATION",
+      "YELLOW_HTN_NSAID"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "RED_NSAID_BLEEDING",
+        "source": "MFDS",
+        "title": "NSAIDs와 알코올 병용 시 출혈 위험",
+        "summary": "이부프로펜, 나프록센 등 진통제를 복용하면서 음주하면 위장 출혈 위험이 크게 증가합니다. 검은색 변, 토혈 등이 나타나면 즉시 병원 방문이 필요합니다.",
+        "url": null
+      },
+      {
+        "evidence_key": "RED_NSAID_DUPLICATION",
+        "source": "MFDS",
+        "title": "NSAIDs 중복 복용 위험",
+        "summary": "이부프로펜과 나프록센과 같은 NSAIDs를 중복 복용할 경우 위장 출혈 및 신장 손상 위험이 증가합니다.",
+        "url": null
+      },
+      {
+        "evidence_key": "YELLOW_HTN_NSAID",
+        "source": "MFDS",
+        "title": "NSAIDs와 혈압약 효과 감소",
+        "summary": "이부프로펜, 나프록센 등 진통소염제는 혈압약의 효과를 약화시켜 혈압 조절이 어려워질 수 있습니다.",
+        "url": null
+      }
+    ],
+    "input_text": "이부프로펜 먹고 나프록센도 먹었는데 술 마셔도 돼요?"
+  },
+  "explanation": "- **결론**: 위험할 수 있으므로 섭취를 자제해야 합니다.\n- **이유**: 이부프로펜과 나프록센은 모두 비스테로이드 항염증제(NSAIDs)이며, 술과 함께 복용할 경우 위장 출혈이나 간 손상의 위험이 증가할 수 있습니다.\n- **대처**: 즉시 술 섭취를 중단하고, 복용한 약물에 대해 의사와 상담하세요.",
+  "debug_info": {
+    "entities": {
+      "foods": [
+        {
+          "raw": "술",
+          "entity_id": "FOOD_ALCOHOL"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "이부프로펜",
+          "entity_id": "DRUG_IBUPROFEN"
+        },
+        {
+          "raw": "나프록센",
+          "entity_id": "DRUG_NAPROXEN"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "HTN_005",
+        "risk_level_hint": "YELLOW",
+        "description": "혈압약 효과 저하 및 혈압 조절 실패 가능",
+        "evidence_key": "YELLOW_HTN_NSAID"
+      },
+      {
+        "rule_id": "NSAID_001",
+        "risk_level_hint": "RED",
+        "description": "알코올 병용 시 위장 출혈 위험 증가",
+        "evidence_key": "RED_NSAID_BLEEDING"
+      },
+      {
+        "rule_id": "NSAID_003",
+        "risk_level_hint": "RED",
+        "description": "동일 계열 중복 복용으로 출혈 위험",
+        "evidence_key": "RED_NSAID_DUPLICATION"
+      }
+    ]
+  }
+}
+============================================================
+
+
+[SCENARIO] MVP_RED_03 - NSAIDs 중복 복용
+Input: 이부프로펜 먹고 있는데 나프록센도 같이 먹어도 되나요?
+------------------------------------------------------------
+Risk Level: RED
+
+[EXPLANATION]
+- **결론**: 이부프로펜과 나프록센을 함께 복용하는 것은 권장하지 않습니다.
+- **이유**: 두 약물 모두 비스테로이드성 항염증제(NSAIDs)로, 함께 복용할 경우 위장관 출혈, 신장 손상 등의 부작용 위험이 증가할 수 있습니다.
+- **대처**: 즉시 복용을 중단하고, 복용 중인 약물에 대해 의사와 상담하세요.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "이부프로펜 먹고 있는데 나프록센도 같이 먹어도 되나요?",
+  "risk_result": {
+    "risk_level": "RED",
+    "risk_code": "RED",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "HTN_005",
+        "NSAID_003"
+      ]
+    },
+    "entities_involved": {
+      "foods": [],
+      "drugs": [
+        {
+          "raw": "이부프로펜",
+          "entity_id": "DRUG_IBUPROFEN"
+        },
+        {
+          "raw": "나프록센",
+          "entity_id": "DRUG_NAPROXEN"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "RED_NSAID_DUPLICATION",
+      "YELLOW_HTN_NSAID"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "RED_NSAID_DUPLICATION",
+        "source": "MFDS",
+        "title": "NSAIDs 중복 복용 위험",
+        "summary": "이부프로펜과 나프록센과 같은 NSAIDs를 중복 복용할 경우 위장 출혈 및 신장 손상 위험이 증가합니다.",
+        "url": null
+      },
+      {
+        "evidence_key": "YELLOW_HTN_NSAID",
+        "source": "MFDS",
+        "title": "NSAIDs와 혈압약 효과 감소",
+        "summary": "이부프로펜, 나프록센 등 진통소염제는 혈압약의 효과를 약화시켜 혈압 조절이 어려워질 수 있습니다.",
+        "url": null
+      }
+    ],
+    "input_text": "이부프로펜 먹고 있는데 나프록센도 같이 먹어도 되나요?"
+  },
+  "explanation": "- **결론**: 이부프로펜과 나프록센을 함께 복용하는 것은 권장하지 않습니다.\n- **이유**: 두 약물 모두 비스테로이드성 항염증제(NSAIDs)로, 함께 복용할 경우 위장관 출혈, 신장 손상 등의 부작용 위험이 증가할 수 있습니다.\n- **대처**: 즉시 복용을 중단하고, 복용 중인 약물에 대해 의사와 상담하세요.",
+  "debug_info": {
+    "entities": {
+      "foods": [],
+      "drugs": [
+        {
+          "raw": "이부프로펜",
+          "entity_id": "DRUG_IBUPROFEN"
+        },
+        {
+          "raw": "나프록센",
+          "entity_id": "DRUG_NAPROXEN"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "HTN_005",
+        "risk_level_hint": "YELLOW",
+        "description": "혈압약 효과 저하 및 혈압 조절 실패 가능",
+        "evidence_key": "YELLOW_HTN_NSAID"
+      },
+      {
+        "rule_id": "NSAID_003",
+        "risk_level_hint": "RED",
+        "description": "동일 계열 중복 복용으로 출혈 위험",
+        "evidence_key": "RED_NSAID_DUPLICATION"
+      }
+    ]
+  }
+}
+============================================================
+
+
+[SCENARIO] MVP_YELLOW_01 - 고혈압약 + 바나나
+Input: 로사르탄 먹는데 바나나 먹어도 괜찮을까요?
+------------------------------------------------------------
+Risk Level: YELLOW
+
+[EXPLANATION]
+**결론**: 바나나와 로사르탄을 함께 섭취하는 것에 대한 명확한 정보가 부족하므로 주의가 필요합니다.
+
+**이유**: 로사르탄은 고혈압 치료에 사용되는 약물로, 바나나와 같은 고칼륨 식품의 섭취가 약물의 효과에 영향을 미칠 수 있습니다. 하지만 현재의 정보로는 이 두 가지의 상호작용에 대한 명확한 근거가 제공되지 않았습니다.
+
+**대처**: 바나나를 섭취하기 전, 특히 로사르탄과 같은 약물을 복용 중이라면, 의료 전문가와 상담하여 개인의 건강 상태에 맞는 조언을 받는 것이 좋습니다. 주의 깊게 상황을 모니터링하세요.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "로사르탄 먹는데 바나나 먹어도 괜찮을까요?",
+  "risk_result": {
+    "risk_level": "YELLOW",
+    "risk_code": "YELLOW",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "HTN_001"
+      ]
+    },
+    "entities_involved": {
+      "foods": [
+        {
+          "raw": "바나나",
+          "entity_id": "FOOD_BANANA"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "로사르탄",
+          "entity_id": "DRUG_LOSARTAN"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "YELLOW_HTN_POTASSIUM"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "YELLOW_HTN_POTASSIUM",
+        "source": "MFDS",
+        "title": "ACE억제제/ARB와 고칼륨 식품",
+        "summary": "바나나, 토마토 등 칼륨이 많은 식품은 ACE억제제나 ARB와 함께 섭취 시 혈중 칼륨 농도를 높일 수 있습니다. 과도한 섭취는 피하고 시간 간격을 두는 것이 좋습니다.",
+        "url": null
+      }
+    ],
+    "input_text": "로사르탄 먹는데 바나나 먹어도 괜찮을까요?"
+  },
+  "explanation": "**결론**: 바나나와 로사르탄을 함께 섭취하는 것에 대한 명확한 정보가 부족하므로 주의가 필요합니다.\n\n**이유**: 로사르탄은 고혈압 치료에 사용되는 약물로, 바나나와 같은 고칼륨 식품의 섭취가 약물의 효과에 영향을 미칠 수 있습니다. 하지만 현재의 정보로는 이 두 가지의 상호작용에 대한 명확한 근거가 제공되지 않았습니다.\n\n**대처**: 바나나를 섭취하기 전, 특히 로사르탄과 같은 약물을 복용 중이라면, 의료 전문가와 상담하여 개인의 건강 상태에 맞는 조언을 받는 것이 좋습니다. 주의 깊게 상황을 모니터링하세요.",
+  "debug_info": {
+    "entities": {
+      "foods": [
+        {
+          "raw": "바나나",
+          "entity_id": "FOOD_BANANA"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "로사르탄",
+          "entity_id": "DRUG_LOSARTAN"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "HTN_001",
+        "risk_level_hint": "YELLOW",
+        "description": "고칼륨 식품으로 혈중 칼륨 상승 가능",
+        "evidence_key": "YELLOW_HTN_POTASSIUM"
+      }
+    ]
+  }
+}
+============================================================
+
+
+[SCENARIO] MVP_YELLOW_02 - 혈압약 + 감기약
+Input: 고혈압약 먹고 있는데 코막힘 심해서 감기약 먹어도 돼요?
+------------------------------------------------------------
+Risk Level: YELLOW
+
+[EXPLANATION]
+**결론**: 현재 고혈압약을 복용 중이라면 감기약 섭취에 주의가 필요합니다.
+
+**이유**: 고혈압약과 감기약은 상호작용이 있을 수 있으며, 특히 감기약 중 일부 성분은 혈압을 상승시킬 수 있습니다. 따라서 복용 시 신중을 기해야 합니다.
+
+**대처**: 감기약을 복용하기 전, 반드시 의사 또는 약사와 상의하여 적합한 약을 추천받고, 섭취 간격을 두어야 합니다. 개인의 건강 상태에 따라 적절한 조치가 필요합니다.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "고혈압약 먹고 있는데 코막힘 심해서 감기약 먹어도 돼요?",
+  "risk_result": {
+    "risk_level": "YELLOW",
+    "risk_code": "YELLOW",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "HTN_004"
+      ]
+    },
+    "entities_involved": {
+      "foods": [],
+      "drugs": [
+        {
+          "raw": "감기약",
+          "entity_id": "DRUG_DECONGESTANT"
+        },
+        {
+          "raw": "혈압약",
+          "entity_id": "DRUG_AMLODIPINE"
+        },
+        {
+          "raw": "고혈압약",
+          "entity_id": "DRUG_AMLODIPINE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "YELLOW_HTN_DECONGESTANT"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "YELLOW_HTN_DECONGESTANT",
+        "source": "MFDS",
+        "title": "고혈압 환자에서 감기약 주의",
+        "summary": "충혈제거제 성분이 포함된 감기약은 교감신경을 자극하여 혈압을 상승시킬 수 있습니다.",
+        "url": null
+      }
+    ],
+    "input_text": "고혈압약 먹고 있는데 코막힘 심해서 감기약 먹어도 돼요?"
+  },
+  "explanation": "**결론**: 현재 고혈압약을 복용 중이라면 감기약 섭취에 주의가 필요합니다.\n\n**이유**: 고혈압약과 감기약은 상호작용이 있을 수 있으며, 특히 감기약 중 일부 성분은 혈압을 상승시킬 수 있습니다. 따라서 복용 시 신중을 기해야 합니다.\n\n**대처**: 감기약을 복용하기 전, 반드시 의사 또는 약사와 상의하여 적합한 약을 추천받고, 섭취 간격을 두어야 합니다. 개인의 건강 상태에 따라 적절한 조치가 필요합니다.",
+  "debug_info": {
+    "entities": {
+      "foods": [],
+      "drugs": [
+        {
+          "raw": "감기약",
+          "entity_id": "DRUG_DECONGESTANT"
+        },
+        {
+          "raw": "혈압약",
+          "entity_id": "DRUG_AMLODIPINE"
+        },
+        {
+          "raw": "고혈압약",
+          "entity_id": "DRUG_AMLODIPINE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "HTN_004",
+        "risk_level_hint": "YELLOW",
+        "description": "교감신경 자극으로 혈압 상승 가능",
+        "evidence_key": "YELLOW_HTN_DECONGESTANT"
+      }
+    ]
+  }
+}
+============================================================
+
+
+[SCENARIO] MVP_YELLOW_03 - 암로디핀 + 자몽
+Input: 암로디핀 복용 중 자몽주스를 마셨습니다
+------------------------------------------------------------
+Risk Level: YELLOW
+
+[EXPLANATION]
+- **결론**: 자몽주스와 암로디핀의 병용은 주의가 필요합니다.
+- **이유**: 자몽주스는 암로디핀의 대사에 영향을 미쳐 혈중 농도를 증가시킬 수 있으며, 이로 인해 혈압이 과도하게 낮아질 위험이 있습니다.
+- **대처**: 즉시 자몽주스의 섭취를 중단하고, 다음 복용 시 암로디핀과 자몽주스를 함께 섭취하지 않도록 주의하세요. 필요시 의사와 상담하여 적절한 조치를 받는 것이 좋습니다.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "암로디핀 복용 중 자몽주스를 마셨습니다",
+  "risk_result": {
+    "risk_level": "YELLOW",
+    "risk_code": "YELLOW",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "HTN_003"
+      ]
+    },
+    "entities_involved": {
+      "foods": [
+        {
+          "raw": "자몽",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        },
+        {
+          "raw": "자몽주스",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "암로디핀",
+          "entity_id": "DRUG_AMLODIPINE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "YELLOW_HTN_GRAPEFRUIT"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "YELLOW_HTN_GRAPEFRUIT",
+        "source": "MFDS",
+        "title": "자몽과 칼슘채널차단제 상호작용",
+        "summary": "자몽은 CYP3A4 효소를 억제하여 암로디핀과 같은 칼슘채널차단제의 혈중 농도를 증가시킬 수 있습니다.",
+        "url": null
+      }
+    ],
+    "input_text": "암로디핀 복용 중 자몽주스를 마셨습니다"
+  },
+  "explanation": "- **결론**: 자몽주스와 암로디핀의 병용은 주의가 필요합니다.\n- **이유**: 자몽주스는 암로디핀의 대사에 영향을 미쳐 혈중 농도를 증가시킬 수 있으며, 이로 인해 혈압이 과도하게 낮아질 위험이 있습니다.\n- **대처**: 즉시 자몽주스의 섭취를 중단하고, 다음 복용 시 암로디핀과 자몽주스를 함께 섭취하지 않도록 주의하세요. 필요시 의사와 상담하여 적절한 조치를 받는 것이 좋습니다.",
+  "debug_info": {
+    "entities": {
+      "foods": [
+        {
+          "raw": "자몽",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        },
+        {
+          "raw": "자몽주스",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "암로디핀",
+          "entity_id": "DRUG_AMLODIPINE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "HTN_003",
+        "risk_level_hint": "YELLOW",
+        "description": "CYP3A4 억제로 혈중 약물 농도 증가",
+        "evidence_key": "YELLOW_HTN_GRAPEFRUIT"
+      }
+    ]
+  }
+}
+============================================================
+
+
+[SCENARIO] MVP_GUARD_01 - 보호자 원격 확인 - 자몽
+Input: 어머니가 혈압약 드시는데 자몽청 드셔도 괜찮을까요?
+------------------------------------------------------------
+Risk Level: YELLOW
+
+[EXPLANATION]
+- **결론**: 자몽청과 혈압약을 함께 드시는 것은 주의가 필요합니다.
+- **이유**: 자몽은 일부 혈압약의 대사에 영향을 미쳐 약물의 효과를 강화하거나 약화시킬 수 있습니다. 이는 혈압 조절에 부정적인 영향을 미칠 수 있습니다.
+- **대처**: 자몽청 섭취를 피하고, 어머니께서 혈압약 복용에 대해 의사와 상담하시도록 권장하세요.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "어머니가 혈압약 드시는데 자몽청 드셔도 괜찮을까요?",
+  "risk_result": {
+    "risk_level": "YELLOW",
+    "risk_code": "YELLOW",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "HTN_003"
+      ]
+    },
+    "entities_involved": {
+      "foods": [
+        {
+          "raw": "자몽",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        },
+        {
+          "raw": "자몽청",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "혈압약",
+          "entity_id": "DRUG_AMLODIPINE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "YELLOW_HTN_GRAPEFRUIT"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "YELLOW_HTN_GRAPEFRUIT",
+        "source": "MFDS",
+        "title": "자몽과 칼슘채널차단제 상호작용",
+        "summary": "자몽은 CYP3A4 효소를 억제하여 암로디핀과 같은 칼슘채널차단제의 혈중 농도를 증가시킬 수 있습니다.",
+        "url": null
+      }
+    ],
+    "input_text": "어머니가 혈압약 드시는데 자몽청 드셔도 괜찮을까요?"
+  },
+  "explanation": "- **결론**: 자몽청과 혈압약을 함께 드시는 것은 주의가 필요합니다.\n- **이유**: 자몽은 일부 혈압약의 대사에 영향을 미쳐 약물의 효과를 강화하거나 약화시킬 수 있습니다. 이는 혈압 조절에 부정적인 영향을 미칠 수 있습니다.\n- **대처**: 자몽청 섭취를 피하고, 어머니께서 혈압약 복용에 대해 의사와 상담하시도록 권장하세요.",
+  "debug_info": {
+    "entities": {
+      "foods": [
+        {
+          "raw": "자몽",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        },
+        {
+          "raw": "자몽청",
+          "entity_id": "FOOD_GRAPEFRUIT"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "혈압약",
+          "entity_id": "DRUG_AMLODIPINE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "HTN_003",
+        "risk_level_hint": "YELLOW",
+        "description": "CYP3A4 억제로 혈중 약물 농도 증가",
+        "evidence_key": "YELLOW_HTN_GRAPEFRUIT"
+      }
+    ]
+  }
+}
+============================================================
+
+
+[SCENARIO] MVP_GUARD_02 - 보호자 원격 확인 - 감초
+Input: 이뇨제 드시는데 감초캔디 드셔도 될까요?
+------------------------------------------------------------
+Risk Level: YELLOW
+
+[EXPLANATION]
+- **결론**: 감초캔디와 이뇨제를 함께 드시는 것은 **주의**가 필요합니다.
+- **이유**: 감초는 체내에서 나트륨 수치를 증가시키고 칼륨 수치를 감소시킬 수 있으며, 이뇨제와 상호작용할 경우 전해질 불균형을 초래할 수 있습니다.
+- **대처**: 감초캔디 섭취를 피하고, 이뇨제를 복용하는 동안에는 의료 전문가와 상담하여 섭취 가능한 식품에 대해 조언을 받으세요.
+
+[DEBUG: DETAILED RESULT]
+{
+  "input_text": "이뇨제 드시는데 감초캔디 드셔도 될까요?",
+  "risk_result": {
+    "risk_level": "YELLOW",
+    "risk_code": "YELLOW",
+    "decision_basis": {
+      "rule_based": true,
+      "matched_rules": [
+        "HTN_006"
+      ]
+    },
+    "entities_involved": {
+      "foods": [
+        {
+          "raw": "감초",
+          "entity_id": "FOOD_LICORICE"
+        },
+        {
+          "raw": "감초캔디",
+          "entity_id": "FOOD_LICORICE"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "이뇨제",
+          "entity_id": "DRUG_HYDROCHLOROTHIAZIDE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "evidence_keys": [
+      "YELLOW_HTN_LICORICE"
+    ],
+    "evidence_info": [
+      {
+        "evidence_key": "YELLOW_HTN_LICORICE",
+        "source": "MFDS",
+        "title": "감초와 이뇨제 상호작용",
+        "summary": "감초는 나트륨 저류를 유발하여 이뇨제의 효과를 감소시키고 혈압을 상승시킬 수 있습니다.",
+        "url": null
+      }
+    ],
+    "input_text": "이뇨제 드시는데 감초캔디 드셔도 될까요?"
+  },
+  "explanation": "- **결론**: 감초캔디와 이뇨제를 함께 드시는 것은 **주의**가 필요합니다.\n- **이유**: 감초는 체내에서 나트륨 수치를 증가시키고 칼륨 수치를 감소시킬 수 있으며, 이뇨제와 상호작용할 경우 전해질 불균형을 초래할 수 있습니다.\n- **대처**: 감초캔디 섭취를 피하고, 이뇨제를 복용하는 동안에는 의료 전문가와 상담하여 섭취 가능한 식품에 대해 조언을 받으세요.",
+  "debug_info": {
+    "entities": {
+      "foods": [
+        {
+          "raw": "감초",
+          "entity_id": "FOOD_LICORICE"
+        },
+        {
+          "raw": "감초캔디",
+          "entity_id": "FOOD_LICORICE"
+        }
+      ],
+      "drugs": [
+        {
+          "raw": "이뇨제",
+          "entity_id": "DRUG_HYDROCHLOROTHIAZIDE"
+        }
+      ],
+      "situations": [
+        {
+          "raw": "병용",
+          "canonical": "병용 섭취",
+          "entity_id": "SITUATION_CONCURRENT"
+        }
+      ]
+    },
+    "matched_rules": [
+      {
+        "rule_id": "HTN_006",
+        "risk_level_hint": "YELLOW",
+        "description": "나트륨 저류로 혈압 상승 가능",
+        "evidence_key": "YELLOW_HTN_LICORICE"
+      }
+    ]
+  }
+}
+============================================================

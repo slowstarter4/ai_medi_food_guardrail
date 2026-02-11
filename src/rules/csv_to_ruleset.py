@@ -89,6 +89,7 @@ def convert():
                 "risk_type": row["risk_type"],
                 "risk_level_hint": row["risk_level"],
                 "message_id": row["message_id"],
+                "evidence_key": row["message_id"],
                 "description": row["description"]
             })
 

@@ -20,7 +20,8 @@ def parse_entities(
     entities = {
         "foods": [],
         "drugs": [],
-        "supplements": []
+        "supplements": [],
+        "situations": []
     }
 
     for entity_type, candidates in known_entities.items():

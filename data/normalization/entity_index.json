@@ -6,10 +6,29 @@
     "히드로크로로티아지드": "DRUG_HYDROCHLOROTHIAZIDE",
     "메트포르민": "DRUG_METFORMIN",
     "다파글리플로진": "DRUG_DAPAGLIFLOZIN",
+    "설폰요소제": "DRUG_SULFONYLUREA",
+    "글리메피리드": "DRUG_SULFONYLUREA",
+    "글리벤클라미드": "DRUG_SULFONYLUREA",
     "이부프로펜": "DRUG_IBUPROFEN",
-    "나프록센": "DRUG_NAPROXEN"
+    "나프록센": "DRUG_NAPROXEN",
+    "슈도에페드린": "DRUG_DECONGESTANT",
+    "페닐에프린": "DRUG_DECONGESTANT",
+    "충혈제거제": "DRUG_DECONGESTANT",
+    "감기약": "DRUG_DECONGESTANT",
+    "당뇨약": "DRUG_SULFONYLUREA",
+    "혈압약": "DRUG_AMLODIPINE",
+    "고혈압약": "DRUG_AMLODIPINE",
+    "이뇨제": "DRUG_HYDROCHLOROTHIAZIDE",
+    "타이레놀": "DRUG_ACETAMINOPHEN",
+    "아세트아미노펜": "DRUG_ACETAMINOPHEN",
+    "아스피린": "DRUG_ASPIRIN",
+    "게보린": "DRUG_PAINKILLER_GENERAL",
+    "펜잘": "DRUG_PAINKILLER_GENERAL",
+    "두통약": "DRUG_PAINKILLER_GENERAL",
+    "베아제": "DRUG_DIGESTIVE_GENERAL",
+    "훼스탈": "DRUG_DIGESTIVE_GENERAL",
+    "소화제": "DRUG_DIGESTIVE_GENERAL"
   },
-
   "foods": {
     "바나나": "FOOD_BANANA",
     "토마토": "FOOD_TOMATO",
@@ -24,21 +43,27 @@
     "사탕": "FOOD_CANDY",
     "탄산음료": "FOOD_CARB_DRINK",
     "단음료": "FOOD_CARB_DRINK",
-    "디저트": "FOOD_DESSERT"
+    "디저트": "FOOD_DESSERT",
+    "알코올": "FOOD_ALCOHOL",
+    "술": "FOOD_ALCOHOL",
+    "소주": "FOOD_ALCOHOL",
+    "맥주": "FOOD_ALCOHOL",
+    "와인": "FOOD_ALCOHOL",
+    "감초": "FOOD_LICORICE",
+    "감초캔디": "FOOD_LICORICE",
+    "감초사탕": "FOOD_LICORICE"
   },
-
   "situations": {
     "동시 섭취": "SITUATION_CONCURRENT",
     "병용": "SITUATION_CONCURRENT",
     "병용 복용": "SITUATION_CONCURRENT",
     "중복 복용": "SITUATION_CONCURRENT",
-
     "공복 복용": "SITUATION_FASTING",
     "식사 미섭취": "SITUATION_FASTING",
-
     "과도한 음주": "SITUATION_EXCESS_ALCOHOL",
     "공복 음주": "SITUATION_FASTING_ALCOHOL",
-
-    "탈수 상태": "SITUATION_DEHYDRATION"
+    "탈수 상태": "SITUATION_DEHYDRATION",
+    "식사 안 하고": "SITUATION_FASTING",
+    "아침 식사 안 하고": "SITUATION_FASTING"
   }
 }

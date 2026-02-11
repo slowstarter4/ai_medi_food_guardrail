@@ -1,70 +1,165 @@
+import sys
+import json
 from src.rules.loader import load_ruleset
 from src.rules.evaluator import evaluate_rules
 from service.entity_parser import parse_entities
 from service.entity_normalizer import normalize_entities, load_entity_index
-from service.risk_assessor import assess_risk
+from src.service.risk_assessor import assess_risk
+from src.pipeline.explanation_pipeline import run_explanation
+
+# MVP 페르소나 기반 시나리오
+MVP_SCENARIOS = [
+    # 페르소나 1: 김영순 여사 - RED 케이스
+    {
+        "id": "MVP_RED_01",
+        "title": "당뇨약 공복 음주",
+        "input": "아침 식사 안 하고 소주 한잔 했는데 당뇨약 먹어도 되나요?",
+        "expected_risk": "RED",
+        "expected_evidence": "RED_DM_HYPOGLYCEMIA"
+    },
+    {
+        "id": "MVP_RED_02",
+        "title": "진통제 중복 + 알코올",
+        "input": "이부프로펜 먹고 나프록센도 먹었는데 술 마셔도 돼요?",
+        "expected_risk": "RED",
+        "expected_evidence": "RED_NSAID_DUPLICATION"
+    },
+    {
+        "id": "MVP_RED_03",
+        "title": "NSAIDs 중복 복용",
+        "input": "이부프로펜 먹고 있는데 나프록센도 같이 먹어도 되나요?",
+        "expected_risk": "RED",
+        "expected_evidence": "RED_NSAID_DUPLICATION"
+    },
+    
+    # 페르소나 1: 김영순 여사 - YELLOW 케이스
+    {
+        "id": "MVP_YELLOW_01",
+        "title": "고혈압약 + 바나나",
+        "input": "로사르탄 먹는데 바나나 먹어도 괜찮을까요?",
+        "expected_risk": "YELLOW",
+        "expected_evidence": "YELLOW_HTN_POTASSIUM"
+    },
+    {
+        "id": "MVP_YELLOW_02",
+        "title": "혈압약 + 감기약",
+        "input": "고혈압약 먹고 있는데 코막힘 심해서 감기약 먹어도 돼요?",
+        "expected_risk": "YELLOW",
+        "expected_evidence": "YELLOW_HTN_DECONGESTANT"
+    },
+    {
+        "id": "MVP_YELLOW_03",
+        "title": "암로디핀 + 자몽",
+        "input": "암로디핀 복용 중 자몽주스를 마셨습니다",
+        "expected_risk": "YELLOW",
+        "expected_evidence": "YELLOW_HTN_GRAPEFRUIT"
+    },
+    
+    # 페르소나 2: 최지연 팀장(보호자)
+    {
+        "id": "MVP_GUARD_01",
+        "title": "보호자 원격 확인 - 자몽",
+        "input": "어머니가 혈압약 드시는데 자몽청 드셔도 괜찮을까요?",
+        "expected_risk": "YELLOW",
+        "expected_evidence": "YELLOW_HTN_GRAPEFRUIT"
+    },
+    {
+        "id": "MVP_GUARD_02",
+        "title": "보호자 원격 확인 - 감초",
+        "input": "이뇨제 드시는데 감초캔디 드셔도 될까요?",
+        "expected_risk": "YELLOW",
+        "expected_evidence": "YELLOW_HTN_LICORICE"
+    },
+]
 
 def build_known_entities_from_index(entity_index):
-    """
-    parser용 표면어 사전 생성
-    """
-    return {
-        entity_type: list(entity_index[entity_type].keys())
-        for entity_type in entity_index
-    }
+    """parser용 표면어 사전 생성"""
+    return {entity_type: list(entity_index[entity_type].keys()) for entity_type in entity_index}
 
-def main(input_payload=None):
-    if input_payload is None:
-        raw_text = "암로디핀 복용 중 자몽주스를 마셨습니다"
-    else:
-        raw_text = input_payload["raw_text"]
-
-    # 2. 룰 로딩
+def analyze_text(raw_text):
+    """
+    MVP 서비스 파이프라인: Text -> Parsing -> Risk Assessment -> Explanation
+    """
+    # 1. 데이터 로딩 (실제 서비스에서는 캐싱 필요)
     ruleset = load_ruleset()
     rules = ruleset["rules"]
-
-    # 3. entity index 로딩 (정규화 기준)
     entity_index = load_entity_index()
-
-    # 4. parser용 표면어 사전
     known_entities = build_known_entities_from_index(entity_index)
 
-    # 5. 엔티티 파싱 (표면어)
+    # 2. 엔티티 파싱 및 정규화
     parsed_entities = parse_entities(raw_text, known_entities)
-
-    # 6. 엔티티 정규화 (entity_id)
     normalized_entities = normalize_entities(parsed_entities)
 
-    if normalized_entities.get("drugs") and normalized_entities.get("foods"):
+    # 3. 상황 추론 (복합 상황 자동 인식)
+    # 3.1 병용 섭취 (Multiple Drugs or Drug+Food)
+    has_multiple_drugs = len(normalized_entities.get("drugs", [])) >= 2
+    has_drug_and_food = normalized_entities.get("drugs") and normalized_entities.get("foods")
+    
+    if has_multiple_drugs or has_drug_and_food:
         normalized_entities.setdefault("situations", []).append({
             "raw": "병용",
             "canonical": "병용 섭취",
             "entity_id": "SITUATION_CONCURRENT"
         })
 
-    # 7. 룰 매칭
+    # 3.2 공복 음주 (Fasting + Alcohol)
+    food_ids = [f['entity_id'] for f in normalized_entities.get('foods', [])]
+    situation_ids = [s['entity_id'] for s in normalized_entities.get('situations', [])]
+    
+    if 'FOOD_ALCOHOL' in food_ids and 'SITUATION_FASTING' in situation_ids:
+        normalized_entities['situations'].append({
+            "raw": "공복 음주",
+            "canonical": "공복 상태에서 음주",
+            "entity_id": "SITUATION_FASTING_ALCOHOL"
+        })
+
+    # 4. 룰 평가
     matched_rules = evaluate_rules(normalized_entities, rules)
 
-    # 8. 위험도 판단
-    result = assess_risk(normalized_entities, matched_rules)
+    # 5. 위험도 판단
+    risk_result = assess_risk(normalized_entities, matched_rules)
+    
+    # [추가] LLM 프롬프트 구성을 위해 input_text 추가
+    risk_result["input_text"] = raw_text
 
-    # 출력
+    # 6. 설명 생성 (RAG/LLM)
+    explanation = run_explanation(risk_result)
 
-    print("\n[ENTITIES]")
-    for d in normalized_entities.get("drugs", []):
-        print(f"- Drug: {d['raw']} → {d['entity_id']}")
-    for f in normalized_entities.get("foods", []):
-        print(f"- Food: {f['raw']} → {f['entity_id']}")
-    for s in normalized_entities.get("situations", []):
-        print(f"- Situation: {s['canonical']} → {s['entity_id']}")
+    return {
+        "input_text": raw_text,
+        "risk_result": risk_result,
+        "explanation": explanation,
+        "debug_info": {
+            "entities": normalized_entities,
+            "matched_rules": matched_rules
+        }
+    }
 
-    print("\n[MATCHED RULES]")
-    for r in matched_rules:
-        print(f"- {r['rule_id']} | {r['risk_level_hint']}")
-        print(f"  ↳ {r['description']}")
+def main():
+    # Windows 한글 출력 깨짐 방지
+    sys.stdout.reconfigure(encoding='utf-8')
 
-    print("\n[FINAL DECISION]")
-    print(f"Risk Level : {result['risk_level']}")
+    print("============================================================")
+    print(" AI Food-Medication Guardrail MVP Service Test")
+    print("============================================================")
+
+    for scenario in MVP_SCENARIOS:
+        print(f"\n\n[SCENARIO] {scenario['id']} - {scenario['title']}")
+        print(f"Input: {scenario['input']}")
+        print("-" * 60)
+
+        # 서비스 분석 호촐
+        result = analyze_text(scenario["input"])
+
+        # 결과 출력
+        print(f"Risk Level: {result['risk_result']['risk_level']}")
+        print("\n[EXPLANATION]")
+        print(result['explanation'])
+        
+        print("\n[DEBUG: DETAILED RESULT]")
+        # 덤프 시 한글 깨짐 방지
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        print("=" * 60)
 
 if __name__ == "__main__":
     main()

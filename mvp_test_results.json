@@ -1,0 +1,99 @@
+{
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "results": [
+    {
+      "id": "MVP_RED_01",
+      "title": "당뇨약 공복 음주",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "RED",
+      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n소주와 당뇨약을 함께 복용하면 혈당 조절에 심각한 문제가 발생할 수 있으며, 저혈당 쇼크와 같은 부작용이 일어날 위험이 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "evidence_keys": [
+        "YELLOW_DM_MEAL_SKIP",
+        "RED_DM_HYPOGLYCEMIA"
+      ]
+    },
+    {
+      "id": "MVP_RED_02",
+      "title": "진통제 중복 + 알코올",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "RED",
+      "explanation": "결론: \"**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**\"\n이유: 이부프로펜과 나프록센은 모두 비스테로이드성 항염증제(NSAID)로, 함께 복용 시 위장 출혈이나 신장 손상과 같은 심각한 부작용을 유발할 수 있습니다. 또한, 술과 함께 섭취할 경우 이들 약물의 부작용이 더욱 악화될 수 있습니다.\n대처: \"즉시 섭취를 중단하고 병원을 방문하세요.\"",
+      "evidence_keys": [
+        "RED_NSAID_BLEEDING",
+        "YELLOW_HTN_NSAID",
+        "RED_NSAID_DUPLICATION"
+      ]
+    },
+    {
+      "id": "MVP_RED_03",
+      "title": "NSAIDs 중복 복용",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "RED",
+      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n이부프로펜과 나프록센은 둘 다 비스테로이드성 항염증제(NSAIDs)로, 동시에 복용할 경우 심각한 부작용인 출혈이나 위장관 손상을 초래할 수 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "evidence_keys": [
+        "YELLOW_HTN_NSAID",
+        "RED_NSAID_DUPLICATION"
+      ]
+    },
+    {
+      "id": "MVP_YELLOW_01",
+      "title": "고혈압약 + 바나나",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "YELLOW",
+      "explanation": "**주의가 필요합니다.**  \n로사르탄과 바나나의 상호작용에 대한 명확한 정보는 없지만, 바나나에는 칼륨이 풍부하여 로사르탄과 함께 섭취 시 혈중 칼륨 수치가 상승할 수 있습니다.  \n시간 간격을 두거나 의사와 상의하세요.",
+      "evidence_keys": [
+        "YELLOW_HTN_POTASSIUM"
+      ]
+    },
+    {
+      "id": "MVP_YELLOW_02",
+      "title": "혈압약 + 감기약",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "YELLOW",
+      "explanation": "**주의가 필요합니다.**  \n고혈압약과 감기약은 상호작용이 있을 수 있어, 혈압에 영향을 줄 수 있습니다.  \n시간 간격을 두거나 의사와 상의하세요.",
+      "evidence_keys": [
+        "YELLOW_HTN_DECONGESTANT"
+      ]
+    },
+    {
+      "id": "MVP_YELLOW_03",
+      "title": "암로디핀 + 자몽",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "YELLOW",
+      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n암로디핀과 자몽주스는 상호작용하여 약물의 농도를 높이고, 혈압 강하 효과를 증가시킬 수 있어 심각한 저혈압을 유발할 수 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "evidence_keys": [
+        "YELLOW_HTN_GRAPEFRUIT"
+      ]
+    },
+    {
+      "id": "MVP_GUARD_01",
+      "title": "보호자 원격 확인 - 자몽",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "YELLOW",
+      "explanation": "**주의가 필요합니다.**  \n자몽은 특정 혈압약과 상호작용하여 약물의 효과를 증가시키거나 감소시킬 수 있습니다. 이는 부작용이나 효과의 변화를 초래할 수 있습니다.  \n시간 간격을 두거나 의사와 상의하세요.",
+      "evidence_keys": [
+        "YELLOW_HTN_GRAPEFRUIT"
+      ]
+    },
+    {
+      "id": "MVP_GUARD_02",
+      "title": "보호자 원격 확인 - 감초",
+      "passed": true,
+      "failure_reasons": [],
+      "risk_level": "YELLOW",
+      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n감초는 이뇨제의 효과를 저하시킬 수 있으며, 고혈압이나 저칼륨혈증을 유발할 수 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "evidence_keys": [
+        "YELLOW_HTN_LICORICE"
+      ]
+    }
+  ]
+}
