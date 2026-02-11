@@ -6,6 +6,7 @@ from service.entity_parser import parse_entities
 from service.entity_normalizer import normalize_entities, load_entity_index
 from src.service.risk_assessor import assess_risk
 from src.pipeline.explanation_pipeline import run_explanation
+from src.ocr.processor import extract_text_from_image
 
 # MVP 페르소나 기반 시나리오
 MVP_SCENARIOS = [
@@ -135,12 +136,31 @@ def analyze_text(raw_text):
         }
     }
 
+def analyze_image(image_path: str):
+    """
+    [향후 확장용] 이미지 파일에서 정보를 추출하여 분석 파이프라인을 실행합니다.
+    
+    1. OCR 엔진 호출 (이미지 -> 텍스트 변환)
+    2. 추출된 텍스트를 analyze_text()에 전달
+    """
+    # 1. OCR을 통한 텍스트 추출
+    extracted_text = extract_text_from_image(image_path)
+    
+    # 2. 분석 파이프라인 실행
+    if not extracted_text:
+        return {
+            "error": "OCR 인식 결과가 없거나 이미지를 처리할 수 없습니다.",
+            "status": "FAIL"
+        }
+        
+    return analyze_text(extracted_text)
+
 def main():
     # Windows 한글 출력 깨짐 방지
     sys.stdout.reconfigure(encoding='utf-8')
 
     print("============================================================")
-    print(" AI Food-Medication Guardrail MVP Service Test")
+    print(" 세이프잇 (SafeEat) - AI Food-Medication Guardrail MVP")
     print("============================================================")
 
     for scenario in MVP_SCENARIOS:

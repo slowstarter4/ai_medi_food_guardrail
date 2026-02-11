@@ -9,10 +9,10 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "RED",
-      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n소주와 당뇨약을 함께 복용하면 혈당 조절에 심각한 문제가 발생할 수 있으며, 저혈당 쇼크와 같은 부작용이 일어날 위험이 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n공복 상태에서 소주를 마시면 당뇨약이 혈당을 과도하게 낮출 위험이 있습니다. 이로 인해 의식 저하 및 낙상 위험이 발생할 수 있습니다.  \n\n즉시 섭취를 중단하고 병원을 방문하세요.",
       "evidence_keys": [
-        "YELLOW_DM_MEAL_SKIP",
-        "RED_DM_HYPOGLYCEMIA"
+        "RED_DM_HYPOGLYCEMIA",
+        "YELLOW_DM_MEAL_SKIP"
       ]
     },
     {
@@ -21,11 +21,11 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "RED",
-      "explanation": "결론: \"**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**\"\n이유: 이부프로펜과 나프록센은 모두 비스테로이드성 항염증제(NSAID)로, 함께 복용 시 위장 출혈이나 신장 손상과 같은 심각한 부작용을 유발할 수 있습니다. 또한, 술과 함께 섭취할 경우 이들 약물의 부작용이 더욱 악화될 수 있습니다.\n대처: \"즉시 섭취를 중단하고 병원을 방문하세요.\"",
+      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n이부프로펜과 나프록센을 동시에 복용하면 위장 출혈 및 신장 손상 위험이 증가하며, 이들과 알코올을 함께 섭취할 경우 위장 출혈 위험이 크게 높아집니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
       "evidence_keys": [
-        "RED_NSAID_BLEEDING",
         "YELLOW_HTN_NSAID",
-        "RED_NSAID_DUPLICATION"
+        "RED_NSAID_DUPLICATION",
+        "RED_NSAID_BLEEDING"
       ]
     },
     {
@@ -34,7 +34,7 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "RED",
-      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n이부프로펜과 나프록센은 둘 다 비스테로이드성 항염증제(NSAIDs)로, 동시에 복용할 경우 심각한 부작용인 출혈이나 위장관 손상을 초래할 수 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n이부프로펜과 나프록센은 모두 NSAIDs로, 중복 복용 시 위장 출혈 및 신장 손상 위험이 증가합니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
       "evidence_keys": [
         "YELLOW_HTN_NSAID",
         "RED_NSAID_DUPLICATION"
@@ -46,7 +46,7 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "YELLOW",
-      "explanation": "**주의가 필요합니다.**  \n로사르탄과 바나나의 상호작용에 대한 명확한 정보는 없지만, 바나나에는 칼륨이 풍부하여 로사르탄과 함께 섭취 시 혈중 칼륨 수치가 상승할 수 있습니다.  \n시간 간격을 두거나 의사와 상의하세요.",
+      "explanation": "**주의가 필요합니다.**  \nACE억제제나 ARB와 함께 고칼륨 식품인 바나나를 섭취하면 혈중 칼륨 농도를 높일 수 있습니다. 과도한 섭취는 건강에 위험을 초래할 수 있습니다.  \n시간 간격을 두거나 의사와 상의하세요.",
       "evidence_keys": [
         "YELLOW_HTN_POTASSIUM"
       ]
@@ -57,7 +57,7 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "YELLOW",
-      "explanation": "**주의가 필요합니다.**  \n고혈압약과 감기약은 상호작용이 있을 수 있어, 혈압에 영향을 줄 수 있습니다.  \n시간 간격을 두거나 의사와 상의하세요.",
+      "explanation": "**결론**: **주의가 필요합니다.**  \n**이유**: 고혈압약과 함께 충혈제거제가 포함된 감기약을 복용할 경우, 혈압이 상승할 수 있으므로 주의가 필요합니다.  \n**대처**: 감기약 복용 전, 의사와 상의하시거나 시간 간격을 두고 복용하세요.",
       "evidence_keys": [
         "YELLOW_HTN_DECONGESTANT"
       ]
@@ -68,7 +68,7 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "YELLOW",
-      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n암로디핀과 자몽주스는 상호작용하여 약물의 농도를 높이고, 혈압 강하 효과를 증가시킬 수 있어 심각한 저혈압을 유발할 수 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "explanation": "**결론**: 주의가 필요합니다.  \n**이유**: 자몽은 CYP3A4 효소를 억제하여 암로디핀의 혈중 농도를 증가시킬 수 있습니다. 이는 부작용의 위험을 높일 수 있습니다.  \n**대처**: 시간 간격을 두거나 의사와 상의하세요.",
       "evidence_keys": [
         "YELLOW_HTN_GRAPEFRUIT"
       ]
@@ -79,7 +79,7 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "YELLOW",
-      "explanation": "**주의가 필요합니다.**  \n자몽은 특정 혈압약과 상호작용하여 약물의 효과를 증가시키거나 감소시킬 수 있습니다. 이는 부작용이나 효과의 변화를 초래할 수 있습니다.  \n시간 간격을 두거나 의사와 상의하세요.",
+      "explanation": "**결론**: 주의가 필요합니다.  \n**이유**: 자몽은 혈압약 중 칼슘채널차단제의 혈중 농도를 증가시킬 수 있어 상호작용이 우려됩니다.  \n**대처**: 섭취 전 시간 간격을 두거나 의사와 상의하세요.",
       "evidence_keys": [
         "YELLOW_HTN_GRAPEFRUIT"
       ]
@@ -90,7 +90,7 @@
       "passed": true,
       "failure_reasons": [],
       "risk_level": "YELLOW",
-      "explanation": "**[경고] 매우 위험합니다! 절대 같이 드시지 마세요.**  \n감초는 이뇨제의 효과를 저하시킬 수 있으며, 고혈압이나 저칼륨혈증을 유발할 수 있습니다.  \n즉시 섭취를 중단하고 병원을 방문하세요.",
+      "explanation": "**결론**: **주의가 필요합니다.**  \n**이유**: 감초는 나트륨 저류를 유발하여 이뇨제의 효과를 감소시키고 혈압을 상승시킬 수 있습니다.  \n**대처**: 시간 간격을 두거나 의사와 상의하세요.",
       "evidence_keys": [
         "YELLOW_HTN_LICORICE"
       ]
