@@ -79,63 +79,74 @@
 2.  **공공데이터포털 API Key**: 식약처 'e약은요' 의약품 정보 조회용
 
 ### 환경 변수 설정
-프로젝트 루트 디렉토리에 `.env` 파일을 생성하고 다음과 같이 설정합니다.
+`backend/` 디렉토리에 `.env` 파일을 생성하고 다음과 같이 설정합니다.
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
 DATA_GO_KR_API_KEY=your_public_data_api_key_here
 ```
 
-### 라이브러리 설치
+### 라이브러리 및 패키지 설치
+
+**Backend (Python)**
 ```bash
+cd backend
 pip install -r requirements.txt
+```
+
+**Frontend (React/Vite)**
+```bash
+cd frontend
+npm install
 ```
 
 ---
 
 ## 시스템 아키텍처
 
-시스템은 **Hybrid RAG(Retrieval-Augmented Generation)** 구조를 따릅니다.
+시스템은 **FastAPI 백엔드**와 **React 프론트엔드**로 구성된 **Hybrid RAG** 구조를 따릅니다.
 
-1.  **Entity Parsing**: 사용자의 질문에서 약물, 식품, 상황 엔티티를 추출.
-2.  **Risk Assessment**: 추출된 엔티티를 바탕으로 내부 룰셋 매칭.
-3.  **Knowledge Retrieval**: 
-    - 내부 DB(`evidence_db.json`) 검색.
-    - 검색 실패 시 **식약처 API**를 통해 외부 지식 획득.
-4.  **Explanation Generation**: 수집된 근거(Evidence)와 위험 등급을 LLM에 전달하여 사용자 맞춤형 설명 생성.
+1.  **Frontend (React)**: 피그마 디자인 기반 UI. 카메라 스캔 및 수동 입력을 통해 정보를 수집하고 백엔드 API 호출.
+2.  **Backend (FastAPI)**: 
+    - **Entity Parsing**: 약물, 식품, 상황 엔티티 추출.
+    - **Risk Assessment**: 내부 룰셋 매칭 및 위험도 판단.
+    - **RAG Pipeline**: 내부 DB 및 식약처 API를 통해 근거 수집.
+    - **LLM Explanation**: `gpt-4o-mini`를 사용하여 사용자 맞춤형 설명 생성 (LangGraph 활용).
 
 ---
 
 ## 기술 스택
 
-- **Language**: Python 3.11+
+- **Frontend**: React, Vite, Tailwind CSS, Lucide React, Framer Motion
+- **Backend**: Python 3.11+, FastAPI, Uvicorn, LangChain, LangGraph
 - **LLM**: OpenAI GPT-4o-mini
 - **External API**: 식약처 의약품개요정보(e약은요) 서비스
-- **Data Conversion**: Rule-based matching, JSON/XML parsing
 
 ---
 
 ## 실행 방법
 
-### MVP 시나리오 테스트
-정의된 8가지 시나리오에 대한 통합 테스트를 수행합니다. (LLM 설명 포함)
+### 1. 백엔드 서버 실행
 ```bash
-python mvp_test.py
+cd backend
+python app.py
 ```
+*서버는 기본적으로 `http://localhost:8000`에서 실행됩니다.*
 
-### API 연동 테스트
-새로운 약물(예: 타이레놀)에 대한 외부 API 연동 기능을 테스트합니다.
+### 2. 프론트엔드 개발 서버 실행
 ```bash
-python test_api_rag.py
+cd frontend
+npm run dev
 ```
+*브라우저에서 안내되는 주소(보통 `http://localhost:5173`)로 접속하세요.*
 
 ---
 
 ## 로드맵 (Roadmap)
 
-### [Phase 2] OCR 고도화
-- **정밀 OCR 연동**: Google Vision API 또는 CLOVA OCR 연동을 통한 처방전/약봉투 인식률 제고.
-- **이미지 전처리**: 노이즈 제거 및 문서 레이아웃 분석 기술 도입.
+### [Phase 2] OCR 및 분석 고도화
+- **정밀 OCR 연동**: Google Vision API 또는 CLOVA OCR 연동을 통한 실시간 스캔 정확도 제고.
+- **분석 결과 시각화**: 바운딩 박스를 활용한 성분별 위험도 하이라이팅 기능 강화.
 - **다양한 약물 검색**: 'e약은요' API 외에 전문의약품용 DUR API 추가 연동.
 
 ---
