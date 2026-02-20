@@ -27,7 +27,11 @@
     "두통약": "DRUG_PAINKILLER_GENERAL",
     "베아제": "DRUG_DIGESTIVE_GENERAL",
     "훼스탈": "DRUG_DIGESTIVE_GENERAL",
-    "소화제": "DRUG_DIGESTIVE_GENERAL"
+    "소화제": "DRUG_DIGESTIVE_GENERAL",
+    "나프록센나트륨": "DRUG_NAPROXEN",
+    "탁센": "DRUG_NAPROXEN",
+    "애드빌": "DRUG_IBUPROFEN",
+    "부루펜": "DRUG_IBUPROFEN"
   },
   "foods": {
     "바나나": "FOOD_BANANA",

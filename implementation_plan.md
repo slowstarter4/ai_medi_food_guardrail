@@ -54,3 +54,42 @@
 1. **Log Logger 구현**: `analyze_text()` 호출 시 결과를 자동으로 JSON 저장하는 유틸리티 작성.
 2. **Report Generator 구현**: 저장된 JSON 파일들을 읽어 LLM 요약을 만드는 파이프라인 구축.
 3. **API 엔드포인트 마련**: 프론트엔드에서 리포트를 요청하면 결과값을 반환하는 인터페이스 설계.
+
+---
+
+# 구현 계획 - 네이버 CLOVA OCR 통합
+
+이 계획은 식품 및 약품 라벨에서 자동으로 텍스트를 추출하기 위해 네이버 클라우드 CLOVA OCR을 세이프잇(SafeEat) 애플리케이션에 통합하는 상세 과정을 담고 있습니다.
+
+## 사용자 검토 필요 사항
+
+> [!IMPORTANT]
+> `clover_ocr_test.py`에 포함된 CLOVA OCR API 설정 정보(URL, Secret Key)를 보안을 위해 `.env` 파일로 이동하여 관리할 예정입니다.
+> `medi_list.csv` 파일이 확인되면 해당 파일의 약물 키워드를 메인 `entity_index.json`에 통합하여 분석 정확도를 높일 계획입니다.
+
+## 제안된 변경 사항
+
+### 백엔드 (Backend)
+#### [수정] [.env](file:///c:/Users/kwing/Downloads/Github/ai_medi_food_guardrail/backend/.env)
+- `CLOVA_OCR_API_URL`과 `CLOVA_OCR_SECRET` 항목 추가.
+
+#### [수정] [processor.py](file:///c:/Users/kwing/Downloads/Github/ai_medi_food_guardrail/backend/src/ocr/processor.py)
+- 기존 가상(Mock) 추출 로직을 실제 CLOVA OCR API 호출 로직으로 교체.
+- API 호출 실패 및 이미지 형식 오류에 대한 예외 처리 구현.
+
+#### [수정] [entity_index.json](file:///c:/Users/kwing/Downloads/Github/ai_medi_food_guardrail/backend/data/normalization/entity_index.json)
+- OCR로 추출된 텍스트가 정확히 파싱될 수 있도록 관련 약물 키워드 보강 및 통합.
+
+### 프론트엔드 (Frontend)
+#### [수정] [ScanPage.tsx](file:///c:/Users/kwing/Downloads/Github/ai_medi_food_guardrail/frontend/src/app/pages/ScanPage.tsx)
+- 백엔드에서 글자 좌표(Bounding Box) 데이터를 제공할 경우, 이를 화면에 실제 위치에 맞게 표시할 수 있도록 구조 준비.
+
+## 검증 계획
+
+### 자동화 테스트
+- 샘플 이미지를 사용하여 `extract_text_from_image` 함수가 텍스트를 정확히 반환하는지 확인하는 테스트 스크립트 실행.
+
+### 수동 검증
+1. 프론트엔드에서 "카메라 스캔" 기능을 실행합니다.
+2. 약봉투나 식품 성분표 사진을 업로드하거나 촬영합니다.
+3. 성분이 올바르게 인식되고 위험도 분석 결과가 정상적으로 출력되는지 확인합니다.

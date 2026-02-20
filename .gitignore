@@ -1,4 +1,22 @@
 .env
 .vscode
-__pycache__
-.pytest_cache
+__pycache__/
+.pytest_cache/
+
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Node dependencies
+node_modules/
+dist/
+.eslintcache
+
+# Logs
+backend/data/logs/*.json
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
