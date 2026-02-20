@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BottomNav } from "../components/BottomNav";
 import { MedicationTag } from "../components/MedicationTag";
-import { Plus, Upload, Calendar } from "lucide-react";
+import { Plus, Upload, Calendar, CheckCircle } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { toast } from "sonner";
@@ -13,8 +13,9 @@ interface Medication {
 }
 
 const commonConditions = [
+  { id: "elderly", label: "고령" },
   { id: "hypertension", label: "고혈압" },
-  { id: "diabetes", label: "당뇨병" },
+  { id: "diabetes", label: "당뇨" },
   { id: "hyperlipidemia", label: "고지혈증" },
   { id: "arthritis", label: "관절염" },
   { id: "asthma", label: "천식" },
@@ -34,7 +35,19 @@ export function ProfilePage() {
 
     const savedConditions = localStorage.getItem("conditions");
     if (savedConditions) {
-      setSelectedConditions(JSON.parse(savedConditions));
+      try {
+        const parsed = JSON.parse(savedConditions);
+        // 유효한 ID만 필터링 (예전에 체크했던 잘못된 데이터 제거)
+        const validIds = parsed.filter((id: string) =>
+          commonConditions.some(c => c.id === id)
+        );
+        setSelectedConditions(validIds);
+        if (validIds.length !== parsed.length) {
+          localStorage.setItem("conditions", JSON.stringify(validIds));
+        }
+      } catch (e) {
+        console.error("Failed to parse conditions", e);
+      }
     }
   }, []);
 
@@ -123,10 +136,54 @@ export function ProfilePage() {
           </Button>
 
           <div className="flex gap-2 mt-3">
+            <input
+              type="file"
+              id="prescription-upload"
+              accept="image/*"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                toast.promise(
+                  fetch("http://localhost:8000/api/ocr/prescription", {
+                    method: "POST",
+                    body: formData,
+                  }).then(async (res) => {
+                    if (!res.ok) throw new Error("분석 실패");
+                    const result = await res.json();
+                    if (result.drugs && result.drugs.length > 0) {
+                      const currentMeds = [...medications];
+                      result.drugs.forEach((name: string) => {
+                        if (!currentMeds.find(m => m.name === name)) {
+                          currentMeds.push({
+                            id: Date.now().toString() + Math.random(),
+                            name: name,
+                            dosage: "처방전 분석됨"
+                          });
+                        }
+                      });
+                      setMedications(currentMeds);
+                      localStorage.setItem("medications", JSON.stringify(currentMeds));
+                      return `${result.drugs.length}개의 약물이 인식되었습니다.`;
+                    }
+                    throw new Error("인식된 약물이 없습니다.");
+                  }),
+                  {
+                    loading: "처방전을 분석 중입니다...",
+                    success: (msg) => msg as string,
+                    error: (err) => err.message,
+                  }
+                );
+              }}
+            />
             <Button
               variant="outline"
               className="flex-1"
-              onClick={() => toast.info("처방전 업로드 기능은 준비 중입니다")}
+              onClick={() => document.getElementById("prescription-upload")?.click()}
             >
               <Upload className="w-4 h-4 mr-2" />
               처방전 업로드
@@ -171,22 +228,33 @@ export function ProfilePage() {
           </p>
 
           <div className="space-y-2">
-            {commonConditions.map((condition) => (
-              <label
-                key={condition.id}
-                className="flex items-center gap-3 p-3 rounded-lg border-2 border-gray-200 hover:border-[#009688] cursor-pointer transition"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedConditions.includes(condition.id)}
-                  onChange={() => toggleCondition(condition.id)}
-                  className="w-5 h-5 text-[#009688] rounded focus:ring-[#009688]"
-                />
-                <span className="font-medium text-[#263238]">
-                  {condition.label}
-                </span>
-              </label>
-            ))}
+            {commonConditions.map((condition) => {
+              const isSelected = selectedConditions.includes(condition.id);
+              return (
+                <label
+                  key={condition.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg border-2 transition cursor-pointer ${isSelected
+                    ? "border-[#009688] bg-[#009688]/5 shadow-sm"
+                    : "border-gray-200 hover:border-[#009688]/50"
+                    }`}
+                >
+                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${isSelected ? "bg-[#009688] border-[#009688]" : "border-gray-300"
+                    }`}>
+                    {isSelected && <CheckCircle className="w-3.5 h-3.5 text-white" />}
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => toggleCondition(condition.id)}
+                    className="hidden"
+                  />
+                  <span className={`font-medium transition ${isSelected ? "text-[#009688]" : "text-[#263238]"
+                    }`}>
+                    {condition.label}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         </div>
 

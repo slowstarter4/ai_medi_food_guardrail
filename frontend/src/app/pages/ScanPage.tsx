@@ -7,6 +7,15 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { motion } from "motion/react";
 
+const commonConditions = [
+  { id: "elderly", label: "고령" },
+  { id: "hypertension", label: "고혈압" },
+  { id: "diabetes", label: "당뇨" },
+  { id: "hyperlipidemia", label: "고지혈증" },
+  { id: "arthritis", label: "관절염" },
+  { id: "asthma", label: "천식" },
+];
+
 interface BoundingBox {
   id: string;
   x: number;
@@ -45,6 +54,24 @@ export function ScanPage() {
     const formData = new FormData();
     formData.append("file", file);
 
+    // 복약 정보 및 질환 정보
+    const savedMeds = localStorage.getItem("medications");
+    const savedConditions = localStorage.getItem("conditions");
+    const conditionLabels = savedConditions
+      ? JSON.parse(savedConditions).map((id: string) => {
+        const found = commonConditions.find(c => c.id === id);
+        return found ? found.label : id;
+      })
+      : [];
+
+    if (savedMeds) {
+      const medNames = JSON.parse(savedMeds).map((m: any) => m.name);
+      formData.append("medications", JSON.stringify(medNames));
+    }
+    if (conditionLabels.length > 0) {
+      formData.append("conditions", JSON.stringify(conditionLabels));
+    }
+
     try {
       const response = await fetch("http://localhost:8000/api/analyze/image", {
         method: "POST",
@@ -55,12 +82,21 @@ export function ScanPage() {
 
       const result = await response.json();
 
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
       // 결과 데이터 파싱 (백엔드 메인 파이프라인 결과 구조에 맞춤)
       const entities = result.debug_info?.entities || {};
       const allIngredients = [
         ...(entities.drugs?.map((d: any) => d.raw) || []),
         ...(entities.foods?.map((f: any) => f.raw) || [])
       ];
+
+      if (allIngredients.length === 0) {
+        alert("이미지에서 인식된 성분이 없습니다. 다시 촬영하거나 수동으로 입력해 주세요.");
+        return;
+      }
 
       // 바운딩 박스 시뮬레이션 (실제 OCR 좌표가 없는 경우 UI를 위해 목업 생성)
       const mockBoxes: BoundingBox[] = allIngredients.map((text, i) => ({
@@ -77,28 +113,45 @@ export function ScanPage() {
       setBoundingBoxes(mockBoxes);
       setDetectedIngredients(allIngredients);
       setLastAnalysisResult(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error analyzing image:", error);
-      alert("이미지 분석 중 오류가 발생했습니다.");
+      alert(error.message || "이미지 분석 중 오류가 발생했습니다.");
     } finally {
       setIsScanning(false);
     }
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const analyzeIngredients = async () => {
-    if (detectedIngredients.length === 0 && !manualSearch) {
+    if (isLoading || (detectedIngredients.length === 0 && !manualSearch)) {
       return;
     }
 
+    setIsLoading(true);
     let resultToPass = lastAnalysisResult;
 
     // 수동 검색이고 직전 이미지 분석 결과가 없는 경우 텍스트 분석 API 호출
     if (scanMode === "manual" && manualSearch && !resultToPass) {
       try {
+        const savedMeds = localStorage.getItem("medications");
+        const savedConditions = localStorage.getItem("conditions");
+        const medNames = savedMeds ? JSON.parse(savedMeds).map((m: any) => m.name) : [];
+        const conditionLabels = savedConditions
+          ? JSON.parse(savedConditions).map((id: string) => {
+            const found = commonConditions.find(c => c.id === id);
+            return found ? found.label : id;
+          })
+          : [];
+
         const response = await fetch("http://localhost:8000/api/analyze/text", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: manualSearch }),
+          body: JSON.stringify({
+            text: manualSearch,
+            medications: medNames,
+            conditions: conditionLabels
+          }),
         });
         if (response.ok) {
           resultToPass = await response.json();
@@ -121,6 +174,7 @@ export function ScanPage() {
     recentScans.unshift(scanData);
     localStorage.setItem("recentScans", JSON.stringify(recentScans.slice(0, 10)));
 
+    setIsLoading(false);
     navigate("/result", {
       state: {
         scanData,
@@ -167,12 +221,12 @@ export function ScanPage() {
         {scanMode === "camera" && (
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4">
             {/* Camera Viewfinder Simulation */}
-            <div className="relative bg-gray-900 aspect-[3/4] flex items-center justify-center">
+            <div className="relative bg-gray-900 h-[280px] flex items-center justify-center">
               {!isScanning ? (
-                <div className="text-center text-white p-8">
-                  <Camera className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-lg mb-2">성분표를 카메라에 비추세요</p>
-                  <p className="text-sm opacity-75">
+                <div className="text-center text-white p-6">
+                  <Camera className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-base mb-1">성분표를 카메라에 비추세요</p>
+                  <p className="text-xs opacity-75">
                     실시간으로 성분을 인식합니다
                   </p>
                 </div>
@@ -340,10 +394,11 @@ export function ScanPage() {
           >
             <Button
               onClick={analyzeIngredients}
+              disabled={isLoading}
               className="w-full bg-[#009688] hover:bg-[#00796B] text-white py-4 text-lg shadow-lg mb-4"
             >
-              위험도 분석하기
-              <ChevronRight className="w-5 h-5 ml-2" />
+              {isLoading ? "분석 중..." : "위험도 분석하기"}
+              {!isLoading && <ChevronRight className="w-5 h-5 ml-2" />}
             </Button>
           </motion.div>
         )}

@@ -1,4 +1,5 @@
 import sys
+import logging
 import json
 from src.rules.loader import load_ruleset
 from src.rules.evaluator import evaluate_rules
@@ -77,7 +78,7 @@ def build_known_entities_from_index(entity_index):
     """parser용 표면어 사전 생성"""
     return {entity_type: list(entity_index[entity_type].keys()) for entity_type in entity_index}
 
-def analyze_text(raw_text):
+def analyze_text(raw_text, user_meds=None, user_conditions=None):
     """
     MVP 서비스 파이프라인: Text -> Parsing -> Risk Assessment -> Explanation
     """
@@ -90,6 +91,43 @@ def analyze_text(raw_text):
     # 2. 엔티티 파싱 및 정규화
     parsed_entities = parse_entities(raw_text, known_entities)
     normalized_entities = normalize_entities(parsed_entities)
+    
+    # 2.1 사용자 약물 주입 (Personalized Context)
+    import logging
+    if user_meds:
+        for med in user_meds:
+            med_parsed = parse_entities(med, known_entities)
+            med_norm = normalize_entities(med_parsed)
+            
+            # 매칭된 약물이 있으면 추가
+            if med_norm.get("drugs"):
+                existing_med_ids = [d['entity_id'] for d in normalized_entities.get("drugs", [])]
+                for d in med_norm.get("drugs", []):
+                    if d['entity_id'] not in existing_med_ids:
+                        normalized_entities.setdefault("drugs", []).append(d)
+            else:
+                # 매칭되지 않더라도 LLM이 인지할 수 있도록 raw 데이터로 추가 (entity_id는 UNKNOWN)
+                normalized_entities.setdefault("drugs", []).append({
+                    "raw": med,
+                    "entity_id": "DRUG_UNKNOWN"
+                })
+
+    # 2.2 사용자 질환/조건 주입
+    # 역방향 매핑 (라벨 -> ID) 추가하여 페르소나 매칭 보장
+    label_to_id = { "고령": "elderly", "고혈압": "hypertension", "당뇨": "diabetes", "고지혈증": "hyperlipidemia", "관절염": "arthritis", "천식": "asthma" }
+    
+    if user_conditions:
+        for cond in user_conditions:
+            cid = label_to_id.get(cond, cond)
+            label = cond if cond in label_to_id else ([v for k,v in label_to_id.items() if k == cond] or [cond])[0]
+            # 이미 한글 라벨인 경우와 ID인 경우 모두 대응
+            final_label = cond if cond in label_to_id else ([k for k,v in label_to_id.items() if v == cond] or [cond])[0]
+            
+            normalized_entities.setdefault("situations", []).append({
+                "raw": final_label,
+                "canonical": final_label,
+                "entity_id": f"CONDITION_{cid}"
+            })
 
     # 3. 상황 추론 (복합 상황 자동 인식)
     # 3.1 병용 섭취 (Multiple Drugs or Drug+Food)
@@ -119,6 +157,7 @@ def analyze_text(raw_text):
 
     # 5. 위험도 판단
     risk_result = assess_risk(normalized_entities, matched_rules)
+    risk_result["user_conditions"] = user_conditions # LLM 전달용
     
     # [추가] LLM 프롬프트 구성을 위해 input_text 추가
     risk_result["input_text"] = raw_text
@@ -136,24 +175,21 @@ def analyze_text(raw_text):
         }
     }
 
-def analyze_image(image_path: str):
+def analyze_image(image_path: str, user_meds=None, user_conditions=None):
     """
-    [향후 확장용] 이미지 파일에서 정보를 추출하여 분석 파이프라인을 실행합니다.
-    
-    1. OCR 엔진 호출 (이미지 -> 텍스트 변환)
-    2. 추출된 텍스트를 analyze_text()에 전달
+    이미지 분석 파이프라인: Image -> OCR -> analyze_text
     """
     # 1. OCR을 통한 텍스트 추출
-    extracted_text = extract_text_from_image(image_path)
+    raw_text = extract_text_from_image(image_path)
     
     # 2. 분석 파이프라인 실행
-    if not extracted_text:
+    if not raw_text:
         return {
             "error": "OCR 인식 결과가 없거나 이미지를 처리할 수 없습니다.",
             "status": "FAIL"
         }
         
-    return analyze_text(extracted_text)
+    return analyze_text(raw_text, user_meds, user_conditions)
 
 def main():
     # Windows 한글 출력 깨짐 방지

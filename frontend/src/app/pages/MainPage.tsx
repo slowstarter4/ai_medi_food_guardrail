@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { BottomNav } from "../components/BottomNav";
 import { MedicationTag } from "../components/MedicationTag";
 import { WelcomeScreen } from "../components/WelcomeScreen";
+import { SplashScreen } from "../components/SplashScreen";
 import { Bell, Camera, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -15,18 +16,21 @@ interface ScanResult {
   id: string;
   foodName: string;
   riskLevel: "safe" | "warning" | "danger";
-  message: string;
-  timestamp: Date;
+  date: string;
+  explanation?: string;
 }
 
 export function MainPage() {
   const navigate = useNavigate();
   const [medications, setMedications] = useState<Medication[]>([]);
   const [recentScans, setRecentScans] = useState<ScanResult[]>([]);
-  const [nextDoseTime, setNextDoseTime] = useState<string>("오전 9:00");
+  const [nextDoseTime, setNextDoseTime] = useState<string>("오후 9:00");
   const [showWelcome, setShowWelcome] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    // Splash screen timer removed per user request
+
     // Check if first visit
     const hasVisited = localStorage.getItem("hasVisited");
     if (!hasVisited) {
@@ -38,36 +42,16 @@ export function MainPage() {
     if (savedMeds) {
       setMedications(JSON.parse(savedMeds));
     } else {
-      // Demo data
-      setMedications([
-        { id: "1", name: "로사르탄", dosage: "50mg, 1일 1회" },
-        { id: "2", name: "메트포르민", dosage: "500mg, 1일 2회" },
-      ]);
+      setMedications([]);
     }
 
-    // Load recent scans from localStorage
-    const savedScans = localStorage.getItem("recentScans");
-    if (savedScans) {
-      const scans = JSON.parse(savedScans);
-      setRecentScans(scans.map((s: any) => ({ ...s, timestamp: new Date(s.timestamp) })));
+    // Load recent scans from scan_history (consistent with ResultPage)
+    const savedHistory = localStorage.getItem("scan_history");
+    if (savedHistory) {
+      const history = JSON.parse(savedHistory);
+      setRecentScans(history);
     } else {
-      // Demo data
-      setRecentScans([
-        {
-          id: "1",
-          foodName: "자몽 주스",
-          riskLevel: "danger",
-          message: "섭취 중단 권고",
-          timestamp: new Date(Date.now() - 3600000),
-        },
-        {
-          id: "2",
-          foodName: "녹차",
-          riskLevel: "warning",
-          message: "2시간 간격 권장",
-          timestamp: new Date(Date.now() - 7200000),
-        },
-      ]);
+      setRecentScans([]);
     }
   }, []);
 
@@ -87,6 +71,10 @@ export function MainPage() {
     localStorage.setItem("hasVisited", "true");
     setShowWelcome(false);
   };
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
 
   if (showWelcome) {
     return <WelcomeScreen onComplete={handleWelcomeComplete} />;
@@ -148,19 +136,25 @@ export function MainPage() {
                 <div
                   key={scan.id}
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition"
-                  onClick={() => navigate("/result", { state: { scan } })}
+                  onClick={() => navigate("/result", {
+                    state: {
+                      scanData: { foodName: scan.foodName, riskLevel: scan.riskLevel },
+                      backendResult: { explanation: scan.explanation }
+                    }
+                  })}
                 >
                   <div className="flex items-center gap-3">
                     {getRiskIcon(scan.riskLevel)}
                     <div>
                       <p className="font-medium text-[#263238]">{scan.foodName}</p>
                       <p className={`text-sm ${getRiskColor(scan.riskLevel)}`}>
-                        {scan.message}
+                        {scan.riskLevel === "safe" ? "안전하게 섭취 가능" :
+                          scan.riskLevel === "warning" ? "주의하여 섭취" : "섭취 중단 권고"}
                       </p>
                     </div>
                   </div>
                   <p className="text-xs text-gray-400">
-                    {Math.floor((Date.now() - scan.timestamp.getTime()) / 60000)}분 전
+                    {scan.date.split(",")[0]}
                   </p>
                 </div>
               ))}

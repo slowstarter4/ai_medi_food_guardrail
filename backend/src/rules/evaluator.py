@@ -32,9 +32,21 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
         # 룰이 Drugs도 Foods도 정의하지 않은 경우 (SITUATION ONLY?) -> 일단 허용하거나 pass
         # 하지만 보통 최소한 하나는 있음. 둘 다 비어있으면 매칭된 것으로 간주(Precondition이 없는 셈)
         
-        # 2. 상황 조건 체크
+        # 2. 상황 조건 및 페르소나 체크
+        # 2.1 페르소나 체크 (Persona 필드가 있으면 사용자 상태와 대조)
+        rule_persona = rule.get("persona")
+        if rule_persona:
+            # entities["situations"]에서 CONDITION_... 들의 raw 값 추출
+            user_specs = {
+                v["raw"] for v in entities.get("situations", []) 
+                if v.get("entity_id", "").startswith("CONDITION_")
+            }
+            persona_parts = set(rule_persona.split("_"))
+            # 페르소나 구성 요소 중 하나라도 사용자 상태와 일치하면 매칭 (더 유연한 매칭)
+            if not (persona_parts & user_specs):
+                continue
 
-        # 2️⃣ 상황 조건은 보조
+        # 2.2 개별 상황 조건 체크 (기존 로직)
         if rule_situations and not (rule_situations & situation_ids):
             continue
 

@@ -1,4 +1,5 @@
 from typing import TypedDict, List, Dict, Annotated
+import logging
 from langgraph.graph import StateGraph, END
 from src.rag.retriever import retrieve_evidence
 from src.rag.explainer import generate_explanation
@@ -38,12 +39,8 @@ def explain_node(state: PipelineState) -> PipelineState:
     risk_result = state["risk_result"]
     evidences = state["evidences"]
     
-    explanation_input = {
-        "input_text": risk_result.get("input_text", ""),
-        "risk_level": risk_result.get("risk_level", "UNKNOWN")
-    }
-    
-    explanation = generate_explanation(explanation_input, evidences)
+    # risk_result 전체를 넘겨야 모든 엔티티(약물, 식품, 질환) 정보를 인지함
+    explanation = generate_explanation(risk_result, evidences)
     return {"explanation": explanation}
 
 # 그래프 구축

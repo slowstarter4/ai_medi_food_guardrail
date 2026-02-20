@@ -6,6 +6,7 @@ import { ArrowLeft, Share2, Heart, ExternalLink } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useState } from "react";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 interface AlternativeFood {
   name: string;
@@ -19,22 +20,34 @@ export function ResultPage() {
   const { scanData, boundingBoxes, backendResult } = location.state || {};
   const [showAlternatives, setShowAlternatives] = useState(false);
 
+  // Helper for Object.entries-like mapping in TS if needed, or just use plain objects
+  function items<T>(obj: T): [keyof T, T[keyof T]][] {
+    return Object.entries(obj as any) as any;
+  }
+
   // 백엔드 설명을 섹션별로 파싱하는 함수
   const parseExplanation = (text: string) => {
     if (!text) return null;
+    console.log("Parsing explanation text:", text);
     const sections: Record<string, string> = {};
     const patterns = {
-      conclusion: /■ \*\*\[결론\]\*\*: (.*?)(?=■|$)/s,
-      reason: /■ \*\*\[이유\]\*\*: (.*?)(?=■|$)/s,
-      action: /■ \*\*\[대처\]\*\*: (.*?)(?=■|$)/s,
-      source: /■ \*\*\[출처\]\*\*: (.*?)(?=■|$)/s,
+      conclusion: /■\s*\*?\*?\[결론\]\*?\*?:\s*(.*?)(?=\s*■|$)/s,
+      reason: /■\s*\*?\*?\[이유\]\*?\*?:\s*(.*?)(?=\s*■|$)/s,
+      action: /■\s*\*?\*?\[대처\]\*?\*?:\s*(.*?)(?=\s*■|$)/s,
+      alternative: /■\s*\*?\*?\[대안\]\*?\*?:\s*(.*?)(?=\s*■|$)/s,
+      source: /■\s*\*?\*?\[출처\]\*?\*?:\s*(.*?)(?=\s*■|$)/s,
     };
 
     items(patterns).forEach(([key, pattern]) => {
       const match = text.match(pattern);
-      if (match) sections[key] = match[1].trim();
+      if (match) {
+        sections[key] = match[1].trim();
+        console.log(`Matched ${key}:`, sections[key]);
+      }
     });
-    return sections;
+
+    // 하나라도 매칭되면 객체 반환, 아니면 null (fallback 유도)
+    return Object.keys(sections).length > 0 ? sections : null;
   };
 
   const explanationSections = parseExplanation(backendResult?.explanation);
@@ -119,15 +132,23 @@ export function ResultPage() {
 
   const riskInfo = getRiskInfo();
 
-  // Helper for Object.entries-like mapping in TS if needed, or just use plain objects
-  function items<T>(obj: T): [keyof T, T[keyof T]][] {
-    return Object.entries(obj as any) as any;
-  }
+  const recordIntake = () => {
+    const history = JSON.parse(localStorage.getItem("scan_history") || "[]");
+    const newEntry = {
+      id: Date.now().toString(),
+      date: new Date().toLocaleString(),
+      foodName: data.foodName,
+      riskLevel: riskLevel,
+      explanation: backendResult?.explanation
+    };
+    localStorage.setItem("scan_history", JSON.stringify([newEntry, ...history]));
+    toast.success("섭취 정보가 기록되었습니다.");
+  };
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
       {/* Header */}
-      <div className="bg-[#009688] text-white p-6 pb-8">
+      <div className="bg-[#009688] text-white p-6 pb-6">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 mb-4 hover:opacity-80"
@@ -139,7 +160,7 @@ export function ResultPage() {
         <p className="text-white/90 mt-1">위험도 분석 결과</p>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 -mt-4">
+      <div className="max-w-2xl mx-auto px-4 mt-4">
         {/* Main Safety Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -224,39 +245,50 @@ export function ResultPage() {
                   SafeEat 맞춤 추천
                 </span>
               </div>
-              <p className="text-sm text-gray-600 mb-4">
-                {data.mainRisk?.ingredient || "위험 성분"}이 없는 안전한 대체품을
-                추천합니다
-              </p>
 
-              <div className="space-y-3">
-                {alternatives.map((alt, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex gap-3 p-3 bg-[#4CAF50]/5 border border-[#4CAF50]/20 rounded-lg hover:bg-[#4CAF50]/10 transition cursor-pointer"
-                    onClick={() => {
-                      alert(`${alt.name}에 대한 상세 정보`);
-                    }}
-                  >
-                    <img
-                      src={alt.imageUrl}
-                      alt={alt.name}
-                      className="w-20 h-20 object-cover rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-bold text-[#263238] mb-1">
-                        {alt.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 leading-relaxed">
-                        {alt.reason}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              {explanationSections?.alternative ? (
+                <div className="p-4 bg-[#009688]/5 border border-[#009688]/20 rounded-lg">
+                  <p className="text-[#263238] leading-relaxed">
+                    {explanationSections.alternative}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-600 mb-4">
+                    {data.mainRisk?.ingredient || "위험 성분"}이 없는 안전한 대체품을
+                    추천합니다
+                  </p>
+
+                  <div className="space-y-3">
+                    {alternatives.map((alt, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex gap-3 p-3 bg-[#4CAF50]/5 border border-[#4CAF50]/20 rounded-lg hover:bg-[#4CAF50]/10 transition cursor-pointer"
+                        onClick={() => {
+                          alert(`${alt.name}에 대한 상세 정보`);
+                        }}
+                      >
+                        <img
+                          src={alt.imageUrl}
+                          alt={alt.name}
+                          className="w-20 h-20 object-cover rounded-lg"
+                        />
+                        <div className="flex-1">
+                          <h3 className="font-bold text-[#263238] mb-1">
+                            {alt.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 leading-relaxed">
+                            {alt.reason}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         )}
@@ -274,13 +306,20 @@ export function ResultPage() {
           </div>
         )}
 
-        {/* Back to Home */}
-        <Button
-          onClick={() => navigate("/")}
-          className="w-full bg-[#009688] hover:bg-[#00796B] text-white mb-4"
-        >
-          홈으로 돌아가기
-        </Button>
+        <div className="flex gap-3 mb-4">
+          <Button
+            onClick={() => recordIntake()}
+            className="flex-1 bg-white border-[#009688] text-[#009688] hover:bg-[#E0F2F1] border"
+          >
+            기록으로 남기기
+          </Button>
+          <Button
+            onClick={() => navigate("/")}
+            className="flex-1 bg-[#009688] hover:bg-[#00796B] text-white"
+          >
+            홈으로 돌아가기
+          </Button>
+        </div>
       </div>
 
       <BottomNav />

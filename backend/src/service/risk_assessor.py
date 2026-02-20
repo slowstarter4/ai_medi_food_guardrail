@@ -4,7 +4,7 @@ from pathlib import Path
 PRIORITY = {
     "RED": 3,
     "YELLOW": 2,
-    "LOW": 1
+    "GREEN": 1
 }
 
 EVIDENCE_DB_PATH = Path("src/evidence/evidence_db.json")
@@ -13,13 +13,13 @@ with open(EVIDENCE_DB_PATH, "r", encoding="utf-8") as f:
 
 def assess_risk(normalized_entities, matched_rules):
     if not matched_rules:
-        final_risk = "LOW"
+        final_risk = "GREEN"
         top_rule = None
     else:
-        # 룰 매칭 우선순위 규칙 적용:
-        # 1. Level (1 > 2 > 3) - 오름차순
-        # 2. Risk Level (RED > YELLOW > LOW) - 내림차순 (PRIORITY 점수 이용)
-        # 3. Rule ID (알파벳 오름차순) - 안정성 확보
+        # 데이터 분석팀 요청 우선순위 적용:
+        # 1차: 룰의 정밀도(Level) - 오름차순 (1이 가장 높음)
+        # 2차: 위험 등급(Risk Level) - 내림차순 (RED가 가장 높음)
+        # 3차: Rule ID - 오름차순 (안정성 확보)
         
         sorted_rules = sorted(
             matched_rules,

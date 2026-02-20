@@ -156,9 +156,8 @@ export function SettingsPage() {
                     {item.q}
                   </span>
                   <ChevronRight
-                    className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform ${
-                      expandedFaq === index ? "rotate-90" : ""
-                    }`}
+                    className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform ${expandedFaq === index ? "rotate-90" : ""
+                      }`}
                   />
                 </button>
                 {expandedFaq === index && (
@@ -180,20 +179,33 @@ export function SettingsPage() {
             앱 정보
           </h2>
 
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between">
+          <div className="space-y-3">
+            <div className="flex justify-between text-sm">
               <span className="text-gray-600">버전</span>
               <span className="font-medium">1.0.0</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between text-sm">
               <span className="text-gray-600">개발</span>
               <span className="font-medium">SafeEat Team</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between text-sm">
               <span className="text-gray-600">문의</span>
               <span className="font-medium text-[#009688]">
                 support@safeeat.com
               </span>
+            </div>
+
+            <div className="pt-3 border-t">
+              <Button
+                variant="outline"
+                className="w-full border-[#009688] text-[#009688] hover:bg-[#009688]/5"
+                onClick={() => {
+                  localStorage.removeItem("hasVisited");
+                  window.location.href = "/";
+                }}
+              >
+                서비스 안내(튜토리얼) 다시보기
+              </Button>
             </div>
           </div>
         </div>

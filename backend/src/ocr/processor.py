@@ -25,8 +25,13 @@ def extract_text_from_image(image_path: str) -> str:
 
     print(f"[OCR] 이미지 처리 시작(CLOVA): {image_path}...")
     
+    # 확장자에 따른 포맷 결정 (jpeg, png, etc)
+    ext = os.path.splitext(image_path)[1].lower().replace(".", "")
+    if ext == "jpg": ext = "jpeg"
+    if ext not in ["jpeg", "png"]: ext = "jpeg" # 기본값
+
     request_json = {
-        "images": [{"format": "jpeg", "name": "scan_image"}], 
+        "images": [{"format": ext, "name": "scan_image"}], 
         "requestId": str(uuid.uuid4()),
         "version": "V2",
         "timestamp": int(time.time() * 1000),

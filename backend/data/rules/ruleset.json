@@ -34,7 +34,11 @@
         "drugs": [
           "DRUG_ENALAPRIL"
         ],
-        "foods": [],
+        "foods": [
+          "POTASSIUM_SUPPLEMENT",
+          "POTASSIUM_SUPPLEMENT",
+          "POTASSIUM_SUPPLEMENT"
+        ],
         "situations": [
           "SITUATION_CONCURRENT"
         ]
@@ -51,7 +55,8 @@
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [
-          "DRUG_AMLODIPINE"
+          "DRUG_AMLODIPINE",
+          "DRUG_LOSARTAN"
         ],
         "foods": [
           "FOOD_GRAPEFRUIT",
@@ -74,10 +79,12 @@
       "level": 3,
       "persona": "고령_고혈압",
       "conditions": {
-        "drugs": [
+        "drugs": [],
+        "foods": [
+          "DRUG_DECONGESTANT",
+          "DRUG_DECONGESTANT",
           "DRUG_DECONGESTANT"
         ],
-        "foods": [],
         "situations": [
           "SITUATION_CONCURRENT"
         ]
@@ -90,14 +97,14 @@
     },
     {
       "rule_id": "HTN_005",
-      "level": 1,
+      "level": 3,
       "persona": "고령_고혈압",
       "conditions": {
-        "drugs": [
+        "drugs": [],
+        "foods": [
           "DRUG_IBUPROFEN",
           "DRUG_NAPROXEN"
         ],
-        "foods": [],
         "situations": [
           "SITUATION_CONCURRENT"
         ]
@@ -117,6 +124,7 @@
           "DRUG_HYDROCHLOROTHIAZIDE"
         ],
         "foods": [
+          "FOOD_LICORICE",
           "FOOD_LICORICE"
         ],
         "situations": [
@@ -131,12 +139,17 @@
     },
     {
       "rule_id": "HTN_007",
-      "level": 3,
+      "level": 2,
       "persona": "고령_고혈압",
       "conditions": {
         "drugs": [],
-        "foods": [],
+        "foods": [
+          "SITUATION_DEHYDRATION",
+          "SITUATION_DEHYDRATION",
+          "SITUATION_DEHYDRATION"
+        ],
         "situations": [
+          "SITUATION_CONCURRENT",
           "SITUATION_DEHYDRATION"
         ]
       },
@@ -152,8 +165,14 @@
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [],
-        "foods": [],
+        "foods": [
+          "FOOD_ALCOHOL",
+          "FOOD_ALCOHOL",
+          "FOOD_ALCOHOL",
+          "FOOD_ALCOHOL"
+        ],
         "situations": [
+          "SITUATION_CONCURRENT",
           "SITUATION_FASTING_ALCOHOL"
         ]
       },
@@ -176,7 +195,10 @@
           "FOOD_CARB_DRINK",
           "FOOD_DESSERT"
         ],
-        "situations": []
+        "situations": [
+          "SITUATION_CONCURRENT",
+          "SITUATION_EXCESS_FOOD"
+        ]
       },
       "risk_type": "혈당 급상승",
       "risk_level_hint": "YELLOW",
@@ -192,8 +214,12 @@
         "drugs": [
           "DRUG_METFORMIN"
         ],
-        "foods": [],
+        "foods": [
+          "FOOD_ALCOHOL",
+          "FOOD_ALCOHOL"
+        ],
         "situations": [
+          "SITUATION_CONCURRENT",
           "SITUATION_EXCESS_ALCOHOL"
         ]
       },
@@ -209,7 +235,10 @@
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [],
-        "foods": [],
+        "foods": [
+          "SITUATION_FASTING",
+          "SITUATION_FASTING"
+        ],
         "situations": [
           "SITUATION_FASTING"
         ]
@@ -228,8 +257,13 @@
         "drugs": [
           "DRUG_DAPAGLIFLOZIN"
         ],
-        "foods": [],
+        "foods": [
+          "SITUATION_DEHYDRATION",
+          "SITUATION_DEHYDRATION",
+          "SITUATION_DEHYDRATION"
+        ],
         "situations": [
+          "SITUATION_CONCURRENT",
           "SITUATION_DEHYDRATION"
         ]
       },
@@ -249,11 +283,10 @@
           "DRUG_NAPROXEN"
         ],
         "foods": [
+          "FOOD_ALCOHOL",
           "FOOD_ALCOHOL"
         ],
-        "situations": [
-          "SITUATION_CONCURRENT"
-        ]
+        "situations": []
       },
       "risk_type": "위장 출혈",
       "risk_level_hint": "RED",
@@ -266,11 +299,10 @@
       "level": 2,
       "persona": "고령_관절염",
       "conditions": {
-        "drugs": [
-          "DRUG_IBUPROFEN",
-          "DRUG_NAPROXEN"
+        "drugs": [],
+        "foods": [
+          "SITUATION_FASTING"
         ],
-        "foods": [],
         "situations": [
           "SITUATION_FASTING"
         ]
@@ -283,14 +315,15 @@
     },
     {
       "rule_id": "NSAID_003",
-      "level": 1,
+      "level": 2,
       "persona": "고령_관절염",
       "conditions": {
-        "drugs": [
+        "drugs": [],
+        "foods": [
           "DRUG_IBUPROFEN",
-          "DRUG_NAPROXEN"
+          "DRUG_NAPROXEN",
+          "DRUG_PAINKILLER_GENERAL"
         ],
-        "foods": [],
         "situations": [
           "SITUATION_CONCURRENT"
         ]
@@ -303,15 +336,17 @@
     },
     {
       "rule_id": "NSAID_004",
-      "level": 1,
+      "level": 2,
       "persona": "고령_관절염",
       "conditions": {
-        "drugs": [
-          "DRUG_IBUPROFEN",
-          "DRUG_NAPROXEN"
+        "drugs": [],
+        "foods": [
+          "SITUATION_DEHYDRATION",
+          "SITUATION_DEHYDRATION",
+          "SITUATION_DEHYDRATION"
         ],
-        "foods": [],
         "situations": [
+          "SITUATION_CONCURRENT",
           "SITUATION_DEHYDRATION"
         ]
       },
