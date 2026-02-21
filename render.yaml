@@ -28,7 +28,7 @@ services:
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
-    staticPublishDir: dist
+    staticPublishPath: dist
     envVars:
       - key: NODE_VERSION
         value: 18
