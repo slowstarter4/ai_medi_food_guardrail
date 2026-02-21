@@ -3,7 +3,7 @@ services:
   - type: web
     name: safeeat-backend
     runtime: python
-    region: singapore # 가까운 리전 선택
+    region: singapore
     plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
@@ -12,7 +12,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: OPENAI_API_KEY
-        sync: false # Render 대시보드에서 수동 입력 권장
+        sync: false
       - key: DATA_GO_KR_API_KEY
         sync: false
       - key: CLOVA_OCR_API_URL
@@ -23,18 +23,18 @@ services:
   # Frontend: React Static Site
   - type: web
     name: safeeat-frontend
-    runtime: static
+    env: static
     region: singapore
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishDir: dist
+    staticPublishDir: dist
     envVars:
       - key: VITE_API_URL
         fromService:
           type: web
           name: safeeat-backend
-          property: host
+          property: url
     routingRules:
       - route: /*
         destination: /index.html
