@@ -13,10 +13,22 @@ from src.ocr.processor import extract_text_from_image
 
 app = FastAPI(title="SafeEat API")
 
-# CORS 설정: Vite 개발 서버 허용
+# CORS 설정
+# Render 배포 환경 및 로컬 개발 환경 대응
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://safeeat-frontend.onrender.com", # 실제 배포 URL이 확정되면 여기에 추가
+]
+
+# 환경 변수에서 추가 오리진을 받을 수 있도록 설정
+env_origins = os.environ.get("ALLOWED_ORIGINS")
+if env_origins:
+    ALLOWED_ORIGINS.extend(env_origins.split(","))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 실제 배포 시에는 구체적인 오리진 지정 권장
+    allow_origins=ALLOWED_ORIGINS if (os.environ.get("RENDER") == "true" or os.environ.get("NODE_ENV") == "production") else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
