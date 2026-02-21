@@ -21,7 +21,7 @@ services:
         sync: false
 
   # Frontend: React Static Site
-  - type: static
+  - type: static_site
     name: safeeat-frontend
     runtime: node
     region: singapore
