@@ -21,9 +21,9 @@ services:
         sync: false
 
   # Frontend: React Static Site
-  - type: static_site
+  - type: web
     name: safeeat-frontend
-    runtime: node
+    env: static
     region: singapore
     plan: free
     rootDir: frontend
