@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { BottomNav } from "../components/BottomNav";
 import { IngredientChip } from "../components/IngredientChip";
-import { Camera, Maximize2, Search, Barcode, ChevronRight } from "lucide-react";
+import { Camera, Maximize2, Search, Barcode, ChevronRight, RefreshCw } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { motion } from "motion/react";
+import Webcam from "react-webcam";
 
 const commonConditions = [
   { id: "elderly", label: "고령" },
@@ -29,32 +30,58 @@ interface BoundingBox {
 export function ScanPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const webcamRef = useRef<Webcam>(null);
   const [scanMode, setScanMode] = useState<"camera" | "manual">("camera");
   const [isScanning, setIsScanning] = useState(false);
+  const [cameraEnabled, setCameraEnabled] = useState(true);
   const [boundingBoxes, setBoundingBoxes] = useState<BoundingBox[]>([]);
   const [detectedIngredients, setDetectedIngredients] = useState<string[]>([]);
   const [manualSearch, setManualSearch] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [lastAnalysisResult, setLastAnalysisResult] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const startScanning = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Helper: Base64 to File conversion
+  const base64ToFile = (base64String: string, filename: string) => {
+    const arr = base64String.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
 
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    if (imageSrc) {
+      setCameraEnabled(false); // Stop camera after capture
+      const file = base64ToFile(imageSrc, "scan.jpg");
+      processFile(file);
+    }
+  }, [webcamRef]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processFile(file);
+  };
+
+  const processFile = async (file: File) => {
     setSelectedFile(file);
     setIsScanning(true);
     setBoundingBoxes([]);
     setDetectedIngredients([]);
 
-    // 백엔드 API 호출
+    // Preparation for API Call
     const formData = new FormData();
     formData.append("file", file);
 
-    // 복약 정보 및 질환 정보
     const savedMeds = localStorage.getItem("medications");
     const savedConditions = localStorage.getItem("conditions");
     const conditionLabels = savedConditions
@@ -81,12 +108,9 @@ export function ScanPage() {
       if (!response.ok) throw new Error("분석 실패");
 
       const result = await response.json();
+      if (result.error) throw new Error(result.error);
 
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      // 결과 데이터 파싱 (백엔드 메인 파이프라인 결과 구조에 맞춤)
+      // Parsing Results
       const entities = result.debug_info?.entities || {};
       const allIngredients = [
         ...(entities.drugs?.map((d: any) => d.raw) || []),
@@ -94,11 +118,12 @@ export function ScanPage() {
       ];
 
       if (allIngredients.length === 0) {
-        alert("이미지에서 인식된 성분이 없습니다. 다시 촬영하거나 수동으로 입력해 주세요.");
+        alert("인식된 성분이 없습니다. 다시 촬영하거나 수동으로 입력하세요.");
+        setCameraEnabled(true);
         return;
       }
 
-      // 바운딩 박스 시뮬레이션 (실제 OCR 좌표가 없는 경우 UI를 위해 목업 생성)
+      // Mock Bounding Boxes for UI
       const mockBoxes: BoundingBox[] = allIngredients.map((text, i) => ({
         id: i.toString(),
         x: 20 + (i * 10) % 50,
@@ -115,23 +140,19 @@ export function ScanPage() {
       setLastAnalysisResult(result);
     } catch (error: any) {
       console.error("Error analyzing image:", error);
-      alert(error.message || "이미지 분석 중 오류가 발생했습니다.");
+      alert(error.message || "이미지 분석 실패");
+      setCameraEnabled(true);
     } finally {
       setIsScanning(false);
     }
   };
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const analyzeIngredients = async () => {
-    if (isLoading || (detectedIngredients.length === 0 && !manualSearch)) {
-      return;
-    }
+    if (isLoading || (detectedIngredients.length === 0 && !manualSearch)) return;
 
     setIsLoading(true);
     let resultToPass = lastAnalysisResult;
 
-    // 수동 검색이고 직전 이미지 분석 결과가 없는 경우 텍스트 분석 API 호출
     if (scanMode === "manual" && manualSearch && !resultToPass) {
       try {
         const savedMeds = localStorage.getItem("medications");
@@ -153,9 +174,7 @@ export function ScanPage() {
             conditions: conditionLabels
           }),
         });
-        if (response.ok) {
-          resultToPass = await response.json();
-        }
+        if (response.ok) resultToPass = await response.json();
       } catch (error) {
         console.error("Manual analysis failed", error);
       }
@@ -165,14 +184,15 @@ export function ScanPage() {
       id: Date.now().toString(),
       foodName: manualSearch || "스캔한 식품",
       ingredients: detectedIngredients,
-      timestamp: new Date(),
+      date: new Date().toLocaleString(),
       riskLevel: resultToPass?.risk_result?.risk_level?.toLowerCase() === "red" ? "danger" :
-        resultToPass?.risk_result?.risk_level?.toLowerCase() === "yellow" ? "warning" : "safe"
+        resultToPass?.risk_result?.risk_level?.toLowerCase() === "yellow" ? "warning" : "safe",
+      explanation: resultToPass?.explanation || resultToPass?.risk_result?.explanation
     };
 
-    const recentScans = JSON.parse(localStorage.getItem("recentScans") || "[]");
-    recentScans.unshift(scanData);
-    localStorage.setItem("recentScans", JSON.stringify(recentScans.slice(0, 10)));
+    const scan_history = JSON.parse(localStorage.getItem("scan_history") || "[]");
+    scan_history.unshift(scanData);
+    localStorage.setItem("scan_history", JSON.stringify(scan_history.slice(0, 10)));
 
     setIsLoading(false);
     navigate("/result", {
@@ -186,7 +206,6 @@ export function ScanPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
-      {/* Header */}
       <div className="bg-[#009688] text-white p-6 pb-8">
         <h1 className="text-2xl font-bold">식품 스캔</h1>
         <p className="text-white/90 mt-2">성분표를 촬영하거나 직접 입력하세요</p>
@@ -220,25 +239,51 @@ export function ScanPage() {
         {/* Camera Mode */}
         {scanMode === "camera" && (
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4">
-            {/* Camera Viewfinder Simulation */}
-            <div className="relative bg-gray-900 h-[280px] flex items-center justify-center">
-              {!isScanning ? (
-                <div className="text-center text-white p-6">
-                  <Camera className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p className="text-base mb-1">성분표를 카메라에 비추세요</p>
-                  <p className="text-xs opacity-75">
-                    실시간으로 성분을 인식합니다
-                  </p>
+            <div className="relative bg-gray-900 h-[320px] flex items-center justify-center overflow-hidden">
+              {!isScanning && cameraEnabled ? (
+                <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  videoConstraints={{
+                    facingMode: "environment",
+                    width: 720,
+                    height: 1280,
+                  }}
+                  className="w-full h-full object-cover"
+                />
+              ) : isScanning ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
+                  <div className="text-white text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-3"></div>
+                    <p className="font-medium">분석 중...</p>
+                  </div>
                 </div>
               ) : (
-                <>
-                  {/* Scanning Grid Overlay */}
-                  <div className="absolute inset-0">
-                    <div className="absolute inset-0 border-4 border-[#009688] opacity-30 rounded-lg m-8"></div>
-                    <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#009688] opacity-40 animate-pulse"></div>
-                  </div>
+                <div className="text-center text-white p-6">
+                  <Camera className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-base mb-1">카메라가 꺼져있습니다</p>
+                  <Button
+                    variant="link"
+                    className="text-[#009688] p-0 h-auto"
+                    onClick={() => setCameraEnabled(true)}
+                  >
+                    카메라 켜기
+                  </Button>
+                </div>
+              )}
 
-                  {/* Real-time Bounding Boxes with Text Preview */}
+              {/* Overlay */}
+              {!isScanning && cameraEnabled && (
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-0 border-4 border-[#009688] opacity-30 rounded-lg m-10"></div>
+                  <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#009688] opacity-50 animate-pulse shadow-[0_0_15px_#009688]"></div>
+                </div>
+              )}
+
+              {/* Bounding Boxes on result */}
+              {!isScanning && !cameraEnabled && boundingBoxes.length > 0 && (
+                <>
                   {boundingBoxes.map((box) => (
                     <motion.div
                       key={box.id}
@@ -254,78 +299,59 @@ export function ScanPage() {
                     >
                       <div
                         className={`w-full h-full border-2 rounded ${box.riskLevel === "danger"
-                          ? "border-[#E53935] bg-[#E53935]/20"
-                          : box.riskLevel === "warning"
-                            ? "border-[#FFB74D] bg-[#FFB74D]/20"
-                            : "border-[#4CAF50] bg-[#4CAF50]/20"
+                            ? "border-[#E53935] bg-[#E53935]/20"
+                            : box.riskLevel === "warning"
+                              ? "border-[#FFB74D] bg-[#FFB74D]/20"
+                              : "border-[#4CAF50] bg-[#4CAF50]/20"
                           }`}
                       ></div>
-                      {/* Text Preview next to box */}
-                      <div
-                        className={`absolute -right-2 top-0 translate-x-full px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${box.riskLevel === "danger"
-                          ? "bg-[#E53935] text-white"
-                          : box.riskLevel === "warning"
-                            ? "bg-[#FFB74D] text-white"
-                            : "bg-[#4CAF50] text-white"
-                          }`}
-                      >
-                        {box.text}
-                      </div>
                     </motion.div>
                   ))}
-
-                  {boundingBoxes.length === 0 && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-white text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-3"></div>
-                        <p>성분 분석 중...</p>
-                      </div>
-                    </div>
-                  )}
                 </>
               )}
             </div>
 
-            {/* Camera Controls */}
             <div className="p-4 bg-gray-50 border-t">
-              {!isScanning ? (
-                <Button
-                  onClick={startScanning}
-                  className="w-full bg-[#009688] hover:bg-[#00796B] text-white"
-                >
-                  <Camera className="w-4 h-4 mr-2" />
-                  스캔 시작
-                </Button>
+              {!isScanning && cameraEnabled ? (
+                <div className="space-y-3">
+                  <Button
+                    onClick={capture}
+                    className="w-full bg-[#009688] hover:bg-[#00796B] text-white py-6"
+                  >
+                    인식하기
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={startScanning}
+                    className="w-full"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    갤러리에서 불러오기
+                  </Button>
+                </div>
               ) : (
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
                     onClick={() => {
                       setIsScanning(false);
+                      setCameraEnabled(true);
                       setBoundingBoxes([]);
                       setDetectedIngredients([]);
                     }}
                     className="flex-1"
                   >
+                    <RefreshCw className="w-4 h-4 mr-2" />
                     다시 촬영
                   </Button>
                   <Button
                     onClick={() => setScanMode("manual")}
                     className="flex-1 bg-[#009688] hover:bg-[#00796B] text-white"
                   >
-                    <Maximize2 className="w-4 h-4 mr-2" />
                     수정하기
                   </Button>
                 </div>
               )}
-
-              <button
-                className="w-full mt-3 text-sm text-gray-600 hover:text-[#009688] flex items-center justify-center gap-1"
-                onClick={() => alert("바코드 스캔 기능은 준비 중입니다")}
-              >
-                <Barcode className="w-4 h-4" />
-                바코드로 스캔하기
-              </button>
             </div>
           </div>
         )}
@@ -342,9 +368,7 @@ export function ScanPage() {
               />
               <Button
                 onClick={() => {
-                  if (manualSearch.trim()) {
-                    setDetectedIngredients([manualSearch]);
-                  }
+                  if (manualSearch.trim()) setDetectedIngredients([manualSearch]);
                 }}
                 className="bg-[#009688] hover:bg-[#00796B]"
               >
@@ -356,54 +380,39 @@ export function ScanPage() {
               <h3 className="font-bold text-[#263238] mb-3">
                 인식된 성분 ({detectedIngredients.length})
               </h3>
-              <p className="text-sm text-gray-600 mb-3">
-                성분을 클릭하여 수정하거나 삭제할 수 있습니다.
-              </p>
-              {detectedIngredients.length === 0 ? (
-                <p className="text-sm text-gray-400 text-center py-4">
-                  인식된 성분이 없습니다
-                </p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {detectedIngredients.map((ingredient, index) => {
-                    const box = boundingBoxes.find((b) => b.text === ingredient);
-                    return (
-                      <IngredientChip
-                        key={index}
-                        label={ingredient}
-                        riskLevel={box?.riskLevel}
-                        onRemove={() => {
-                          setDetectedIngredients(
-                            detectedIngredients.filter((_, i) => i !== index)
-                          );
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              )}
+              <div className="flex flex-wrap gap-2">
+                {detectedIngredients.map((ingredient, index) => {
+                  const box = boundingBoxes.find((b) => b.text === ingredient);
+                  return (
+                    <IngredientChip
+                      key={index}
+                      label={ingredient}
+                      riskLevel={box?.riskLevel}
+                      onRemove={() => {
+                        setDetectedIngredients(
+                          detectedIngredients.filter((_, i) => i !== index)
+                        );
+                      }}
+                    />
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
 
-        {/* Analyze Button */}
+        {/* Action Button */}
         {detectedIngredients.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <Button
+            onClick={analyzeIngredients}
+            disabled={isLoading}
+            className="w-full bg-[#009688] hover:bg-[#00796B] text-white py-4 text-lg shadow-lg mb-4"
           >
-            <Button
-              onClick={analyzeIngredients}
-              disabled={isLoading}
-              className="w-full bg-[#009688] hover:bg-[#00796B] text-white py-4 text-lg shadow-lg mb-4"
-            >
-              {isLoading ? "분석 중..." : "위험도 분석하기"}
-              {!isLoading && <ChevronRight className="w-5 h-5 ml-2" />}
-            </Button>
-          </motion.div>
+            {isLoading ? "분석 중..." : "위험도 분석하기"}
+            {!isLoading && <ChevronRight className="w-5 h-5 ml-2" />}
+          </Button>
         )}
 
-        {/* Help Guide */}
         <div className="bg-[#009688]/5 border border-[#009688]/20 rounded-xl p-4">
           <h4 className="font-bold text-[#263238] mb-2">촬영 가이드</h4>
           <ul className="text-sm text-gray-700 space-y-1">
@@ -421,7 +430,6 @@ export function ScanPage() {
         accept="image/*"
         style={{ display: "none" }}
       />
-
       <BottomNav />
     </div>
   );
