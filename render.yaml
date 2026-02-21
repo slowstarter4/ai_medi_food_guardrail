@@ -24,7 +24,6 @@ services:
   - type: web
     name: safeeat-frontend
     runtime: static
-    region: singapore
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
@@ -36,7 +35,7 @@ services:
         fromService:
           type: web
           name: safeeat-backend
-          property: url
+          property: host
     routes:
       - type: rewrite
         source: /*
