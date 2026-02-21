@@ -108,7 +108,8 @@ export function ProfilePage() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const promise = fetch("http://localhost:8000/api/ocr/prescription", {
+    const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+    const promise = fetch(`${API_URL}/api/ocr/prescription`, {
       method: "POST",
       body: formData,
     }).then(async (res) => {

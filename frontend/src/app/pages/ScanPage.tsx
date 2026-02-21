@@ -100,7 +100,8 @@ export function ScanPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/analyze/image", {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const response = await fetch(`${API_URL}/api/analyze/image`, {
         method: "POST",
         body: formData,
       });
@@ -165,7 +166,8 @@ export function ScanPage() {
           })
           : [];
 
-        const response = await fetch("http://localhost:8000/api/analyze/text", {
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        const response = await fetch(`${API_URL}/api/analyze/text`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -299,10 +301,10 @@ export function ScanPage() {
                     >
                       <div
                         className={`w-full h-full border-2 rounded ${box.riskLevel === "danger"
-                            ? "border-[#E53935] bg-[#E53935]/20"
-                            : box.riskLevel === "warning"
-                              ? "border-[#FFB74D] bg-[#FFB74D]/20"
-                              : "border-[#4CAF50] bg-[#4CAF50]/20"
+                          ? "border-[#E53935] bg-[#E53935]/20"
+                          : box.riskLevel === "warning"
+                            ? "border-[#FFB74D] bg-[#FFB74D]/20"
+                            : "border-[#4CAF50] bg-[#4CAF50]/20"
                           }`}
                       ></div>
                     </motion.div>

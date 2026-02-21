@@ -1,0 +1,28 @@
+services:
+  backend:
+    build: ./backend
+    container_name: safeeat-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+      - /app/venv # 컨테이너 내 venv 무시
+
+  frontend:
+    build: ./frontend
+    container_name: safeeat-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # 컨테이너 내 node_modules 무시
+
+networks:
+  default:
+    name: safeeat-network
