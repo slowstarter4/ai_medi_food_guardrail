@@ -23,7 +23,7 @@ services:
   # Frontend: React Static Site
   - type: web
     name: safeeat-frontend
-    env: static
+    runtime: static
     region: singapore
     plan: free
     rootDir: frontend
