@@ -113,9 +113,26 @@ export function ScanPage() {
 
       // Parsing Results
       const entities = result.debug_info?.entities || {};
+      const rawText: string = result.input_text || "";
+
+      // 성분량 추출 함수: OCR 텍스트에서 성분명 매칭 후 양 추출
+      const extractAmount = (name: string): string => {
+        // "\ub098\ud2b8\ub968 500mg" or "\ub2e8\ubc31\uc9c8 30g" or "\uc5f4\ub7c9 250kcal" 패\ud134
+        const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = new RegExp(escaped + `[\\s:]*([\\d,.]+\\s*(?:mg|g|ml|kcal|%|\u03bcg|mcg|IU))`, 'i');
+        const match = rawText.match(pattern);
+        return match ? match[1].trim() : "";
+      };
+
       const allIngredients = [
-        ...(entities.drugs?.map((d: any) => d.raw) || []),
-        ...(entities.foods?.map((f: any) => f.raw) || [])
+        ...(entities.drugs?.map((d: any) => {
+          const amt = extractAmount(d.raw);
+          return amt ? `${d.raw} ${amt}` : d.raw;
+        }) || []),
+        ...(entities.foods?.map((f: any) => {
+          const amt = extractAmount(f.raw);
+          return amt ? `${f.raw} ${amt}` : f.raw;
+        }) || [])
       ];
 
       if (allIngredients.length === 0) {
@@ -362,7 +379,7 @@ export function ScanPage() {
         {scanMode === "manual" && (
           <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
             <h3 className="font-bold text-[#263238] mb-3">제품명 검색</h3>
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2">
               <Input
                 placeholder="예: 자몽 주스"
                 value={manualSearch}
@@ -377,28 +394,31 @@ export function ScanPage() {
                 검색
               </Button>
             </div>
+          </div>
+        )}
 
-            <div className="border-t pt-4">
-              <h3 className="font-bold text-[#263238] mb-3">
-                인식된 성분 ({detectedIngredients.length})
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {detectedIngredients.map((ingredient, index) => {
-                  const box = boundingBoxes.find((b) => b.text === ingredient);
-                  return (
-                    <IngredientChip
-                      key={index}
-                      label={ingredient}
-                      riskLevel={box?.riskLevel}
-                      onRemove={() => {
-                        setDetectedIngredients(
-                          detectedIngredients.filter((_, i) => i !== index)
-                        );
-                      }}
-                    />
-                  );
-                })}
-              </div>
+        {/* 공통: 인식된 성분 (카메라/수동 모드 공통) */}
+        {detectedIngredients.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
+            <h3 className="font-bold text-[#263238] mb-3">
+              인식된 성분 ({detectedIngredients.length})
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {detectedIngredients.map((ingredient, index) => {
+                const box = boundingBoxes.find((b) => b.text === ingredient);
+                return (
+                  <IngredientChip
+                    key={index}
+                    label={ingredient}
+                    riskLevel={box?.riskLevel}
+                    onRemove={() => {
+                      setDetectedIngredients(
+                        detectedIngredients.filter((_, i) => i !== index)
+                      );
+                    }}
+                  />
+                );
+              })}
             </div>
           </div>
         )}

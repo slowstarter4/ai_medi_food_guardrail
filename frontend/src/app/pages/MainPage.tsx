@@ -4,6 +4,7 @@ import { MedicationTag } from "../components/MedicationTag";
 import { WelcomeScreen } from "../components/WelcomeScreen";
 import { SplashScreen } from "../components/SplashScreen";
 import { Bell, Camera, Clock, CheckCircle, AlertTriangle } from "lucide-react";
+import { Button } from "../components/ui/button";
 import { useEffect, useState } from "react";
 
 interface Medication {
@@ -160,6 +161,20 @@ export function MainPage() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Weekly Report Button */}
+        <div className="bg-[#009688]/10 border border-[#009688]/20 rounded-xl p-5 mb-4 flex items-center justify-between">
+          <div>
+            <h3 className="font-bold text-[#009688]">주간 안심 리포트</h3>
+            <p className="text-xs text-[#009688]/80 mt-1">이번 주 나의 식탁 안전도를 확인하세요</p>
+          </div>
+          <Button
+            onClick={() => navigate("/report")}
+            className="bg-[#009688] hover:bg-[#00796B] text-white text-xs h-9 px-4"
+          >
+            보기
+          </Button>
         </div>
 
         {/* Scan Button */}

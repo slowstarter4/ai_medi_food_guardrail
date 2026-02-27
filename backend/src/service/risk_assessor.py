@@ -7,7 +7,7 @@ PRIORITY = {
     "GREEN": 1
 }
 
-EVIDENCE_DB_PATH = Path("src/evidence/evidence_db.json")
+EVIDENCE_DB_PATH = Path(__file__).parent.parent / "evidence" / "evidence_db.json"
 with open(EVIDENCE_DB_PATH, "r", encoding="utf-8") as f:
     EVIDENCE_DB = json.load(f)
 

@@ -1,0 +1,157 @@
+{
+  "timestamp": "2026-02-25T16:28:25.580540",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "자몽 주스",
+    "medications": [
+      "로사르틴"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_007",
+    "explanation_summary": "■ **[결론]**: 자몽, 자몽주스, 자몽청은 로사르틴과 상호작용할 수 있으므로 섭취를 피하는 것이 좋습니다.\n\n■ **[이유]**: 현재 로사르틴을 복용 중이신 김영순 여사님, 자몽은 CYP3A4 효소의 작용을 억제하여 로사르틴의 혈중 농도를 증가시킬 수 있습니다. 이는 고혈압 치료에 필요한 약물 효과를 더욱 강하게 만들어, 저혈압이나 어지럼증과 같은 ...",
+    "full_result": {
+      "input_text": "자몽 주스",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_007",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_007",
+            "NSAID_004"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽주스",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르틴",
+              "entity_id": "DRUG_UNKNOWN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "YELLOW_NSAID_RENAL",
+          "YELLOW_HTN_DEHYDRATION"
+        ],
+        "evidence_info": [
+          {
+            "evidence_key": "YELLOW_NSAID_RENAL",
+            "source": "FDA DailyMed (Warnings)",
+            "title": "NSAIDs와 신장 부담",
+            "summary": "진통소염제는 신장 기능을 저하시킬 수 있으며, 탈수 상태에서는 위험이 더 커집니다. 고령자는 특히 주의가 필요합니다.",
+            "url": "https://dailymed.nlm.nih.gov"
+          },
+          {
+            "evidence_key": "YELLOW_HTN_DEHYDRATION",
+            "source": "식품의약품안전처 의약품안전나라",
+            "title": "탈수와 혈압약 부작용",
+            "summary": "탈수 상태에서는 혈압약으로 인한 어지럼증이 심해지고 전해질 불균형이 발생할 수 있습니다.",
+            "url": "https://nedrug.mfds.go.kr"
+          }
+        ],
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "자몽 주스"
+      },
+      "explanation": "■ **[결론]**: 자몽, 자몽주스, 자몽청은 로사르틴과 상호작용할 수 있으므로 섭취를 피하는 것이 좋습니다.\n\n■ **[이유]**: 현재 로사르틴을 복용 중이신 김영순 여사님, 자몽은 CYP3A4 효소의 작용을 억제하여 로사르틴의 혈중 농도를 증가시킬 수 있습니다. 이는 고혈압 치료에 필요한 약물 효과를 더욱 강하게 만들어, 저혈압이나 어지럼증과 같은 부작용을 초래할 수 있습니다. 특히 고령이시고, 혈압 관리가 중요한 상태인 만큼 이러한 부작용은 더욱 위험할 수 있습니다. 또한, 고혈압 약물 복용 중 탈수를 경험할 경우 혈압약의 부작용이 심해질 수 있으니 주의가 필요합니다.\n\n■ **[대안]**: 자몽 대신 오렌지나 사과와 같은 과일을 섭취하시면 안전하게 비타민과 수분을 보충할 수 있습니다.\n\n■ **[대처]**: 자몽, 자몽주스, 자몽청을 포함한 모든 식품 섭취를 즉시 중단하시고, 새로운 식품을 선택하실 때는 반드시 조심하시기 바랍니다. 필요하다면 의사와 상담하여 추가적인 조언을 받으세요.\n\n■ **[출처]**: FDA DailyMed (Warnings), 식품의약품안전처 의약품안전나라",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽주스",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르틴",
+              "entity_id": "DRUG_UNKNOWN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "matched_rules": [
+          {
+            "rule_id": "HTN_007",
+            "level": 2,
+            "risk_level_hint": "YELLOW",
+            "description": "탈수로 어지럼 및 전해질 이상 가능",
+            "evidence_key": "YELLOW_HTN_DEHYDRATION"
+          },
+          {
+            "rule_id": "NSAID_004",
+            "level": 2,
+            "risk_level_hint": "YELLOW",
+            "description": "신장 기능 저하 가능",
+            "evidence_key": "YELLOW_NSAID_RENAL"
+          }
+        ]
+      }
+    }
+  }
+}

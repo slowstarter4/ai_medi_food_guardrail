@@ -1,0 +1,141 @@
+{
+  "timestamp": "2026-02-23T14:33:00.016486",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "자몽 주스",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고혈압",
+      "고령"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_003",
+    "explanation_summary": "■ **[결론]**: 자몽, 자몽주스, 자몽청은 로사르탄 복용 중인 고혈압 환자에게 매우 위험할 수 있습니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 김영순 여사님, 안녕하세요? 자몽은 CYP3A4 효소를 억제하여 일부 약물의 혈중 농도를 증가시킬 수 있는 성질이 있습니다. 로사르탄은 이 효소와는 직접적인 상호작용을 하지 않지만, 자몽과 같은 ...",
+    "full_result": {
+      "input_text": "자몽 주스",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽주스",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "YELLOW_HTN_GRAPEFRUIT"
+        ],
+        "evidence_info": [
+          {
+            "evidence_key": "YELLOW_HTN_GRAPEFRUIT",
+            "source": "MFDS",
+            "title": "자몽과 칼슘채널차단제 상호작용",
+            "summary": "자몽은 CYP3A4 효소를 억제하여 암로디핀과 같은 칼슘채널차단제의 혈중 농도를 증가시킬 수 있습니다.",
+            "url": null
+          }
+        ],
+        "user_conditions": [
+          "고혈압",
+          "고령"
+        ],
+        "input_text": "자몽 주스"
+      },
+      "explanation": "■ **[결론]**: 자몽, 자몽주스, 자몽청은 로사르탄 복용 중인 고혈압 환자에게 매우 위험할 수 있습니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 김영순 여사님, 안녕하세요? 자몽은 CYP3A4 효소를 억제하여 일부 약물의 혈중 농도를 증가시킬 수 있는 성질이 있습니다. 로사르탄은 이 효소와는 직접적인 상호작용을 하지 않지만, 자몽과 같은 식품이 혈압 조절에 영향을 줄 수 있습니다. 고령이시고 고혈압이 있으신 상태에서 자몽을 섭취하게 되면, 혈압 조절이 더욱 어려워질 수 있습니다. 이는 신장 기능이 약해진 상태에서 더 큰 위험을 초래할 수 있습니다.\n\n■ **[대안]**: 자몽 대신 오렌지, 사과, 또는 배와 같은 안전한 과일을 섭취하시는 것을 추천드립니다. 이들은 로사르탄과의 상호작용이 없으면서도 맛있게 드실 수 있는 대안입니다.\n\n■ **[대처]**: 자몽이 포함된 식품은 즉시 섭취를 중단하시고, 안전한 대체 과일로 변경해 주세요. 또한, 정기적으로 혈압을 체크하며 변화에 주의하시기 바랍니다. 필요 시 의사와 상담하시는 것을 권장드립니다.\n\n■ **[출처]**: MFDS, 세이프잇 내부 가이드라인.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽주스",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "matched_rules": [
+          {
+            "rule_id": "HTN_003",
+            "level": 1,
+            "risk_level_hint": "YELLOW",
+            "description": "CYP3A4 억제로 혈중 약물 농도 증가",
+            "evidence_key": "YELLOW_HTN_GRAPEFRUIT"
+          }
+        ]
+      }
+    }
+  }
+}

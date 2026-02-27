@@ -5,6 +5,9 @@ from typing import Dict, List
 BASE_DIR = Path(__file__).resolve().parents[1]
 ENTITY_INDEX_PATH = BASE_DIR / "data" / "normalization" / "entity_index.json"
 
+# 모듈 레벨 캐시 (파일 반복 로딩 방지)
+_INDEX_CACHE: Dict = None
+
 FOOD_SUFFIXES = ["주스", "즙", "차", "분말", "환", "정", "캡슐", "보충제"]
 
 # =========================
@@ -32,9 +35,13 @@ def load_entity_index() -> Dict[str, Dict[str, str]]:
       "foods": { "자몽": "FOOD_GRAPEFRUIT" },
       "situations": { "공복 복용": "SITU_FASTING" }
     }
+    캐시된 인덱스를 반환 (최초 1회만 파일 읽기)
     """
-    with open(ENTITY_INDEX_PATH, encoding="utf-8") as f:
-        return json.load(f)
+    global _INDEX_CACHE
+    if _INDEX_CACHE is None:
+        with open(ENTITY_INDEX_PATH, encoding="utf-8") as f:
+            _INDEX_CACHE = json.load(f)
+    return _INDEX_CACHE
 
 # =========================
 # 3. Entity Normalization

@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-02-25T16:52:28.937743",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "5317013_mCjh186eqd_1680681680965.jpeg",
+    "medications": [],
+    "conditions": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 현재 복용 중인 약물이 없으므로 위험성은 낮지만, 섭취할 식품에 대한 주의가 필요합니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 약물이 없으므로, 단음료, 탄수화물, 당류, 단백질, 지방, 나트륨, 포화지방, 콜레스테롤, kcl이 포함된 식품을 섭취할 때의 위험성은 상대적으로 낮습니다. 그러나 단음료와 같은 고당분 식품은 혈당...",
+    "full_result": {
+      "input_text": "수 있 손상되었거나 내용물이 면실되었을 = 1 팽창, 경우 변형, 가장자리에 다치지 않도록 음료 개봉부 및 주의하여 레인지에 시오. 넣고 가열하지 마십시오. 주신 소비자분쟁해결기준) 가능. 부정 . 불량 식품 신고는 국번없이 1399 또는 보상 총 내용량 100 mL 영양정보 61 kcal 나트륨 10 mg 1% 탄수화물 15 g 5% 식이섬유 2.5 g 10% 당류 13 g 13 % 지방 0.7g1% 트랜스지방 0 g 포화지방 g 0% 콜레스테롤 0 mg 0% 단백질 0 g 0% 비타민B1 0.18 mg 15 % OTHE 1일 영양성분 기준치에 대한 비율(%)은 2,000 kcal 기준이므로 캡: 개인의 필요 열량에 따라 다를 수 있습니다.",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "단음료",
+              "entity_id": "FOOD_CARB_DRINK"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            }
+          ],
+          "drugs": [],
+          "situations": []
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [],
+        "input_text": "수 있 손상되었거나 내용물이 면실되었을 = 1 팽창, 경우 변형, 가장자리에 다치지 않도록 음료 개봉부 및 주의하여 레인지에 시오. 넣고 가열하지 마십시오. 주신 소비자분쟁해결기준) 가능. 부정 . 불량 식품 신고는 국번없이 1399 또는 보상 총 내용량 100 mL 영양정보 61 kcal 나트륨 10 mg 1% 탄수화물 15 g 5% 식이섬유 2.5 g 10% 당류 13 g 13 % 지방 0.7g1% 트랜스지방 0 g 포화지방 g 0% 콜레스테롤 0 mg 0% 단백질 0 g 0% 비타민B1 0.18 mg 15 % OTHE 1일 영양성분 기준치에 대한 비율(%)은 2,000 kcal 기준이므로 캡: 개인의 필요 열량에 따라 다를 수 있습니다."
+      },
+      "explanation": "■ **[결론]**: 현재 복용 중인 약물이 없으므로 위험성은 낮지만, 섭취할 식품에 대한 주의가 필요합니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 약물이 없으므로, 단음료, 탄수화물, 당류, 단백질, 지방, 나트륨, 포화지방, 콜레스테롤, kcl이 포함된 식품을 섭취할 때의 위험성은 상대적으로 낮습니다. 그러나 단음료와 같은 고당분 식품은 혈당을 급격히 상승시킬 수 있으며, 이는 장기적으로 건강에 좋지 않은 영향을 미칠 수 있습니다. 탄수화물과 당류가 과도하게 섭취될 경우 체중 증가 및 대사 질환의 위험을 증가시킬 수 있습니다. 또한, 나트륨과 포화지방의 과다 섭취는 심혈관 건강에 부정적인 영향을 미칠 수 있으므로 주의를 요합니다.\n\n■ **[대안]**: 단음료 대신 물이나 허브차를 섭취하고, 탄수화물의 경우 통곡물이나 채소로 대체하는 것이 좋습니다. 당류가 적은 과일인 블루베리나 사과를 간식으로 선택하는 것도 좋은 대안입니다.\n\n■ **[대처]**: 현재 섭취하고 있는 식품의 성분을 주의 깊게 살펴보시고, 고당분 및 고지방 식품의 섭취를 줄이는 것을 권장합니다. 건강한 식단을 유지하기 위해 다양한 영양소가 포함된 식사를 하도록 노력하세요.\n\n■ **[출처]**: 세이프잇 내부 가이드라인",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "단음료",
+              "entity_id": "FOOD_CARB_DRINK"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            }
+          ],
+          "drugs": [],
+          "situations": []
+        },
+        "matched_rules": []
+      }
+    }
+  }
+}

@@ -71,9 +71,12 @@ export function SafetyCard({
                 {evidence}
               </p>
               {evidenceSource && (
-                <p className="text-xs text-gray-500 mt-2">
-                  출처: {evidenceSource}
-                </p>
+                <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-gray-200/60">
+                  <CheckCircle className="w-3.5 h-3.5 text-[#009688]" />
+                  <p className="text-xs text-[#009688] font-medium">
+                    출처: {evidenceSource}
+                  </p>
+                </div>
               )}
             </div>
           )}

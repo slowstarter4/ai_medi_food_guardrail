@@ -79,12 +79,10 @@
       "level": 3,
       "persona": "고령_고혈압",
       "conditions": {
-        "drugs": [],
-        "foods": [
-          "DRUG_DECONGESTANT",
-          "DRUG_DECONGESTANT",
+        "drugs": [
           "DRUG_DECONGESTANT"
         ],
+        "foods": [],
         "situations": [
           "SITUATION_CONCURRENT"
         ]
@@ -100,13 +98,18 @@
       "level": 3,
       "persona": "고령_고혈압",
       "conditions": {
-        "drugs": [],
-        "foods": [
+        "drugs": [
           "DRUG_IBUPROFEN",
-          "DRUG_NAPROXEN"
+          "DRUG_NAPROXEN",
+          "DRUG_LOSARTAN",
+          "DRUG_AMLODIPINE",
+          "DRUG_ENALAPRIL",
+          "DRUG_VALSARTAN",
+          "DRUG_TELMISARTAN"
         ],
+        "foods": [],
         "situations": [
-          "SITUATION_CONCURRENT"
+          "SITUATION_DRUG_DUPLICATION"
         ]
       },
       "risk_type": "효과 감소",
@@ -140,14 +143,10 @@
     {
       "rule_id": "HTN_007",
       "level": 2,
-      "persona": "고령_고혈압",
+      "persona": "고령_고혁압",
       "conditions": {
         "drugs": [],
-        "foods": [
-          "SITUATION_DEHYDRATION",
-          "SITUATION_DEHYDRATION",
-          "SITUATION_DEHYDRATION"
-        ],
+        "foods": [],
         "situations": [
           "SITUATION_CONCURRENT",
           "SITUATION_DEHYDRATION"
@@ -235,19 +234,16 @@
       "persona": "고령_당뇨",
       "conditions": {
         "drugs": [],
-        "foods": [
-          "SITUATION_FASTING",
-          "SITUATION_FASTING"
-        ],
+        "foods": [],
         "situations": [
           "SITUATION_FASTING"
         ]
       },
-      "risk_type": "저혈당",
+      "risk_type": "저혁당",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_DM_MEAL_SKIP",
       "evidence_key": "YELLOW_DM_MEAL_SKIP",
-      "description": "식사 없이 복용 시 저혈당 가능"
+      "description": "식사 없이 복용 시 저혁당 가능"
     },
     {
       "rule_id": "DM_005",
@@ -257,11 +253,7 @@
         "drugs": [
           "DRUG_DAPAGLIFLOZIN"
         ],
-        "foods": [
-          "SITUATION_DEHYDRATION",
-          "SITUATION_DEHYDRATION",
-          "SITUATION_DEHYDRATION"
-        ],
+        "foods": [],
         "situations": [
           "SITUATION_CONCURRENT",
           "SITUATION_DEHYDRATION"
@@ -300,9 +292,7 @@
       "persona": "고령_관절염",
       "conditions": {
         "drugs": [],
-        "foods": [
-          "SITUATION_FASTING"
-        ],
+        "foods": [],
         "situations": [
           "SITUATION_FASTING"
         ]
@@ -318,14 +308,14 @@
       "level": 2,
       "persona": "고령_관절염",
       "conditions": {
-        "drugs": [],
-        "foods": [
+        "drugs": [
           "DRUG_IBUPROFEN",
           "DRUG_NAPROXEN",
           "DRUG_PAINKILLER_GENERAL"
         ],
+        "foods": [],
         "situations": [
-          "SITUATION_CONCURRENT"
+          "SITUATION_DRUG_DUPLICATION"
         ]
       },
       "risk_type": "독성 증가",
@@ -340,11 +330,7 @@
       "persona": "고령_관절염",
       "conditions": {
         "drugs": [],
-        "foods": [
-          "SITUATION_DEHYDRATION",
-          "SITUATION_DEHYDRATION",
-          "SITUATION_DEHYDRATION"
-        ],
+        "foods": [],
         "situations": [
           "SITUATION_CONCURRENT",
           "SITUATION_DEHYDRATION"
@@ -355,6 +341,74 @@
       "message_id": "YELLOW_NSAID_RENAL",
       "evidence_key": "YELLOW_NSAID_RENAL",
       "description": "신장 기능 저하 가능"
+    },
+    {
+      "rule_id": "HTN_008",
+      "level": 1,
+      "persona": "고령_고혈압",
+      "conditions": {
+        "drugs": [
+          "DRUG_BETA_BLOCKER"
+        ],
+        "foods": [
+          "FOOD_ALCOHOL",
+          "FOOD_ALCOHOL"
+        ],
+        "situations": [
+          "SITUATION_CONCURRENT"
+        ]
+      },
+      "risk_type": "부작용 증가",
+      "risk_level_hint": "YELLOW",
+      "message_id": "YELLOW_HTN_BETA_ALCOHOL",
+      "evidence_key": "YELLOW_HTN_BETA_ALCOHOL",
+      "description": "어지럼, 저혈압, 심박수 변화 위험"
+    },
+    {
+      "rule_id": "DM_006",
+      "level": 1,
+      "persona": "고령_당뇨",
+      "conditions": {
+        "drugs": [
+          "DRUG_SULFONYLUREA"
+        ],
+        "foods": [
+          "FOOD_ALCOHOL",
+          "FOOD_ALCOHOL",
+          "FOOD_ALCOHOL"
+        ],
+        "situations": [
+          "SITUATION_CONCURRENT",
+          "SITUATION_FASTING_ALCOHOL"
+        ]
+      },
+      "risk_type": "저혈당",
+      "risk_level_hint": "RED",
+      "message_id": "RED_DM_SULFONYLUREA_ALCOHOL",
+      "evidence_key": "RED_DM_SULFONYLUREA_ALCOHOL",
+      "description": "설폰요소제 + 공복음주로 심각한 저혈당 위험"
+    },
+    {
+      "rule_id": "NSAID_005",
+      "level": 1,
+      "persona": "고령_관절염",
+      "conditions": {
+        "drugs": [
+          "DRUG_IBUPROFEN",
+          "DRUG_NAPROXEN",
+          "DRUG_ANTICOAGULANT",
+          "DRUG_WARFARIN"
+        ],
+        "foods": [],
+        "situations": [
+          "SITUATION_DRUG_DUPLICATION"
+        ]
+      },
+      "risk_type": "출혈 위험",
+      "risk_level_hint": "RED",
+      "message_id": "RED_NSAID_ANTICOAGULANT",
+      "evidence_key": "RED_NSAID_ANTICOAGULANT",
+      "description": "NSAIDs + 항응고제 병용으로 출혈 위험 급증"
     }
   ]
 }

@@ -1,0 +1,181 @@
+{
+  "timestamp": "2026-02-25T18:45:48.808820",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "1772006064.jpg",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_003",
+    "explanation_summary": "■ **[결론]**: 자몽 섭취는 로사르탄과 상호작용하여 위험할 수 있으므로, 절대 자몽을 피해야 합니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 김영순 여사님, 자몽은 CYP3A4 효소를 억제하여 일부 약물의 혈중 농도를 증가시키는 효과가 있습니다. 비록 로사르탄이 CYP3A4의 영향을 크게 받지 않는 약물이지만, 고혈압과 같은 만성질환을 앓...",
+    "full_result": {
+      "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다.",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "YELLOW_HTN_GRAPEFRUIT"
+        ],
+        "evidence_info": [
+          {
+            "evidence_key": "YELLOW_HTN_GRAPEFRUIT",
+            "source": "FDA DailyMed (Drug Interactions)",
+            "title": "자몽과 칼슘채널차단제 상호작용",
+            "summary": "자몽은 CYP3A4 효소를 억제하여 암로디핀과 같은 칼슘채널차단제의 혈중 농도를 증가시킬 수 있습니다.",
+            "url": "https://dailymed.nlm.nih.gov"
+          }
+        ],
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다."
+      },
+      "explanation": "■ **[결론]**: 자몽 섭취는 로사르탄과 상호작용하여 위험할 수 있으므로, 절대 자몽을 피해야 합니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 김영순 여사님, 자몽은 CYP3A4 효소를 억제하여 일부 약물의 혈중 농도를 증가시키는 효과가 있습니다. 비록 로사르탄이 CYP3A4의 영향을 크게 받지 않는 약물이지만, 고혈압과 같은 만성질환을 앓고 계신 고령의 환자에게는 그리 안전하지 않을 수 있습니다. 자몽은 또한 혈압을 더욱 불안정하게 만들 수 있으며, 고령으로 인한 신장 기능 저하와 결합하여 약물의 배설에 영향을 줄 수 있습니다.\n\n■ **[대안]**: 자몽 대신 오렌지, 사과, 또는 배와 같은 다른 과일을 섭취하시는 것이 좋습니다. 이러한 과일들은 비타민 C를 제공하면서도 로사르탄과의 상호작용이 없습니다.\n\n■ **[대처]**: 즉시 자몽을 섭취하지 않도록 하시고, 만약 자몽을 드셨다면 의료 전문가와 상담하시기 바랍니다. 또한, 음식 섭취 시 약물 복용에 대해 항상 주의하시길 권장드립니다.\n\n■ **[출처]**: FDA DailyMed (Drug Interactions)",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "matched_rules": [
+          {
+            "rule_id": "HTN_003",
+            "level": 1,
+            "risk_level_hint": "YELLOW",
+            "description": "CYP3A4 억제로 혈중 약물 농도 증가",
+            "evidence_key": "YELLOW_HTN_GRAPEFRUIT"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { BottomNav } from "../components/BottomNav";
 import { MedicationTag } from "../components/MedicationTag";
-import { Plus, Upload, Calendar, CheckCircle, Camera, X, RefreshCw } from "lucide-react";
+import { Plus, Upload, CheckCircle, Camera, X, AlertTriangle, FileText } from "lucide-react";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { toast } from "sonner";
@@ -13,6 +13,18 @@ interface Medication {
   dosage: string;
 }
 
+interface ParsedPrescriptionItem {
+  raw_name: string;
+  drug_name: string;
+  entity_id: string | null;
+  dose: string | null;
+  frequency: string | null;
+  amount_per_dose: string | null;
+  total_days: string | null;
+  timing: string | null;
+  is_unknown: boolean;
+}
+
 const commonConditions = [
   { id: "elderly", label: "고령" },
   { id: "hypertension", label: "고혈압" },
@@ -22,13 +34,20 @@ const commonConditions = [
   { id: "asthma", label: "천식" },
 ];
 
+function buildDosageString(p: ParsedPrescriptionItem): string {
+  const parts = [p.dose, p.frequency, p.amount_per_dose, p.timing].filter(Boolean);
+  if (parts.length > 0) return parts.join(" · ");
+  if (p.total_days) return p.total_days;
+  return "용법 미확인";
+}
+
 export function ProfilePage() {
   const [medications, setMedications] = useState<Medication[]>([]);
   const [newMedName, setNewMedName] = useState("");
   const [newMedDosage, setNewMedDosage] = useState("");
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
   const [showCamera, setShowCamera] = useState(false);
-  const [isCapturing, setIsCapturing] = useState(false);
+  const [prescriptionPreview, setPrescriptionPreview] = useState<ParsedPrescriptionItem[] | null>(null);
   const webcamRef = useRef<Webcam>(null);
 
   useEffect(() => {
@@ -41,7 +60,6 @@ export function ProfilePage() {
     if (savedConditions) {
       try {
         const parsed = JSON.parse(savedConditions);
-        // 유효한 ID만 필터링 (예전에 체크했던 잘못된 데이터 제거)
         const validIds = parsed.filter((id: string) =>
           commonConditions.some(c => c.id === id)
         );
@@ -109,36 +127,73 @@ export function ProfilePage() {
     formData.append("file", file);
 
     const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
-    const promise = fetch(`${API_URL}/api/ocr/prescription`, {
-      method: "POST",
-      body: formData,
-    }).then(async (res) => {
-      if (!res.ok) throw new Error("분석 실패");
-      const result = await res.json();
-      if (result.drugs && result.drugs.length > 0) {
-        const currentMeds = [...medications];
-        result.drugs.forEach((name: string) => {
-          if (!currentMeds.find(m => m.name === name)) {
-            currentMeds.push({
-              id: Date.now().toString() + Math.random(),
-              name: name,
-              dosage: "처방전 분석됨"
-            });
-          }
-        });
-        setMedications(currentMeds);
-        localStorage.setItem("medications", JSON.stringify(currentMeds));
-        setShowCamera(false); // Close camera on success
-        return `${result.drugs.length}개의 약물이 인식되었습니다.`;
+
+    toast.promise(
+      fetch(`${API_URL}/api/ocr/prescription`, {
+        method: "POST",
+        body: formData,
+      }).then(async (res) => {
+        if (!res.ok) throw new Error("분석 실패");
+        const result = await res.json();
+
+        const prescriptions: ParsedPrescriptionItem[] = result.prescriptions || [];
+
+        if (prescriptions.length > 0) {
+          setPrescriptionPreview(prescriptions);
+          setShowCamera(false);
+          return `${prescriptions.length}개의 약물이 인식되었습니다. 결과를 확인해주세요.`;
+        }
+        throw new Error("인식된 약물이 없습니다.");
+      }),
+      {
+        loading: "처방전을 분석 중입니다...",
+        success: (msg) => msg as string,
+        error: (err) => err.message,
       }
-      throw new Error("인인식된 약물이 없습니다.");
+    );
+  };
+
+  // 처방전 미리보기에서 전체 추가
+  const addAllFromPrescription = () => {
+    if (!prescriptionPreview) return;
+
+    const currentMeds = [...medications];
+    let addedCount = 0;
+
+    prescriptionPreview.forEach((p) => {
+      const name = p.drug_name || p.raw_name;
+      if (!currentMeds.find((m) => m.name === name)) {
+        currentMeds.push({
+          id: Date.now().toString() + Math.random(),
+          name,
+          dosage: buildDosageString(p),
+        });
+        addedCount++;
+      }
     });
 
-    toast.promise(promise, {
-      loading: "처방전을 분석 중입니다...",
-      success: (msg) => msg as string,
-      error: (err) => err.message,
-    });
+    setMedications(currentMeds);
+    localStorage.setItem("medications", JSON.stringify(currentMeds));
+    setPrescriptionPreview(null);
+    toast.success(`${addedCount}개의 약물이 등록되었습니다`);
+  };
+
+  // 처방전 미리보기에서 개별 추가
+  const addSingleFromPrescription = (p: ParsedPrescriptionItem) => {
+    const name = p.drug_name || p.raw_name;
+    if (medications.find((m) => m.name === name)) {
+      toast.info(`${name}은 이미 등록된 약물입니다`);
+      return;
+    }
+    const newMed: Medication = {
+      id: Date.now().toString() + Math.random(),
+      name,
+      dosage: buildDosageString(p),
+    };
+    const updated = [...medications, newMed];
+    setMedications(updated);
+    localStorage.setItem("medications", JSON.stringify(updated));
+    toast.success(`${name} 추가됨`);
   };
 
   const capturePrescription = useCallback(() => {
@@ -225,6 +280,88 @@ export function ProfilePage() {
             </Button>
           </div>
         </div>
+
+        {/* Prescription Preview Card */}
+        {prescriptionPreview && prescriptionPreview.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm p-5 mb-4 border-2 border-[#009688]/30">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-[#009688]" />
+                <h3 className="font-bold text-[#263238]">
+                  처방전 인식 결과 ({prescriptionPreview.length}개)
+                </h3>
+              </div>
+              <button
+                onClick={() => setPrescriptionPreview(null)}
+                className="p-1 hover:bg-gray-100 rounded-full"
+              >
+                <X className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="space-y-2 mb-4">
+              {prescriptionPreview.map((p, idx) => {
+                const name = p.drug_name || p.raw_name;
+                const dosageStr = buildDosageString(p);
+                const alreadyAdded = medications.some((m) => m.name === name);
+
+                return (
+                  <div
+                    key={idx}
+                    className={`flex items-center justify-between p-3 rounded-lg border ${alreadyAdded
+                      ? "bg-gray-50 border-gray-200 opacity-60"
+                      : p.is_unknown
+                        ? "bg-amber-50 border-amber-200"
+                        : "bg-[#009688]/5 border-[#009688]/20"
+                      }`}
+                  >
+                    <div className="flex items-start gap-2 flex-1 min-w-0">
+                      {p.is_unknown ? (
+                        <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                      ) : (
+                        <CheckCircle className="w-4 h-4 text-[#009688] mt-0.5 shrink-0" />
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-medium text-[#263238] text-sm truncate">{name}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{dosageStr}</p>
+                        {p.is_unknown && (
+                          <p className="text-xs text-amber-600 mt-0.5">⚠ 미등록 약물</p>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => addSingleFromPrescription(p)}
+                      disabled={alreadyAdded}
+                      className={`ml-3 text-xs px-3 py-1.5 rounded-full font-medium shrink-0 transition ${alreadyAdded
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-[#009688] text-white hover:bg-[#00796B]"
+                        }`}
+                    >
+                      {alreadyAdded ? "등록됨" : "추가"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={addAllFromPrescription}
+                className="flex-1 bg-[#009688] hover:bg-[#00796B] text-white"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                전체 추가
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setPrescriptionPreview(null)}
+                className="flex-1"
+              >
+                취소
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Camera Overlay */}
         {showCamera && (

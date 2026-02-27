@@ -1,0 +1,111 @@
+{
+  "timestamp": "2026-02-25T16:55:13.669265",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "1772006064.jpg",
+    "medications": [],
+    "conditions": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 현재 복용 중인 약물이 없으므로, 자몽과 다른 성분이 포함된 식품을 섭취하는 데 큰 위험은 없습니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 약물이 없으므로, 자몽을 포함한 식품의 섭취가 특별한 위험을 초래하지 않습니다. 자몽은 특정 약물과 상호작용할 수 있는 성분을 포함하고 있지만, 현재 사용자가 복용 중인 약물이 없기 때문...",
+    "full_result": {
+      "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다.",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [],
+          "situations": []
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [],
+        "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다."
+      },
+      "explanation": "■ **[결론]**: 현재 복용 중인 약물이 없으므로, 자몽과 다른 성분이 포함된 식품을 섭취하는 데 큰 위험은 없습니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 약물이 없으므로, 자몽을 포함한 식품의 섭취가 특별한 위험을 초래하지 않습니다. 자몽은 특정 약물과 상호작용할 수 있는 성분을 포함하고 있지만, 현재 사용자가 복용 중인 약물이 없기 때문에 이러한 위험은 존재하지 않습니다. 자몽은 일반적으로 CYP3A4라는 효소를 억제하는데, 이 효소는 여러 약물의 대사에 관여합니다. 그러나 복용 중인 약물이 없으므로 이러한 효소 차단이 문제가 되지는 않습니다.\n\n■ **[대안]**: 자몽 대신 오렌지나 사과와 같은 과일을 섭취하시는 것도 좋은 대안이 될 수 있습니다. 이 과일들은 비타민 C가 풍부하고 건강에 이로운 성분을 많이 포함하고 있어 균형 잡힌 식단에 도움이 됩니다.\n\n■ **[대처]**: 현재 복용 중인 약물이 없으므로, 자몽 및 다른 성분이 포함된 식품을 안심하고 섭취하셔도 좋습니다. 다만, 앞으로 약물을 복용하시게 될 경우 해당 약물과 자몽의 상호작용을 고려하여 주의하시기 바랍니다.\n\n■ **[출처]**: 세이프잇 내부 가이드라인",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [],
+          "situations": []
+        },
+        "matched_rules": []
+      }
+    }
+  }
+}

@@ -175,6 +175,46 @@ export function ResultPage() {
           />
         </motion.div>
 
+        {/* Analysis Context (Personalized) */}
+        <div className="bg-[#009688]/5 border border-[#009688]/20 rounded-xl p-4 mb-4">
+          <h2 className="text-sm font-bold text-[#009688] mb-2 flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#009688]"></div>
+            맞춤 분석 정보
+          </h2>
+          <div className="space-y-2">
+            <div>
+              <span className="text-xs text-gray-500 block mb-1">등록된 질환/상태</span>
+              <div className="flex flex-wrap gap-1.5">
+                {(backendResult?.risk_result?.user_conditions?.length > 0) ? (
+                  backendResult.risk_result.user_conditions.map((c: string, i: number) => (
+                    <span key={i} className="px-2 py-0.5 bg-white border border-[#009688]/30 rounded text-[11px] text-[#009688]">
+                      {c}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-[11px] text-gray-400">등록된 질환 정보 없음</span>
+                )}
+              </div>
+            </div>
+            <div>
+              <span className="text-xs text-gray-500 block mb-1">복용 중인 약물</span>
+              <div className="flex flex-wrap gap-1.5">
+                {(backendResult?.risk_result?.entities_involved?.drugs?.filter((d: any) => d.entity_id !== "DRUG_UNKNOWN").length > 0) ? (
+                  backendResult.risk_result.entities_involved.drugs
+                    .filter((d: any) => d.entity_id !== "DRUG_UNKNOWN")
+                    .map((d: any, i: number) => (
+                      <span key={i} className="px-2 py-0.5 bg-white border border-[#009688]/30 rounded text-[11px] text-[#009688]">
+                        {d.raw}
+                      </span>
+                    ))
+                ) : (
+                  <span className="text-[11px] text-gray-400">등록된 약물 정보 없음</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Detected Ingredients */}
         <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
           <h2 className="font-bold text-[#263238] mb-3">인식된 성분</h2>
@@ -319,6 +359,20 @@ export function ResultPage() {
           >
             홈으로 돌아가기
           </Button>
+        </div>
+
+        {/* AI Disclaimer & Roadmap Link */}
+        <div className="mt-8 mb-4 border-t border-gray-200 pt-6">
+          <p className="text-xs text-gray-400 leading-relaxed mb-3">
+            본 결과는 공신력 있는 기준(식약처, FDA 등)을 바탕으로 한 AI의 보조 정보입니다. 기저질환자의 최종적인 판단 및 대처는 반드시 담당 의사 및 약사와 상담하시기 바랍니다.
+          </p>
+          <button
+            onClick={() => navigate("/info")}
+            className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-medium transition flex justify-between items-center"
+          >
+            <span>SafeEat 분석 기준 및 서비스 로드맵 보기</span>
+            <ExternalLink className="w-4 h-4" />
+          </button>
         </div>
       </div>
 

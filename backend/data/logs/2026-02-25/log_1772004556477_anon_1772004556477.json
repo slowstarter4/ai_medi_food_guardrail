@@ -1,0 +1,103 @@
+{
+  "timestamp": "2026-02-25T16:29:16.477245",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "3f8d0df9cb2b7.jpg",
+    "medications": [],
+    "conditions": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 현재 복용 중인 약물이 없으시므로, 탄수화물, 당류, 단백질, 지방, 나트륨, 포화지방, 콜레스테롤이 포함된 식품 섭취는 상대적으로 안전합니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 약물이 없기 때문에, 섭취하는 식품과의 직접적인 약물 상호작용 위험이 없습니다. 그러나 섭취할 식품의 성분들, 특히 고당류, 고지방, 고나트륨 ...",
+    "full_result": {
+      "input_text": "총 내용량 74g(18.5gX4봉지) 영양정보 1봉지(18.5g당)85kcal/총 343kcal 1일영양성분 1회 제공량당 함량 기준치에 대한 비율 탄수화물 14g 4% 당류 2g 2% 단백질 2g 4% 지방 2.6g 5% 포화지방 0.7g 5% 트랜스지방 0g 콜레스테롤 4mg 1% 나트륨 85mg 4% 1일 영양성분 기준치에 대한 비율(%)은 2,000kcal 기준 이므로 개인의 필요 열량에 따라 다를 수 있습니다.",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [],
+          "situations": []
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [],
+        "input_text": "총 내용량 74g(18.5gX4봉지) 영양정보 1봉지(18.5g당)85kcal/총 343kcal 1일영양성분 1회 제공량당 함량 기준치에 대한 비율 탄수화물 14g 4% 당류 2g 2% 단백질 2g 4% 지방 2.6g 5% 포화지방 0.7g 5% 트랜스지방 0g 콜레스테롤 4mg 1% 나트륨 85mg 4% 1일 영양성분 기준치에 대한 비율(%)은 2,000kcal 기준 이므로 개인의 필요 열량에 따라 다를 수 있습니다."
+      },
+      "explanation": "■ **[결론]**: 현재 복용 중인 약물이 없으시므로, 탄수화물, 당류, 단백질, 지방, 나트륨, 포화지방, 콜레스테롤이 포함된 식품 섭취는 상대적으로 안전합니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 약물이 없기 때문에, 섭취하는 식품과의 직접적인 약물 상호작용 위험이 없습니다. 그러나 섭취할 식품의 성분들, 특히 고당류, 고지방, 고나트륨 식품은 장기적으로 건강에 영향을 미칠 수 있습니다. 예를 들어, 과도한 당류와 나트륨 섭취는 비만, 고혈압, 당뇨병 등의 만성 질환을 유발할 수 있습니다. 이는 특히 나이가 많거나 기초 대사율이 낮은 분들에게 더욱 주의가 필요합니다.\n\n■ **[대안]**: 탄수화물과 당류의 섭취를 줄이기 위해 통곡물 제품이나 신선한 과일(예: 사과, 배)로 대체하는 것이 좋습니다. 또한, 단백질은 저지방 육류나 생선, 콩류에서 섭취하고, 나트륨과 포화지방은 신선한 채소와 올리브유를 포함한 건강한 지방으로 대체하는 것을 추천드립니다.\n\n■ **[대처]**: 앞으로 식단을 계획할 때, 가급적 가공식품이나 고지방, 고나트륨 식품의 섭취를 줄이고, 다양한 영양소가 포함된 균형 잡힌 식사로 건강을 유지하는 것이 중요합니다.\n\n■ **[출처]**: 식약처 e약은요, 세이프잇 내부 가이드라인.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [],
+          "situations": []
+        },
+        "matched_rules": []
+      }
+    }
+  }
+}
