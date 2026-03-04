@@ -1,9 +1,11 @@
-openai
-python-dotenv
-langgraph
-langchain-openai
 fastapi
 uvicorn
-python-multipart
+python-dotenv
 requests
+pillow
+pydantic
+openai
+langchain-openai
+langgraph
+python-multipart
 aiohttp
