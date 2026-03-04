@@ -6,7 +6,7 @@ from pathlib import Path
 root_dir = Path(__file__).parent.parent
 sys.path.append(str(root_dir))
 
-from main import analyze_text
+from app import analyze_text
 import json
 
 def test_llm_api_integration():

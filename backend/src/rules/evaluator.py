@@ -49,8 +49,9 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                 if v.get("entity_id", "").startswith("CONDITION_")
             }
             persona_parts = set(rule_persona.split("_"))
-            # 페르소나 구성 요소 중 하나라도 사용자 상태와 일치하면 매칭 (더 유연한 매칭)
-            if not (persona_parts & user_specs):
+            # 페르소나 매칭 실패 시: Level 1 룰(특정 약물-식품 상호작용)은 
+            # 사용자 정보가 없더라도 안전을 위해 매칭 허용
+            if not (persona_parts & user_specs) and rule.get("level") != 1:
                 continue
 
         # 2.2 개별 상황 조건 체크: ALL 매칭 (issubset)

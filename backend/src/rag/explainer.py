@@ -37,7 +37,9 @@ def generate_explanation(
     conditions_str = ", ".join(user_conditions) if user_conditions else "없음"
     
     evidence_text = "\n".join(
-        f"- {e['title']}: {e['summary']} (출처: {e['source']})"
+        f"- [{e.get('evidence_strength', 'N/A')}] {e.get('title', '제목 없음')}: "
+        f"{e.get('evidence_summary_user', e.get('summary', '요약 없음'))} "
+        f"(출처: {e.get('evidence_source_label', e.get('source', '출처 미상'))})"
         for e in evidences
     )
 

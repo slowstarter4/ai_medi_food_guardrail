@@ -23,7 +23,7 @@
       "risk_type": "전해질 이상",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_HTN_POTASSIUM",
-      "evidence_key": "YELLOW_HTN_POTASSIUM",
+      "evidence_key": "EV_HTN_001",
       "description": "고칼륨 식품으로 혈중 칼륨 상승 가능"
     },
     {
@@ -46,7 +46,7 @@
       "risk_type": "고칼륨혈증",
       "risk_level_hint": "RED",
       "message_id": "RED_HTN_POTASSIUM",
-      "evidence_key": "RED_HTN_POTASSIUM",
+      "evidence_key": "EV_HTN_002",
       "description": "칼륨 과다로 심각한 부정맥 위험"
     },
     {
@@ -59,9 +59,6 @@
           "DRUG_LOSARTAN"
         ],
         "foods": [
-          "FOOD_GRAPEFRUIT",
-          "FOOD_GRAPEFRUIT",
-          "FOOD_GRAPEFRUIT",
           "FOOD_GRAPEFRUIT"
         ],
         "situations": [
@@ -71,7 +68,7 @@
       "risk_type": "부작용 증가",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_HTN_GRAPEFRUIT",
-      "evidence_key": "YELLOW_HTN_GRAPEFRUIT",
+      "evidence_key": "EV_HTN_004",
       "description": "CYP3A4 억제로 혈중 약물 농도 증가"
     },
     {
@@ -90,7 +87,7 @@
       "risk_type": "혈압 상승",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_HTN_DECONGESTANT",
-      "evidence_key": "YELLOW_HTN_DECONGESTANT",
+      "evidence_key": "EXTRA_HTN_DECONGESTANT",
       "description": "교감신경 자극으로 혈압 상승 가능"
     },
     {
@@ -115,7 +112,7 @@
       "risk_type": "효과 감소",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_HTN_NSAID",
-      "evidence_key": "YELLOW_HTN_NSAID",
+      "evidence_key": "EXTRA_HTN_NSAID",
       "description": "혈압약 효과 저하 및 혈압 조절 실패 가능"
     },
     {
@@ -137,13 +134,13 @@
       "risk_type": "혈압 상승",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_HTN_LICORICE",
-      "evidence_key": "YELLOW_HTN_LICORICE",
+      "evidence_key": "EV_HTN_005",
       "description": "나트륨 저류로 혈압 상승 가능"
     },
     {
       "rule_id": "HTN_007",
       "level": 2,
-      "persona": "고령_고혁압",
+      "persona": "고령_고혈압",
       "conditions": {
         "drugs": [],
         "foods": [],
@@ -155,7 +152,7 @@
       "risk_type": "전해질 불균형",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_HTN_DEHYDRATION",
-      "evidence_key": "YELLOW_HTN_DEHYDRATION",
+      "evidence_key": "EXTRA_HTN_DEHYDRATION",
       "description": "탈수로 어지럼 및 전해질 이상 가능"
     },
     {
@@ -178,7 +175,7 @@
       "risk_type": "저혈당",
       "risk_level_hint": "RED",
       "message_id": "RED_DM_HYPOGLYCEMIA",
-      "evidence_key": "RED_DM_HYPOGLYCEMIA",
+      "evidence_key": "EV_DM_004",
       "description": "알코올로 인한 심각한 저혈당 위험"
     },
     {
@@ -202,7 +199,7 @@
       "risk_type": "혈당 급상승",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_DM_HYPERGLYCEMIA",
-      "evidence_key": "YELLOW_DM_HYPERGLYCEMIA",
+      "evidence_key": "EXTRA_DM_HYPERGLYCEMIA",
       "description": "당류 과다로 혈당 변동성 증가"
     },
     {
@@ -214,18 +211,16 @@
           "DRUG_METFORMIN"
         ],
         "foods": [
-          "FOOD_ALCOHOL",
           "FOOD_ALCOHOL"
         ],
         "situations": [
-          "SITUATION_CONCURRENT",
-          "SITUATION_EXCESS_ALCOHOL"
+          "SITUATION_CONCURRENT"
         ]
       },
       "risk_type": "독성 증가",
       "risk_level_hint": "RED",
       "message_id": "RED_DM_LATIC_ACIDOSIS",
-      "evidence_key": "RED_DM_LATIC_ACIDOSIS",
+      "evidence_key": "EV_DM_001",
       "description": "젖산산증 위험 증가"
     },
     {
@@ -242,7 +237,7 @@
       "risk_type": "저혁당",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_DM_MEAL_SKIP",
-      "evidence_key": "YELLOW_DM_MEAL_SKIP",
+      "evidence_key": "EXTRA_DM_MEAL_SKIP",
       "description": "식사 없이 복용 시 저혁당 가능"
     },
     {
@@ -262,7 +257,7 @@
       "risk_type": "부작용 증가",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_DM_DEHYDRATION",
-      "evidence_key": "YELLOW_DM_DEHYDRATION",
+      "evidence_key": "EXTRA_DM_DEHYDRATION",
       "description": "탈수 및 신장 부담 증가"
     },
     {
@@ -275,7 +270,6 @@
           "DRUG_NAPROXEN"
         ],
         "foods": [
-          "FOOD_ALCOHOL",
           "FOOD_ALCOHOL"
         ],
         "situations": []
@@ -283,7 +277,7 @@
       "risk_type": "위장 출혈",
       "risk_level_hint": "RED",
       "message_id": "RED_NSAID_BLEEDING",
-      "evidence_key": "RED_NSAID_BLEEDING",
+      "evidence_key": "EV_NSAID_001",
       "description": "알코올 병용 시 위장 출혈 위험 증가"
     },
     {
@@ -291,7 +285,11 @@
       "level": 2,
       "persona": "고령_관절염",
       "conditions": {
-        "drugs": [],
+        "drugs": [
+          "DRUG_IBUPROFEN",
+          "DRUG_NAPROXEN",
+          "DRUG_PAINKILLER_GENERAL"
+        ],
         "foods": [],
         "situations": [
           "SITUATION_FASTING"
@@ -300,7 +298,7 @@
       "risk_type": "위 점막 손상",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_NSAID_GI",
-      "evidence_key": "YELLOW_NSAID_GI",
+      "evidence_key": "EXTRA_NSAID_GI",
       "description": "위 점막 자극 및 통증 가능"
     },
     {
@@ -321,7 +319,7 @@
       "risk_type": "독성 증가",
       "risk_level_hint": "RED",
       "message_id": "RED_NSAID_DUPLICATION",
-      "evidence_key": "RED_NSAID_DUPLICATION",
+      "evidence_key": "EXTRA_NSAID_DUPLICATION",
       "description": "동일 계열 중복 복용으로 출혈 위험"
     },
     {
@@ -339,7 +337,7 @@
       "risk_type": "신장 부담",
       "risk_level_hint": "YELLOW",
       "message_id": "YELLOW_NSAID_RENAL",
-      "evidence_key": "YELLOW_NSAID_RENAL",
+      "evidence_key": "EV_NSAID_003",
       "description": "신장 기능 저하 가능"
     },
     {
@@ -385,7 +383,7 @@
       "risk_type": "저혈당",
       "risk_level_hint": "RED",
       "message_id": "RED_DM_SULFONYLUREA_ALCOHOL",
-      "evidence_key": "RED_DM_SULFONYLUREA_ALCOHOL",
+      "evidence_key": "EV_DM_003",
       "description": "설폰요소제 + 공복음주로 심각한 저혈당 위험"
     },
     {
@@ -407,7 +405,7 @@
       "risk_type": "출혈 위험",
       "risk_level_hint": "RED",
       "message_id": "RED_NSAID_ANTICOAGULANT",
-      "evidence_key": "RED_NSAID_ANTICOAGULANT",
+      "evidence_key": "EV_NSAID_002",
       "description": "NSAIDs + 항응고제 병용으로 출혈 위험 급증"
     }
   ]

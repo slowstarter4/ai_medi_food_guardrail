@@ -1,0 +1,176 @@
+{
+  "timestamp": "2026-03-04T11:24:30.570673",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "1772006064.jpg",
+    "medications": [
+      "로사탄정"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_003",
+    "explanation_summary": "■ **[결론]**: 고령과 고혈압이 있으신 김영순 여사님, 로사르탄 복용 중 자몽 섭취는 매우 위험하므로 절대 금지입니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 김영순 여사님께서 자몽을 섭취할 경우, 자몽에 포함된 성분이 로사르탄의 약물 농도를 높일 수 있습니다. 이는 특히 고령자에게서 발생할 수 있는 어지럼증이나 저혈압 같은 부작용의 위험...",
+    "full_result": {
+      "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다.",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EV_HTN_004"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EV_HTN_004",
+            "evidence_source_label": "영국 NHS 약물 안내 (Felodipine 등 CCB 계열) – 자몽 섭취 주의",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "자몽이나 자몽주스는 약물 농도를 높여 어지럼·저혈압 같은 부작용 위험을 증가시킬 수 있어요.",
+            "evidence_tags": [
+              "저혈압",
+              "어지럼증"
+            ],
+            "title": "CCB + 자몽"
+          }
+        ],
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다."
+      },
+      "explanation": "■ **[결론]**: 고령과 고혈압이 있으신 김영순 여사님, 로사르탄 복용 중 자몽 섭취는 매우 위험하므로 절대 금지입니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 김영순 여사님께서 자몽을 섭취할 경우, 자몽에 포함된 성분이 로사르탄의 약물 농도를 높일 수 있습니다. 이는 특히 고령자에게서 발생할 수 있는 어지럼증이나 저혈압 같은 부작용의 위험을 증가시킬 수 있습니다. 고령이시라 신장 기능이 약해진 상태에서 이러한 약물 농도의 변화는 더욱 심각한 문제를 일으킬 수 있습니다. 이러한 위험은 고혈압 관리에도 부정적인 영향을 미칠 수 있습니다. \n\n■ **[대안]**: 자몽 대신 오렌지나 사과와 같은 다른 과일을 안전하게 섭취하시는 것을 추천드립니다. 이들 과일은 로사르탄과의 상호작용이 없으므로 안심하고 드실 수 있습니다.\n\n■ **[대처]**: 즉시 자몽 섭취를 중단하시고, 앞으로 자몽 및 자몽 주스는 피하시기 바랍니다. 또한, 본인의 건강 상태와 복용 중인 약에 대해 주치의와 상담하시는 것도 좋은 방법입니다.\n\n■ **[출처]**: 영국 NHS 약물 안내 (Felodipine 등 CCB 계열) – 자몽 섭취 주의.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

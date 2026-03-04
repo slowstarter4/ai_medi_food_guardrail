@@ -16,17 +16,27 @@ def assess_risk(normalized_entities, matched_rules):
         final_risk = "GREEN"
         top_rule = None
     else:
-        # 데이터 분석팀 요청 우선순위 적용:
-        # 1차: 룰의 정밀도(Level) - 오름차순 (1이 가장 높음)
-        # 2차: 위험 등급(Risk Level) - 내림차순 (RED가 가장 높음)
-        # 3차: Rule ID - 오름차순 (안정성 확보)
+        STRENGTH_SCORE = {
+            "HIGH": 4,
+            "MODERATE": 3,
+            "LOW": 2,
+            "EXPERT_PENDING": 1
+        }
         
+        # Helper to get the evidence strength of a rule from EVIDENCE_DB
+        def get_strength_score(rule):
+            key = rule.get("evidence_key")
+            if key and key in EVIDENCE_DB:
+                strength = EVIDENCE_DB[key].get("evidence_strength", "LOW")
+                return STRENGTH_SCORE.get(strength.upper(), 0)
+            return 0
+            
         sorted_rules = sorted(
             matched_rules,
             key=lambda r: (
-                r.get("level", 3), 
-                -PRIORITY.get(r.get("risk_level_hint"), 0), 
-                r.get("rule_id", "")
+                r.get("level", 3),                          # 1순위: 정밀도 (1 > 2 > 3)
+                -PRIORITY.get(r.get("risk_level_hint"), 0), # 2순위: 위험도 (RED > YELLOW)
+                r.get("rule_id", "")                        # 3순위: ID (안정화)
             )
         )
         

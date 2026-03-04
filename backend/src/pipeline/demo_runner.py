@@ -1,5 +1,5 @@
 # src/pipeline/demo_runner.py
-from main import main
+from app import analyze_text
 
 DEMO_SCENARIOS = [
     {
@@ -27,10 +27,10 @@ def run_demo():
         print("=" * 60)
         print(f"[INPUT]\n{s['input']}\n")
 
-        main({
-            "source": "demo",
-            "raw_text": s["input"]
-        })
+        result = analyze_text(s["input"])
+        print(f"[RESULT] 위험도: {result.get('risk_result', {}).get('risk_level', 'N/A')}")
+        if result.get("explanation"):
+            print(f"[EXPLANATION]\n{result['explanation'][:200]}...")
 
 
 if __name__ == "__main__":

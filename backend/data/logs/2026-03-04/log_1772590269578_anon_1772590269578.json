@@ -1,0 +1,142 @@
+{
+  "timestamp": "2026-03-04T11:11:09.578748",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "5317013_mCjh186eqd_1680681680965.jpeg",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "수 있 손상되었거나 내용물이 면실되었을 = 1 팽창, 경우 변형, 가장자리에 다치지 않도록 음료 개봉부 및 주의하여 레인지에 시오. 넣고 가열하지 마십시오. 주신 소비자분쟁해결기준) 가능. 부정 . 불량 식품 신고는 국번없이 1399 또는 보상 총 내용량 100 mL 영양정보 61 kcal 나트륨 10 mg 1% 탄수화물 15 g 5% 식이섬유 2.5 g 10% 당류 13 g 13 % 지방 0.7g1% 트랜스지방 0 g 포화지방 g 0% 콜레스테롤 0 mg 0% 단백질 0 g 0% 비타민B1 0.18 mg 15 % OTHE 1일 영양성분 기준치에 대한 비율(%)은 2,000 kcal 기준이므로 캡: 개인의 필요 열량에 따라 다를 수 있습니다.",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "단음료",
+              "entity_id": "FOOD_CARB_DRINK"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [],
+        "input_text": "수 있 손상되었거나 내용물이 면실되었을 = 1 팽창, 경우 변형, 가장자리에 다치지 않도록 음료 개봉부 및 주의하여 레인지에 시오. 넣고 가열하지 마십시오. 주신 소비자분쟁해결기준) 가능. 부정 . 불량 식품 신고는 국번없이 1399 또는 보상 총 내용량 100 mL 영양정보 61 kcal 나트륨 10 mg 1% 탄수화물 15 g 5% 식이섬유 2.5 g 10% 당류 13 g 13 % 지방 0.7g1% 트랜스지방 0 g 포화지방 g 0% 콜레스테롤 0 mg 0% 단백질 0 g 0% 비타민B1 0.18 mg 15 % OTHE 1일 영양성분 기준치에 대한 비율(%)은 2,000 kcal 기준이므로 캡: 개인의 필요 열량에 따라 다를 수 있습니다."
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "단음료",
+              "entity_id": "FOOD_CARB_DRINK"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

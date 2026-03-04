@@ -1,8 +1,13 @@
-from typing import TypedDict, List
+from typing import TypedDict, List, Optional
 
-class Evidence(TypedDict):
+class Evidence(TypedDict, total=False):
     evidence_key: str
-    source: str          # MFDS | 논문 | 전문가DB | 임시
+    evidence_id: str
+    source: str                    # External API fallback key
+    evidence_source_label: str     # evidence_db.json primary key
+    evidence_strength: str         # HIGH | MODERATE | LOW
     title: str
-    summary: str
-    url: str | None
+    summary: str                   # External API fallback key
+    evidence_summary_user: str     # evidence_db.json primary key
+    evidence_tags: List[str]
+    url: Optional[str]

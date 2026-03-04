@@ -1,4 +1,5 @@
 import os
+import json
 import shutil
 import tempfile
 import logging
@@ -7,11 +8,128 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 
-# main.py에서 분석 로직 가져오기
-from main import analyze_text, analyze_image
+from src.rules.loader import load_ruleset
+from src.rules.evaluator import evaluate_rules
+from service.entity_parser import parse_entities
+from service.entity_normalizer import normalize_entities, load_entity_index
+from src.service.risk_assessor import assess_risk
 from src.ocr.processor import extract_text_from_image
 from src.utils.logger import save_analysis_log
 from src.service.report_service import generate_weekly_report
+
+# LLM 설명 생성 (RAG 파이프라인)
+try:
+    from src.pipeline.explanation_pipeline import run_explanation
+    HAS_EXPLANATION = True
+except Exception:
+    HAS_EXPLANATION = False
+
+# 질환 라벨 → ID 매핑
+LABEL_TO_ID = {
+    "고령": "elderly", "고혈압": "hypertension", "당뇨": "diabetes",
+    "고지혈증": "hyperlipidemia", "관절염": "arthritis", "천식": "asthma"
+}
+
+
+def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list = None):
+    """핵심 분석 파이프라인: 파싱 → 정규화 → 규칙 매칭 → 위험도 판정 → LLM 설명"""
+    ruleset = load_ruleset()
+    rules = ruleset["rules"]
+    entity_index = load_entity_index()
+    known_entities = {etype: list(entity_index[etype].keys()) for etype in entity_index}
+
+    # 1. 입력 텍스트 파싱 & 정규화
+    parsed = parse_entities(input_text, known_entities)
+    normalized = normalize_entities(parsed)
+
+    # 2. 사용자 약물 주입
+    if user_meds:
+        for med in user_meds:
+            med_norm = normalize_entities(parse_entities(med, known_entities))
+            if med_norm.get("drugs"):
+                existing_ids = [d["entity_id"] for d in normalized.get("drugs", [])]
+                for d in med_norm["drugs"]:
+                    if d["entity_id"] not in existing_ids:
+                        normalized.setdefault("drugs", []).append(d)
+
+    # 3. 상황어 자동 감지
+    input_norm = input_text.replace(" ", "")
+    if any(kw in input_norm for kw in ["공복", "밥안먹고", "식사안하고", "밥못먹고"]):
+        normalized.setdefault("situations", []).append(
+            {"raw": "공복", "canonical": "공복 복용", "entity_id": "SITUATION_FASTING"})
+    if any(kw in input_norm for kw in ["사우나", "땀많이", "더웠어"]):
+        normalized.setdefault("situations", []).append(
+            {"raw": "탈수", "canonical": "탈수/수분부족", "entity_id": "SITUATION_DEHYDRATION"})
+
+    # 4. 사용자 질환 주입
+    if user_conditions:
+        for cond in user_conditions:
+            cid = LABEL_TO_ID.get(cond, cond)
+            normalized.setdefault("situations", []).append(
+                {"raw": cond, "canonical": cond, "entity_id": f"CONDITION_{cid}"})
+
+    # 5. 병용 상황어 자동 주입
+    has_multi = len(normalized.get("drugs", [])) >= 2
+    has_drug_food = normalized.get("drugs") and normalized.get("foods")
+    if has_multi or has_drug_food or normalized.get("drugs") or normalized.get("foods"):
+        normalized.setdefault("situations", []).append(
+            {"raw": "병용", "canonical": "병용 섭취", "entity_id": "SITUATION_CONCURRENT"})
+    if has_multi:
+        normalized.setdefault("situations", []).append(
+            {"raw": "약물 병용", "canonical": "여러 약물", "entity_id": "SITUATION_DRUG_DUPLICATION"})
+
+    # 공복 음주 복합 상황
+    food_ids = [f["entity_id"] for f in normalized.get("foods", [])]
+    situ_ids = [s["entity_id"] for s in normalized.get("situations", [])]
+    if "FOOD_ALCOHOL" in food_ids and "SITUATION_FASTING" in situ_ids:
+        normalized["situations"].append(
+            {"raw": "공복 음주", "canonical": "공복 음주", "entity_id": "SITUATION_FASTING_ALCOHOL"})
+
+    # 6. 규칙 매칭 & 위험도 평가
+    matched_rules = evaluate_rules(normalized, rules)
+    risk_result = assess_risk(normalized, matched_rules)
+
+    # user_conditions을 결과에 포함 (프론트엔드에서 사용)
+    risk_result["user_conditions"] = user_conditions or []
+    risk_result["input_text"] = input_text
+
+    # 7. LLM 설명 생성 (RAG)
+    explanation = ""
+    if HAS_EXPLANATION and risk_result.get("risk_level") != "GREEN":
+        try:
+            explanation = run_explanation({"risk_result": risk_result})
+        except Exception as e:
+            logging.warning(f"LLM 설명 생성 실패: {e}")
+            explanation = ""
+
+    return {
+        "input_text": input_text,
+        "risk_result": risk_result,
+        "explanation": explanation,
+        "debug_info": {"entities": normalized}
+    }
+
+
+def analyze_text(text: str, medications: list = None, conditions: list = None):
+    """텍스트 기반 분석"""
+    return _run_pipeline(text, medications, conditions)
+
+
+def analyze_image(image_path: str, medications: list = None, conditions: list = None):
+    """이미지 기반 분석 (OCR → 텍스트 → 파이프라인)"""
+    extracted_text = extract_text_from_image(image_path)
+    if not extracted_text:
+        return {
+            "input_text": "",
+            "risk_result": {"risk_level": "GREEN", "risk_code": "GREEN",
+                            "representative_rule": None, "entities_involved": {},
+                            "evidence_keys": [], "evidence_info": [],
+                            "user_conditions": conditions or []},
+            "explanation": "이미지에서 텍스트를 인식하지 못했습니다. 다시 촬영해주세요.",
+            "debug_info": {"entities": {}}
+        }
+    return _run_pipeline(extracted_text, medications, conditions)
+
 
 app = FastAPI(title="SafeEat API")
 

@@ -436,36 +436,31 @@ export function ProfilePage() {
         {/* Health Conditions */}
         <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
           <h2 className="font-bold text-[#263238] mb-3">질환 프리셋 선택</h2>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-500 mb-4">
             해당되는 질환을 선택하면 더 정확한 위험도 분석이 가능합니다.
           </p>
 
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-3">
             {commonConditions.map((condition) => {
               const isSelected = selectedConditions.includes(condition.id);
               return (
-                <label
+                <button
                   key={condition.id}
-                  className={`flex items-center gap-3 p-3 rounded-lg border-2 transition cursor-pointer ${isSelected
-                    ? "border-[#009688] bg-[#009688]/5 shadow-sm"
-                    : "border-gray-200 hover:border-[#009688]/50"
+                  onClick={() => toggleCondition(condition.id)}
+                  className={`flex flex-col items-center justify-center py-4 px-2 rounded-xl border-2 transition-all ${isSelected
+                      ? "border-[#009688] bg-[#009688]/10 text-[#009688]"
+                      : "border-gray-200 bg-gray-50 text-gray-600 hover:border-[#009688]/40 hover:bg-gray-100"
                     }`}
                 >
-                  <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition ${isSelected ? "bg-[#009688] border-[#009688]" : "border-gray-300"
-                    }`}>
-                    {isSelected && <CheckCircle className="w-3.5 h-3.5 text-white" />}
+                  <div className="flex items-center gap-2">
+                    {isSelected ? (
+                      <CheckCircle className="w-4 h-4 text-[#009688]" />
+                    ) : (
+                      <div className="w-4 h-4 rounded-full border-2 border-gray-300" />
+                    )}
+                    <span className="font-semibold">{condition.label}</span>
                   </div>
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => toggleCondition(condition.id)}
-                    className="hidden"
-                  />
-                  <span className={`font-medium transition ${isSelected ? "text-[#009688]" : "text-[#263238]"
-                    }`}>
-                    {condition.label}
-                  </span>
-                </label>
+                </button>
               );
             })}
           </div>
