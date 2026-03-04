@@ -1,0 +1,121 @@
+{
+  "timestamp": "2026-03-04T15:05:33.437859",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "사우나 가려고 해요",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_007",
+    "explanation_summary": "■ **[결론]**: 로사르탄을 복용 중이신 분이 탈수 상태에서 식품 섭취를 고려할 때 주의가 필요합니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 상태에서 탈수 증상이 나타나면, 혈압약의 효과가 증대되어 어지럼증과 같은 부작용이 심해질 수 있습니다. 특히, 고혈압이 있으신 경우 탈수로 인해 전해질 불균형이 발생할 수 있으며, 이는 심각한 상황으...",
+    "full_result": {
+      "input_text": "사우나 가려고 해요",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_007",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_007"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "사우나",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "탈수",
+              "canonical": "탈수/수분부족",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EXTRA_HTN_DEHYDRATION"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EXTRA_HTN_DEHYDRATION",
+            "evidence_source_label": "식품의약품안전처 의약품안전나라",
+            "evidence_strength": "LOW",
+            "evidence_summary_user": "탈수 상태에서는 혈압약으로 인한 어지럼증이 심해지고 전해질 불균형이 발생할 수 있습니다.",
+            "evidence_tags": [
+              "어지럼증",
+              "전해질 이상"
+            ],
+            "title": "탈수와 혈압약 부작용",
+            "url": "https://nedrug.mfds.go.kr"
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "고혈압"
+        ],
+        "input_text": "사우나 가려고 해요"
+      },
+      "explanation": "■ **[결론]**: 로사르탄을 복용 중이신 분이 탈수 상태에서 식품 섭취를 고려할 때 주의가 필요합니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 상태에서 탈수 증상이 나타나면, 혈압약의 효과가 증대되어 어지럼증과 같은 부작용이 심해질 수 있습니다. 특히, 고혈압이 있으신 경우 탈수로 인해 전해질 불균형이 발생할 수 있으며, 이는 심각한 상황으로 이어질 수 있습니다. 로사르탄은 혈압을 낮추는 약물이기 때문에 탈수로 인한 혈압 강하가 더욱 심해질 위험이 있습니다. \n\n■ **[대안]**: 탈수를 예방하기 위해 충분한 수분 섭취가 중요하며, 물이나 전해질 음료를 안전하게 섭취하실 수 있습니다. 과일이나 채소에서 수분을 보충할 수 있는 수박이나 오이와 같은 식품도 좋습니다.\n\n■ **[대처]**: 현재 상태에서 탈수 증상이 느껴지신다면 즉시 수분을 보충하시고, 필요시 의료진과 상담하여 추가적인 조치를 취하는 것이 좋습니다. 또한, 로사르탄 복용 시에는 정기적으로 혈압을 체크하시고, 이상이 있을 경우 즉시 의료기관을 방문하시기 바랍니다.\n\n■ **[출처]**: 식품의약품안전처 의약품안전나라",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "사우나",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "탈수",
+              "canonical": "탈수/수분부족",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

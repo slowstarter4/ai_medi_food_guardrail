@@ -1,242 +1,177 @@
 {
-  "EV_HTN_001": {
-    "evidence_id": "EV_HTN_001",
-    "evidence_source_label": "미국 FDA 의약품 허가사항 (로사르탄 등 ACE/ARB 라벨) – 칼륨 보충제/저염소금 주의",
+  "EVD_HTN_POTASSIUM_FOOD": {
+    "evidence_id": "EVD_HTN_POTASSIUM_FOOD",
+    "evidence_source_label": "FDA drug label (losartan)",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "바나나·토마토 같은 고칼륨 식품이나 칼륨 소금대체제를 함께 사용하면 혈중 칼륨이 과도하게 올라 부정맥 위험이 증가할 수 있어요.",
+    "evidence_summary_user": "ACE/ARB 고혈압약은 칼륨 배출을 억제합니다. 고칼륨 식품(바나나, 토마토 등)을 과다 섭취하면 심장 부담을 줄 수 있으므로 섭취량을 조절하세요.",
     "evidence_tags": [
-      "고칼륨혈증",
-      "부정맥"
-    ],
-    "title": "ACE/ARB + 고칼륨 식품/염대체"
+      "ACE_ARB",
+      "potassium",
+      "hyperkalemia"
+    ]
   },
-  "EV_HTN_002": {
-    "evidence_id": "EV_HTN_002",
-    "evidence_source_label": "미국 FDA 의약품 허가사항 (ACE 억제제 계열) – 칼륨 보충제 병용 주의",
+  "EVD_HTN_POTASSIUM_SUPPLEMENT": {
+    "evidence_id": "EVD_HTN_POTASSIUM_SUPPLEMENT",
+    "evidence_source_label": "FDA drug label (enalapril)",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "ACE 억제제 복용 중 칼륨 소금(저염소금)을 사용하면 고칼륨혈증 위험이 있어요. 임의로 함께 사용하지 마세요.",
+    "evidence_summary_user": "고혈압약 성분이 혈중 칼륨 농도를 높입니다. 칼륨 보충제나 소금 대체제와 병용 시 심각한 부정맥 위험이 있으므로 병용 전 의사와 상의하세요.",
     "evidence_tags": [
-      "고칼륨혈증"
-    ],
-    "title": "ACE억제제 + 칼륨 소금대체제"
+      "ACE",
+      "potassium",
+      "arrhythmia"
+    ]
   },
-  "EV_HTN_003": {
-    "evidence_id": "EV_HTN_003",
-    "evidence_source_label": "영국 NHS 환자 안내 (Ramipril 등) – 칼륨 소금 피하도록 권고",
+  "EVD_HTN_GRAPEFRUIT_CCB": {
+    "evidence_id": "EVD_HTN_GRAPEFRUIT_CCB",
+    "evidence_source_label": "NHS medication guide",
+    "evidence_strength": "HIGH",
+    "evidence_summary_user": "자몽 성분이 암로디핀의 분해를 방해합니다. 혈중 약물 농도가 급격히 높아져 어지럼이나 저혈압이 발생할 수 있으니 자몽 섭취를 피하세요.",
+    "evidence_tags": [
+      "grapefruit",
+      "CYP3A4",
+      "CCB"
+    ]
+  },
+  "EVD_HTN_DECONGESTANT_BP": {
+    "evidence_id": "EVD_HTN_DECONGESTANT_BP",
+    "evidence_source_label": "NHS medicine safety",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "ACE 억제제는 체내 칼륨을 증가시킬 수 있어 칼륨 기반 저염소금은 피하라고 안내돼요.",
+    "evidence_summary_user": "코막힘약의 슈도에페드린 성분이 혈관을 수축시킵니다. 고혈압 환자의 혈압을 갑자기 높일 수 있으므로 복용 전 혈압 상태를 확인하세요.",
     "evidence_tags": [
-      "고칼륨혈증 예방"
-    ],
-    "title": "ACE억제제 + 칼륨 소금, 환자 안내"
+      "decongestant",
+      "pseudoephedrine",
+      "hypertension"
+    ]
   },
-  "EV_HTN_004": {
-    "evidence_id": "EV_HTN_004",
-    "evidence_source_label": "영국 NHS 약물 안내 (Felodipine 등 CCB 계열) – 자몽 섭취 주의",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "자몽이나 자몽주스는 약물 농도를 높여 어지럼·저혈압 같은 부작용 위험을 증가시킬 수 있어요.",
-    "evidence_tags": [
-      "저혈압",
-      "어지럼증"
-    ],
-    "title": "CCB + 자몽"
-  },
-  "EV_HTN_005": {
-    "evidence_id": "EV_HTN_005",
-    "evidence_source_label": "British Heart Foundation 건강 정보 – 감초의 혈압 상승 효과",
+  "EVD_HTN_NSAID_BP": {
+    "evidence_id": "EVD_HTN_NSAID_BP",
+    "evidence_source_label": "Clinical pharmacology review",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "감초는 나트륨을 증가시키고 전해질 균형을 흔들어 혈압을 올릴 수 있어 고혈압 관리에 불리할 수 있어요.",
+    "evidence_summary_user": "이부프로펜 등 진통제는 체내 나트륨 배출을 방해합니다. 혈압약의 효과를 떨어뜨리고 혈압을 올릴 수 있으니 장기 복용 시 주의하세요.",
     "evidence_tags": [
-      "혈압 상승"
-    ],
-    "title": "감초 + 혈압 악화"
+      "NSAID",
+      "blood_pressure",
+      "interaction"
+    ]
   },
-  "EV_DM_001": {
-    "evidence_id": "EV_DM_001",
-    "evidence_source_label": "미국 FDA 메트포르민 허가사항 – 음주 시 젖산산증 위험 경고",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "메트포르민 복용 중 과도한 음주는 젖산산증이라는 심각한 부작용 위험을 높일 수 있어요.",
-    "evidence_tags": [
-      "젖산산증 위험"
-    ],
-    "title": "메트포르민 + 과음"
-  },
-  "EV_DM_002": {
-    "evidence_id": "EV_DM_002",
-    "evidence_source_label": "미국 당뇨병학회(ADA) 가이드 – 음주 시 저혈당 위험",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "인슐린이나 설폰요소제 복용 중 술을 마시면 저혈당 위험이 크게 증가해요. 공복 음주는 특히 위험해요.",
-    "evidence_tags": [
-      "저혈당"
-    ],
-    "title": "인슐린/설폰요소제 + 음주"
-  },
-  "EV_DM_003": {
-    "evidence_id": "EV_DM_003",
-    "evidence_source_label": "영국 NHS 약물 안내 (Gliclazide 등) – 음주 시 저혈당 경고",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "설폰요소제 계열 당뇨약은 음주와 함께 복용하면 저혈당 위험이 증가할 수 있어요.",
-    "evidence_tags": [
-      "저혈당 증가"
-    ],
-    "title": "설폰요소제 + 음주"
-  },
-  "EV_DM_004": {
-    "evidence_id": "EV_DM_004",
-    "evidence_source_label": "Mayo Clinic 건강 정보 – 공복 음주 시 저혈당 및 지연 저혈당 가능",
+  "EVD_HTN_LICORICE_BP": {
+    "evidence_id": "EVD_HTN_LICORICE_BP",
+    "evidence_source_label": "British Heart Foundation",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "공복 상태에서 술을 마시면 즉시 또는 몇 시간 뒤 저혈당이 발생할 수 있어요.",
+    "evidence_summary_user": "감초의 글리시리진 성분이 나트륨 저류를 유발합니다. 혈압 상승 및 부종이 나타날 수 있으므로 감초가 포함된 식품이나 한약 섭취 시 주의하세요.",
     "evidence_tags": [
-      "지연 저혈당"
-    ],
-    "title": "공복 음주 → 저혈당"
+      "licorice",
+      "glycyrrhizin",
+      "hypertension"
+    ]
   },
-  "EV_DM_005": {
-    "evidence_id": "EV_DM_005",
-    "evidence_source_label": "영국 NHS 병원 환자 안내 – 음주 시 저혈당 고위험군",
+  "EVD_HTN_DIURETIC_DEHYDRATION": {
+    "evidence_id": "EVD_HTN_DIURETIC_DEHYDRATION",
+    "evidence_source_label": "DailyMed labels",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "인슐린이나 설폰요소제를 복용하는 사람은 술을 마실 때 저혈당 위험이 높아 추가 주의가 필요해요.",
+    "evidence_summary_user": "이뇨제는 체내 수분을 배출시킵니다. 과도한 땀 배출이나 사우나 시 탈수로 인한 실신 위험이 있으므로 충분한 수분을 섭취하세요.",
     "evidence_tags": [
-      "저혈당 고위험"
-    ],
-    "title": "인슐린/설폰요소제 복용자 음주 주의"
+      "diuretic",
+      "dehydration",
+      "electrolyte"
+    ]
   },
-  "EV_NSAID_001": {
-    "evidence_id": "EV_NSAID_001",
-    "evidence_source_label": "미국 FDA 일반의약품(OTC) 라벨 – 음주 시 위장출혈 경고",
+  "EVD_DM_ALCOHOL_HYPO": {
+    "evidence_id": "EVD_DM_ALCOHOL_HYPO",
+    "evidence_source_label": "American Diabetes Association",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "이부프로펜 등 NSAID는 위장출혈 위험이 있고, 술을 자주 마시면 그 위험이 더 커질 수 있어요.",
+    "evidence_summary_user": "당뇨약 복용 중 알코올이 간의 포도당 생성을 막습니다. 심각한 저혈당에 빠질 위험이 크므로 빈속에 술을 마시지 않도록 절대 주의하세요.",
     "evidence_tags": [
-      "위장출혈"
-    ],
-    "title": "이부프로펜 + 잦은 음주"
+      "alcohol",
+      "hypoglycemia",
+      "sulfonylurea"
+    ]
   },
-  "EV_NSAID_002": {
-    "evidence_id": "EV_NSAID_002",
-    "evidence_source_label": "미국 FDA Drug Facts – 고령자 및 출혈 위험군 주의",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "NSAID는 위장출혈 위험이 있으며, 특히 고령자나 출혈 위험이 있는 경우 더 주의해야 해요.",
-    "evidence_tags": [
-      "고령자 주의",
-      "출혈"
-    ],
-    "title": "NSAID + 고령/출혈 위험군"
-  },
-  "EV_NSAID_003": {
-    "evidence_id": "EV_NSAID_003",
-    "evidence_source_label": "DailyMed 허가사항 (Naproxen 등) – 탈수 시 신장 기능 모니터링 권고",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "탈수 상태에서 NSAID를 복용하면 신장 손상 위험이 증가할 수 있어요. 수분을 충분히 섭취하세요.",
-    "evidence_tags": [
-      "신장 손상"
-    ],
-    "title": "NSAID + 탈수"
-  },
-  "EV_NSAID_004": {
-    "evidence_id": "EV_NSAID_004",
-    "evidence_source_label": "뉴질랜드 Medsafe 안전 공지 – 탈수 시 신장 기능 저하 위험",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "이부프로펜은 신장 기능에 영향을 줄 수 있어 탈수 상태에서는 위험이 더 커질 수 있어요.",
-    "evidence_tags": [
-      "신장기능 저하"
-    ],
-    "title": "이부프로펜 + 탈수 위험군"
-  },
-  "EV_NSAID_005": {
-    "evidence_id": "EV_NSAID_005",
-    "evidence_source_label": "의학 논문 리뷰(PMC) – 은행잎의 출혈 위험 보고",
+  "EVD_DM_SUGAR_SPIKE": {
+    "evidence_id": "EVD_DM_SUGAR_SPIKE",
+    "evidence_source_label": "ADA nutrition guidance",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "은행잎 등 일부 건강식품은 출혈 경향을 높일 수 있어 NSAID와 함께 사용하면 위험이 커질 수 있어요.",
+    "evidence_summary_user": "고당분 식품은 혈당 수치를 급격히 올립니다. 당뇨 환자의 혈당 조절을 어렵게 하므로 당 함량이 높은 음료나 간식은 가급적 피하세요.",
     "evidence_tags": [
-      "출혈 증가"
-    ],
-    "title": "NSAID + 은행잎 등 허브"
+      "sugar",
+      "hyperglycemia",
+      "diet"
+    ]
   },
-  "EXTRA_HTN_DECONGESTANT": {
-    "evidence_id": "EXTRA_HTN_DECONGESTANT",
-    "evidence_source_label": "식품의약품안전처 의약품안전나라",
+  "EVD_DM_METFORMIN_ALCOHOL": {
+    "evidence_id": "EVD_DM_METFORMIN_ALCOHOL",
+    "evidence_source_label": "FDA drug label (metformin)",
+    "evidence_strength": "HIGH",
+    "evidence_summary_user": "메트포르민과 과도한 알코올 섭취는 체내 젖산 합성을 촉진합니다. 치명적인 젖산산증 위험이 있으므로 복용 중 과음은 반드시 피해야 합니다.",
+    "evidence_tags": [
+      "metformin",
+      "alcohol",
+      "lactic_acidosis"
+    ]
+  },
+  "EVD_DM_MEAL_SKIP": {
+    "evidence_id": "EVD_DM_MEAL_SKIP",
+    "evidence_source_label": "ADA guidelines",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "충혈제거제 성분이 포함된 감기약은 혈압을 상승시킬 수 있으므로 주의가 필요합니다.",
+    "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 인슐린 작용으로 혈당이 너무 낮아집니다. 떨림이나 식은땀 등 저혈당 증상이 생길 수 있으니 규칙적으로 식사하세요.",
     "evidence_tags": [
-      "혈압 상승"
-    ],
-    "title": "고혈압 환자에서 감기약 주의",
-    "url": "https://nedrug.mfds.go.kr"
+      "fasting",
+      "hypoglycemia",
+      "diabetes"
+    ]
   },
-  "EXTRA_HTN_NSAID": {
-    "evidence_id": "EXTRA_HTN_NSAID",
-    "evidence_source_label": "ACC/AHA Hypertension Guidelines & 식약처 주의사항",
+  "EVD_DM_SGLT2_DEHYDRATION": {
+    "evidence_id": "EVD_DM_SGLT2_DEHYDRATION",
+    "evidence_source_label": "FDA drug label (SGLT2)",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "이부프로펜, 나프록센 등 진통소염제는 혈압약의 효과를 약화시켜 혈압 조절을 어렵게 만들 수 있어요.",
+    "evidence_summary_user": "SGLT2 억제제는 소변으로 당과 수분을 함께 배출합니다. 체내 수분이 부족해지면 탈수 및 혈압 저하가 올 수 있으니 수분을 꾸준히 섭취하세요.",
     "evidence_tags": [
-      "혈압약 효능 감소"
-    ],
-    "title": "NSAIDs와 혈압약 효과 감소",
-    "url": "https://nedrug.mfds.go.kr"
+      "SGLT2",
+      "dehydration",
+      "renal"
+    ]
   },
-  "EXTRA_HTN_DEHYDRATION": {
-    "evidence_id": "EXTRA_HTN_DEHYDRATION",
-    "evidence_source_label": "식품의약품안전처 의약품안전나라",
-    "evidence_strength": "LOW",
-    "evidence_summary_user": "탈수 상태에서는 혈압약으로 인한 어지럼증이 심해지고 전해질 불균형이 발생할 수 있습니다.",
+  "EVD_NSAID_ALCOHOL_BLEEDING": {
+    "evidence_id": "EVD_NSAID_ALCOHOL_BLEEDING",
+    "evidence_source_label": "FDA ibuprofen facts",
+    "evidence_strength": "HIGH",
+    "evidence_summary_user": "진통제와 술이 위 점막을 동시에 자극합니다. 위장 출혈이나 천공 위험이 높아질 수 있으므로 복용 전후 음주를 삼가야 합니다.",
     "evidence_tags": [
-      "어지럼증",
-      "전해질 이상"
-    ],
-    "title": "탈수와 혈압약 부작용",
-    "url": "https://nedrug.mfds.go.kr"
+      "NSAID",
+      "alcohol",
+      "bleeding"
+    ]
   },
-  "EXTRA_DM_HYPERGLYCEMIA": {
-    "evidence_id": "EXTRA_DM_HYPERGLYCEMIA",
-    "evidence_source_label": "ADA Standards of Care & 식품안전나라",
+  "EVD_NSAID_FASTING": {
+    "evidence_id": "EVD_NSAID_FASTING",
+    "evidence_source_label": "NSAID safety guidance",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "케이크, 사탕 등 당류가 많은 음식은 혈당을 급격히 상승시켜 당뇨 조절을 어렵게 만듭니다.",
+    "evidence_summary_user": "진통제 성분이 위벽 보호 물질 생성을 억제합니다. 공복 복용 시 속쓰림이나 위염이 발생할 수 있으므로 식후 또는 우유와 함께 복용하세요.",
     "evidence_tags": [
-      "혈당 급상승"
-    ],
-    "title": "당류 과다 섭취와 혈당 변동"
+      "NSAID",
+      "gastric_irritation"
+    ]
   },
-  "EXTRA_DM_MEAL_SKIP": {
-    "evidence_id": "EXTRA_DM_MEAL_SKIP",
-    "evidence_source_label": "식품의약품안전처 (복약지도 정보)",
-    "evidence_strength": "MODERATE",
-    "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 저혈당이 발생할 수 있습니다. 떨림, 식은땀 등 증상이 나타나면 당분을 섭취하세요.",
-    "evidence_tags": [
-      "저혈당"
-    ],
-    "title": "식사 거름과 저혈당",
-    "url": "https://nedrug.mfds.go.kr"
-  },
-  "EXTRA_DM_DEHYDRATION": {
-    "evidence_id": "EXTRA_DM_DEHYDRATION",
-    "evidence_source_label": "FDA DailyMed (Warnings & Precautions)",
+  "EVD_NSAID_DUPLICATION": {
+    "evidence_id": "EVD_NSAID_DUPLICATION",
+    "evidence_source_label": "FDA safety warning",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "SGLT2 억제제는 소변으로 당을 배출하므로 탈수 시 어지럼증과 신장 부담이 증가할 수 있습니다.",
+    "evidence_summary_user": "비슷한 성분의 진통제를 중복 복용하면 위장 및 신장에 부담을 줍니다. 부작용 발생 빈도가 급증하므로 동일 계열 약물을 하나 이상 먹지 마세요.",
     "evidence_tags": [
-      "신장 부담"
-    ],
-    "title": "SGLT2 억제제와 탈수"
+      "NSAID",
+      "duplication",
+      "bleeding"
+    ]
   },
-  "EXTRA_NSAID_GI": {
-    "evidence_id": "EXTRA_NSAID_GI",
-    "evidence_source_label": "미국 FDA Drug Facts – 고령자 및 위장 보호 주의",
+  "EVD_NSAID_DEHYDRATION": {
+    "evidence_id": "EVD_NSAID_DEHYDRATION",
+    "evidence_source_label": "DailyMed label insight",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "진통소염제는 위 점막을 자극할 수 있으며, 공복 복용이나 고령자의 경우 그 위험이 더 큽니다.",
+    "evidence_summary_user": "진통제가 신장 혈류량을 조절하는 효소를 억제합니다. 탈수 상태에서 복용 시 급성 신손상 위험이 있으므로 충분한 수분 상태에서 복용하세요.",
     "evidence_tags": [
-      "위 점막 손상"
-    ],
-    "title": "NSAIDs 공복 복용과 위 손상"
-  },
-  "EXTRA_NSAID_DUPLICATION": {
-    "evidence_id": "EXTRA_NSAID_DUPLICATION",
-    "evidence_source_label": "HIRA DUR 병용금기",
-    "evidence_strength": "HIGH",
-    "evidence_summary_user": "이부프로펜과 나프록센과 같은 동일 계열 진통제를 중복 복용할 경우 위장 출혈 및 신장 손상 위험이 급증합니다.",
-    "evidence_tags": [
-      "중복 처방 제한",
-      "부작용 극대화"
-    ],
-    "title": "NSAIDs 중복 복용 위험",
-    "url": "https://www.hira.or.kr"
+      "NSAID",
+      "renal",
+      "dehydration"
+    ]
   }
 }

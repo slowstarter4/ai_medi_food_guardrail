@@ -1,0 +1,166 @@
+{
+  "timestamp": "2026-03-04T15:06:31.897991",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "설폰요소제 먹고 있는데 공복에 술 마셔도 되나요?",
+    "medications": [],
+    "conditions": [
+      "당뇨"
+    ]
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "DM_006",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.\n\n■ **[이유]**: 현재 **설폰요소제**를 복용 중이신데, 이 약물은 혈당을 낮추는 효과가 있습니다. 여기에 **술**을 함께 섭취하면 저혈당의 위험이 크게 증가할 수 있습니다. 음주가 저혈당을 유발하는 이유는 술이 간에서 포도당을 생성하는 과정을 방해하기 때문입니다. 특히 공복 상태에서 술을 ...",
+    "full_result": {
+      "input_text": "설폰요소제 먹고 있는데 공복에 술 마셔도 되나요?",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "DM_006",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_001",
+            "DM_004",
+            "DM_006"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "술",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "설폰요소제",
+              "entity_id": "DRUG_SULFONYLUREA",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EV_DM_003",
+          "EXTRA_DM_MEAL_SKIP",
+          "EV_DM_004"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EV_DM_003",
+            "evidence_source_label": "영국 NHS 약물 안내 (Gliclazide 등) – 음주 시 저혈당 경고",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "설폰요소제 계열 당뇨약은 음주와 함께 복용하면 저혈당 위험이 증가할 수 있어요.",
+            "evidence_tags": [
+              "저혈당 증가"
+            ],
+            "title": "설폰요소제 + 음주"
+          },
+          {
+            "evidence_id": "EXTRA_DM_MEAL_SKIP",
+            "evidence_source_label": "식품의약품안전처 (복약지도 정보)",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 저혈당이 발생할 수 있습니다. 떨림, 식은땀 등 증상이 나타나면 당분을 섭취하세요.",
+            "evidence_tags": [
+              "저혈당"
+            ],
+            "title": "식사 거름과 저혈당",
+            "url": "https://nedrug.mfds.go.kr"
+          },
+          {
+            "evidence_id": "EV_DM_004",
+            "evidence_source_label": "Mayo Clinic 건강 정보 – 공복 음주 시 저혈당 및 지연 저혈당 가능",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "공복 상태에서 술을 마시면 즉시 또는 몇 시간 뒤 저혈당이 발생할 수 있어요.",
+            "evidence_tags": [
+              "지연 저혈당"
+            ],
+            "title": "공복 음주 → 저혈당"
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": [
+            "설폰요소제"
+          ]
+        },
+        "user_conditions": [
+          "당뇨"
+        ],
+        "input_text": "설폰요소제 먹고 있는데 공복에 술 마셔도 되나요?"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.\n\n■ **[이유]**: 현재 **설폰요소제**를 복용 중이신데, 이 약물은 혈당을 낮추는 효과가 있습니다. 여기에 **술**을 함께 섭취하면 저혈당의 위험이 크게 증가할 수 있습니다. 음주가 저혈당을 유발하는 이유는 술이 간에서 포도당을 생성하는 과정을 방해하기 때문입니다. 특히 공복 상태에서 술을 마시면 즉시 또는 몇 시간 뒤에 저혈당이 발생할 수 있어요. 이러한 상황에서 떨림, 식은땀 등의 저혈당 증상이 나타날 수 있으므로 매우 위험한 조합입니다. (출처: 영국 NHS 약물 안내, Mayo Clinic 건강 정보)\n\n■ **[대안]**: 술 대신 물이나 허브차 같은 무알콜 음료를 드시는 것이 안전합니다. 또한, 당분이 포함된 음료도 저혈당 예방을 위해 고려하실 수 있습니다.\n\n■ **[대처]**: 즉시 음주를 중단하시고, 만약 음주 후에 저혈당 증상이 나타난다면 당분을 즉시 섭취하시기 바랍니다. 필요시 의료 기관에 연락해 주세요.\n\n■ **[출처]**: 영국 NHS 약물 안내, Mayo Clinic 건강 정보, 식품의약품안전처 (복약지도 정보)",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "술",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "설폰요소제",
+              "entity_id": "DRUG_SULFONYLUREA",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

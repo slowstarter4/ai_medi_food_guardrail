@@ -1,0 +1,160 @@
+{
+  "timestamp": "2026-03-04T16:53:54.929176",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복 음주(예정)",
+    "medications": [
+      "설폰요소제"
+    ],
+    "conditions": [
+      "고령",
+      "당뇨"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "DM_004",
+    "explanation_summary": "■ **[결론]**: 음주와 설폰요소제의 상호작용은 저혈당 위험을 증가시킬 수 있으므로 주의가 필요합니다.\n\n■ **[이유]**: 현재 설폰요소제를 복용 중이신 고령의 당뇨 환자분은 음주를 섭취할 경우, 혈당 조절에 부정적인 영향을 받을 수 있습니다. 설폰요소제는 인슐린 분비를 자극하여 혈당을 낮추는 작용을 합니다. 그러나 음주가 혈당 조절에 영향을 미쳐 ...",
+    "full_result": {
+      "input_text": "공복 음주(예정)",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "DM_004",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_004"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "설폰요소제",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            },
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_DM_MEAL_SKIP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_source_label": "ADA diabetes care guideline",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 저혈당 위험이 증가할 수 있습니다.",
+            "evidence_tags": [
+              "fasting",
+              "hypoglycemia",
+              "diabetes"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "당뇨"
+        ],
+        "input_text": "공복 음주(예정)"
+      },
+      "explanation": "■ **[결론]**: 음주와 설폰요소제의 상호작용은 저혈당 위험을 증가시킬 수 있으므로 주의가 필요합니다.\n\n■ **[이유]**: 현재 설폰요소제를 복용 중이신 고령의 당뇨 환자분은 음주를 섭취할 경우, 혈당 조절에 부정적인 영향을 받을 수 있습니다. 설폰요소제는 인슐린 분비를 자극하여 혈당을 낮추는 작용을 합니다. 그러나 음주가 혈당 조절에 영향을 미쳐 저혈당을 유발할 수 있습니다. 특히 고령의 환자는 신체의 대사능력이 저하되어 있어, 음주 후 저혈당 증상이 더 심각하게 나타날 수 있습니다. 따라서 음주를 할 경우 저혈당의 위험성이 증가하고, 이는 심각한 건강 문제를 초래할 수 있습니다.\n\n■ **[대안]**: 음주 대신 무가당 차나 허브티, 또는 신선한 과일(예: 사과, 오렌지)을 섭취하시는 것이 안전합니다. 이러한 대체 음료는 혈당에 미치는 영향이 적고 건강에 도움이 됩니다.\n\n■ **[대처]**: 음주를 피하시고, 음식을 섭취할 때는 혈당을 잘 체크하시며, 필요시 의사와 상담하여 적절한 혈당 관리 방법을 알아보시는 것이 좋습니다. 또한, 만약 저혈당 증상이 나타난다면 즉시 포도당이나 당분이 있는 음식을 섭취하시기 바랍니다.\n\n■ **[출처]**: ADA diabetes care guideline",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "설폰요소제",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            },
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -46,6 +46,8 @@ def load_entity_index() -> Dict[str, Dict[str, str]]:
 # =========================
 # 3. Entity Normalization
 # =========================
+import difflib
+
 def normalize_entities(
     parsed_entities: Dict[str, List[str]]
 ) -> Dict[str, List[Dict]]:
@@ -63,15 +65,24 @@ def normalize_entities(
 
         for raw in values:
             surface = normalize_surface(entity_type, raw)
+            
+            entity_id = None
+            
+            # 1. Exact Match
+            if surface in lookup:
+                entity_id = lookup[surface]
+            else:
+                # 2. Fuzzy Match (85% threshold for drugs/foods, 75% for situations)
+                cutoff = 0.75 if entity_type == "situations" else 0.85
+                matches = difflib.get_close_matches(surface, lookup.keys(), n=1, cutoff=cutoff)
+                if matches:
+                    entity_id = lookup[matches[0]]
+                    print(f"DEBUG: Fuzzy match found [{entity_type}]: '{surface}' -> '{matches[0]}' (ID: {entity_id})")
 
-            if surface not in lookup:
-                continue
-
-            entity_id = lookup[surface]
-
-            normalized[entity_type].append({
-                "raw": raw,
-                "entity_id": entity_id
-            })
+            if entity_id:
+                normalized[entity_type].append({
+                    "raw": raw,
+                    "entity_id": entity_id
+                })
 
     return normalized

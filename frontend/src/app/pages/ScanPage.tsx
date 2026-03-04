@@ -27,6 +27,15 @@ interface BoundingBox {
   riskLevel?: "safe" | "warning" | "danger";
 }
 
+const quickSituations = [
+  { id: "SITUATION_FASTING", label: "공복" },
+  { id: "SITUATION_EXERCISE", label: "격한 운동" },
+  { id: "SITUATION_DEHYDRATION", label: "사우나/찜질방" },
+  { id: "SITUATION_ALCOHOL", label: "음주(예정)" },
+  { id: "SITUATION_DEHYDRATION_FAST", label: "탈수" },
+  { id: "FOOD_CAFFEINE", label: "카페인 과다" },
+];
+
 export function ScanPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,6 +45,7 @@ export function ScanPage() {
   const [cameraEnabled, setCameraEnabled] = useState(true);
   const [boundingBoxes, setBoundingBoxes] = useState<BoundingBox[]>([]);
   const [detectedIngredients, setDetectedIngredients] = useState<string[]>([]);
+  const [selectedSituations, setSelectedSituations] = useState<string[]>([]);
   const [manualSearch, setManualSearch] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [lastAnalysisResult, setLastAnalysisResult] = useState<any>(null);
@@ -45,7 +55,6 @@ export function ScanPage() {
     fileInputRef.current?.click();
   };
 
-  // Helper: Base64 to File conversion
   const base64ToFile = (base64String: string, filename: string) => {
     const arr = base64String.split(",");
     const mime = arr[0].match(/:(.*?);/)?.[1];
@@ -61,7 +70,7 @@ export function ScanPage() {
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
-      setCameraEnabled(false); // Stop camera after capture
+      setCameraEnabled(false);
       const file = base64ToFile(imageSrc, "scan.jpg");
       processFile(file);
     }
@@ -72,13 +81,20 @@ export function ScanPage() {
     if (file) processFile(file);
   };
 
+  const toggleSituation = (label: string) => {
+    if (selectedSituations.includes(label)) {
+      setSelectedSituations(selectedSituations.filter(s => s !== label));
+    } else {
+      setSelectedSituations([...selectedSituations, label]);
+    }
+  };
+
   const processFile = async (file: File) => {
     setSelectedFile(file);
     setIsScanning(true);
     setBoundingBoxes([]);
     setDetectedIngredients([]);
 
-    // Preparation for API Call
     const formData = new FormData();
     formData.append("file", file);
 
@@ -99,7 +115,12 @@ export function ScanPage() {
       formData.append("conditions", JSON.stringify(conditionLabels));
     }
 
+    if (selectedSituations.length > 0) {
+      formData.append("manual_situations", JSON.stringify(selectedSituations));
+    }
+
     try {
+      // @ts-ignore
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
       const response = await fetch(`${API_URL}/api/analyze/image`, {
         method: "POST",
@@ -107,17 +128,11 @@ export function ScanPage() {
       });
 
       if (!response.ok) throw new Error("분석 실패");
-
       const result = await response.json();
-      if (result.error) throw new Error(result.error);
-
-      // Parsing Results
       const entities = result.debug_info?.entities || {};
       const rawText: string = result.input_text || "";
 
-      // 성분량 추출 함수: OCR 텍스트에서 성분명 매칭 후 양 추출
       const extractAmount = (name: string): string => {
-        // "\ub098\ud2b8\ub968 500mg" or "\ub2e8\ubc31\uc9c8 30g" or "\uc5f4\ub7c9 250kcal" 패\ud134
         const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const pattern = new RegExp(escaped + `[\\s:]*([\\d,.]+\\s*(?:mg|g|ml|kcal|%|\u03bcg|mcg|IU))`, 'i');
         const match = rawText.match(pattern);
@@ -135,13 +150,12 @@ export function ScanPage() {
         }) || [])
       ];
 
-      if (allIngredients.length === 0) {
-        alert("인식된 성분이 없습니다. 다시 촬영하거나 수동으로 입력하세요.");
+      if (allIngredients.length === 0 && selectedSituations.length === 0) {
+        alert("인식된 항목이나 선택된 상황이 없습니다.");
         setCameraEnabled(true);
         return;
       }
 
-      // Mock Bounding Boxes for UI
       const mockBoxes: BoundingBox[] = allIngredients.map((text, i) => ({
         id: i.toString(),
         x: 20 + (i * 10) % 50,
@@ -166,12 +180,13 @@ export function ScanPage() {
   };
 
   const analyzeIngredients = async () => {
-    if (isLoading || (detectedIngredients.length === 0 && !manualSearch)) return;
+    if (isLoading || (detectedIngredients.length === 0 && selectedSituations.length === 0 && !manualSearch)) return;
 
     setIsLoading(true);
     let resultToPass = lastAnalysisResult;
 
-    if (scanMode === "manual" && manualSearch && !resultToPass) {
+    // 만약 수동 모드이거나, 새로운 상황이 추가된 경우 재분석 시도
+    if (scanMode === "manual" || !resultToPass) {
       try {
         const savedMeds = localStorage.getItem("medications");
         const savedConditions = localStorage.getItem("conditions");
@@ -183,12 +198,21 @@ export function ScanPage() {
           })
           : [];
 
+        // @ts-ignore
         const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+        // 칩에 등록된 성분 + 수동 입력창 성분 + 선택된 상황 모두 통합
+        const combinedText = [
+          ...detectedIngredients,
+          manualSearch,
+          ...selectedSituations
+        ].filter(t => t.trim().length > 0).join(", ");
+
         const response = await fetch(`${API_URL}/api/analyze/text`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            text: manualSearch,
+            text: combinedText,
             medications: medNames,
             conditions: conditionLabels
           }),
@@ -201,8 +225,8 @@ export function ScanPage() {
 
     const scanData = {
       id: Date.now().toString(),
-      foodName: manualSearch || "스캔한 식품",
-      ingredients: detectedIngredients,
+      foodName: manualSearch || (selectedSituations.length > 0 ? selectedSituations[0] : "통합 안심 스캔"),
+      ingredients: [...detectedIngredients, ...selectedSituations],
       date: new Date().toLocaleString(),
       riskLevel: resultToPass?.risk_result?.risk_level?.toLowerCase() === "red" ? "danger" :
         resultToPass?.risk_result?.risk_level?.toLowerCase() === "yellow" ? "warning" : "safe",
@@ -226,15 +250,19 @@ export function ScanPage() {
   return (
     <div className="min-h-screen bg-[#F5F5F5] pb-20">
       <div className="bg-[#009688] text-white p-6 pb-8">
-        <h1 className="text-2xl font-bold">식품 스캔</h1>
-        <p className="text-white/90 mt-2">성분표를 촬영하거나 직접 입력하세요</p>
+        <h1 className="text-2xl font-bold">통합 안심 스캔</h1>
+        <p className="text-white/90 mt-2">성분표, 처방전, 혹은 현재 상황을 알려주세요</p>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 -mt-4">
-        {/* Mode Selector */}
         <div className="bg-white rounded-xl shadow-sm p-2 mb-4 flex gap-2">
           <button
-            onClick={() => setScanMode("camera")}
+            onClick={() => {
+              setScanMode("camera");
+              setLastAnalysisResult(null);
+              setDetectedIngredients([]);
+              setBoundingBoxes([]);
+            }}
             className={`flex-1 py-2.5 rounded-lg font-medium transition ${scanMode === "camera"
               ? "bg-[#009688] text-white"
               : "text-gray-600 hover:bg-gray-50"
@@ -244,7 +272,10 @@ export function ScanPage() {
             카메라 스캔
           </button>
           <button
-            onClick={() => setScanMode("manual")}
+            onClick={() => {
+              setScanMode("manual");
+              setLastAnalysisResult(null);
+            }}
             className={`flex-1 py-2.5 rounded-lg font-medium transition ${scanMode === "manual"
               ? "bg-[#009688] text-white"
               : "text-gray-600 hover:bg-gray-50"
@@ -255,7 +286,25 @@ export function ScanPage() {
           </button>
         </div>
 
-        {/* Camera Mode */}
+        {/* 상황 퀵 칩 */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
+          <h3 className="font-bold text-[#263238] mb-4 text-base">현재 특이 상황 추가</h3>
+          <div className="flex flex-wrap gap-2.5">
+            {quickSituations.map((sit) => (
+              <button
+                key={sit.id}
+                onClick={() => toggleSituation(sit.label)}
+                className={`px-4 py-2.5 rounded-full text-sm font-semibold border transition-all ${selectedSituations.includes(sit.label)
+                  ? "bg-[#009688] text-white border-[#009688] shadow-md"
+                  : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                  }`}
+              >
+                {sit.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {scanMode === "camera" && (
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4">
             <div className="relative bg-gray-900 h-[320px] flex items-center justify-center overflow-hidden">
@@ -292,7 +341,6 @@ export function ScanPage() {
                 </div>
               )}
 
-              {/* Overlay */}
               {!isScanning && cameraEnabled && (
                 <div className="absolute inset-0 pointer-events-none">
                   <div className="absolute inset-0 border-4 border-[#009688] opacity-30 rounded-lg m-10"></div>
@@ -300,7 +348,6 @@ export function ScanPage() {
                 </div>
               )}
 
-              {/* Bounding Boxes on result */}
               {!isScanning && !cameraEnabled && boundingBoxes.length > 0 && (
                 <>
                   {boundingBoxes.map((box) => (
@@ -357,6 +404,7 @@ export function ScanPage() {
                       setCameraEnabled(true);
                       setBoundingBoxes([]);
                       setDetectedIngredients([]);
+                      setSelectedSituations([]);
                     }}
                     className="flex-1"
                   >
@@ -375,40 +423,53 @@ export function ScanPage() {
           </div>
         )}
 
-        {/* Manual Mode */}
         {scanMode === "manual" && (
-          <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
-            <h3 className="font-bold text-[#263238] mb-3">제품명 검색</h3>
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
+            <h3 className="font-bold text-[#263238] mb-4 text-base">제품명 직접 입력</h3>
             <div className="flex gap-2">
               <Input
-                placeholder="예: 자몽 주스"
+                placeholder="예: 자몽 주스, 이부프로펜..."
+                className="py-6 text-base"
                 value={manualSearch}
                 onChange={(e) => setManualSearch(e.target.value)}
               />
               <Button
                 onClick={() => {
-                  if (manualSearch.trim()) setDetectedIngredients([manualSearch]);
+                  if (manualSearch.trim()) {
+                    // 공백이나 쉼표로 성분 분리
+                    const newIngredients = manualSearch
+                      .split(/[\s,]+/)
+                      .map(s => s.trim())
+                      .filter(s => s.length > 0);
+
+                    // 기존 목록 유지하며 중복 제외하고 추가
+                    setDetectedIngredients(prev => {
+                      const combined = [...prev, ...newIngredients];
+                      return Array.from(new Set(combined));
+                    });
+
+                    setManualSearch(""); // 입력창 초기화
+                  }
                 }}
-                className="bg-[#009688] hover:bg-[#00796B]"
+                className="bg-[#009688] hover:bg-[#00796B] h-auto px-6"
               >
-                검색
+                추가
               </Button>
             </div>
           </div>
         )}
 
-        {/* 공통: 인식된 성분 (카메라/수동 모드 공통) */}
-        {detectedIngredients.length > 0 && (
+        {(detectedIngredients.length > 0 || selectedSituations.length > 0) && (
           <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
             <h3 className="font-bold text-[#263238] mb-3">
-              인식된 성분 ({detectedIngredients.length})
+              분석 대상 ({detectedIngredients.length + selectedSituations.length})
             </h3>
             <div className="flex flex-wrap gap-2">
               {detectedIngredients.map((ingredient, index) => {
                 const box = boundingBoxes.find((b) => b.text === ingredient);
                 return (
                   <IngredientChip
-                    key={index}
+                    key={`ing-${index}`}
                     label={ingredient}
                     riskLevel={box?.riskLevel}
                     onRemove={() => {
@@ -419,12 +480,19 @@ export function ScanPage() {
                   />
                 );
               })}
+              {selectedSituations.map((sit, index) => (
+                <IngredientChip
+                  key={`sit-${index}`}
+                  label={sit}
+                  riskLevel="warning"
+                  onRemove={() => toggleSituation(sit)}
+                />
+              ))}
             </div>
           </div>
         )}
 
-        {/* Action Button */}
-        {detectedIngredients.length > 0 && (
+        {(detectedIngredients.length > 0 || selectedSituations.length > 0) && (
           <Button
             onClick={analyzeIngredients}
             disabled={isLoading}
@@ -436,11 +504,11 @@ export function ScanPage() {
         )}
 
         <div className="bg-[#009688]/5 border border-[#009688]/20 rounded-xl p-4">
-          <h4 className="font-bold text-[#263238] mb-2">촬영 가이드</h4>
+          <h4 className="font-bold text-[#263238] mb-2">통합 안전 스캔 가이드</h4>
           <ul className="text-sm text-gray-700 space-y-1">
-            <li>• 성분표가 화면 중앙에 오도록 배치하세요</li>
-            <li>• 밝은 곳에서 촬영하면 더 정확합니다</li>
-            <li>• 흔들림 없이 안정적으로 촬영하세요</li>
+            <li>• 성분표, 처방전, 약봉투 등을 화면 중앙에 맞추세요</li>
+            <li>• 현재 상황(공복, 운동 등)을 선택하거나 직접 입력하세요</li>
+            <li>• AI가 제품명과 상황을 모두 고려하여 분석해 드립니다</li>
           </ul>
         </div>
       </div>

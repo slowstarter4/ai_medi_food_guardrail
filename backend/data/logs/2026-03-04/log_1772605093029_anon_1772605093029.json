@@ -1,0 +1,145 @@
+{
+  "timestamp": "2026-03-04T15:18:13.029144",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "격한 운동 하고 왔는데 아직 밥은 안 먹었어요",
+    "medications": [
+      "메트포르민"
+    ],
+    "conditions": [
+      "당뇨"
+    ]
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "DM_007",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 반드시 식사를 거르지 마세요!\n\n■ **[이유]**: 현재 메트포르민을 복용 중이신데, 식사를 거르게 되면 저혈당이 발생할 수 있습니다. 메트포르민은 혈당을 낮추는 약물로, 식사를 거르면 필요한 에너지를 공급받지 못해 혈당이 급격히 떨어질 수 있습니다. 저혈당 증상으로는 떨림, 식은땀 등이 있으며, 이러한 증상은 즉각...",
+    "full_result": {
+      "input_text": "격한 운동 하고 왔는데 아직 밥은 안 먹었어요",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "DM_007",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_004",
+            "DM_007"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "메트포르민",
+              "entity_id": "DRUG_METFORMIN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "격한 운동",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "운동 후",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "운동",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "운동",
+              "canonical": "격한 운동",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EXTRA_DM_MEAL_SKIP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EXTRA_DM_MEAL_SKIP",
+            "evidence_source_label": "식품의약품안전처 (복약지도 정보)",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 저혈당이 발생할 수 있습니다. 떨림, 식은땀 등 증상이 나타나면 당분을 섭취하세요.",
+            "evidence_tags": [
+              "저혈당"
+            ],
+            "title": "식사 거름과 저혈당",
+            "url": "https://nedrug.mfds.go.kr"
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "당뇨"
+        ],
+        "input_text": "격한 운동 하고 왔는데 아직 밥은 안 먹었어요"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 반드시 식사를 거르지 마세요!\n\n■ **[이유]**: 현재 메트포르민을 복용 중이신데, 식사를 거르게 되면 저혈당이 발생할 수 있습니다. 메트포르민은 혈당을 낮추는 약물로, 식사를 거르면 필요한 에너지를 공급받지 못해 혈당이 급격히 떨어질 수 있습니다. 저혈당 증상으로는 떨림, 식은땀 등이 있으며, 이러한 증상은 즉각적인 당분 섭취가 필요합니다. 따라서, 당뇨를 앓고 계신 사용자분께서는 항상 규칙적인 식사를 통해 안정적인 혈당 관리를 해야 합니다.\n\n■ **[대안]**: 규칙적인 식사를 통해 혈당을 안정적으로 유지하고, 저혈당 증상이 나타날 경우에는 즉시 당분이 포함된 음료(예: 오렌지 주스)를 섭취해 주세요.\n\n■ **[대처]**: 매 끼니를 거르지 말고, 정기적으로 식사를 하세요. 만약 떨림이나 식은땀 같은 저혈당 증상이 나타난다면 즉시 당분을 섭취하고, 상황에 따라 의사와 상담하세요.\n\n■ **[출처]**: 식품의약품안전처 (복약지도 정보)",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "메트포르민",
+              "entity_id": "DRUG_METFORMIN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "격한 운동",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "운동 후",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "운동",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "운동",
+              "canonical": "격한 운동",
+              "entity_id": "SITUATION_EXERCISE"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

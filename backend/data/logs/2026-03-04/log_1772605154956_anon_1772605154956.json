@@ -1,0 +1,98 @@
+{
+  "timestamp": "2026-03-04T15:19:14.956431",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "NSAIDs 진통제 먹고 술 마시면 안 되나요?",
+    "medications": [],
+    "conditions": [
+      "관절염"
+    ]
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "NSAIDs 진통제 먹고 술 마시면 안 되나요?",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "술",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "진통제",
+              "entity_id": "DRUG_PAINKILLER_GENERAL",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": [
+            "진통제"
+          ]
+        },
+        "user_conditions": [
+          "관절염"
+        ],
+        "input_text": "NSAIDs 진통제 먹고 술 마시면 안 되나요?"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "술",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "진통제",
+              "entity_id": "DRUG_PAINKILLER_GENERAL",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

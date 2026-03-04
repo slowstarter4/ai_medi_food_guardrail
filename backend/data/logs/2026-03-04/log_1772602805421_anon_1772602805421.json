@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-03-04T14:40:05.421025",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "오늘 저녁에 젓갈이랑 국물이랑 짜게 먹었어요",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "오늘 저녁에 젓갈이랑 국물이랑 짜게 먹었어요",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [
+          "고혈압"
+        ],
+        "input_text": "오늘 저녁에 젓갈이랑 국물이랑 짜게 먹었어요"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

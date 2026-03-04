@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-03-04T14:40:57.567970",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "이 약을 한 달째 매일 복용 중이에요",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "관절염"
+    ]
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "이 약을 한 달째 매일 복용 중이에요",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [
+          "관절염"
+        ],
+        "input_text": "이 약을 한 달째 매일 복용 중이에요"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

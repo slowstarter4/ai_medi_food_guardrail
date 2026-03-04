@@ -1,71 +1,141 @@
+import re
 from typing import Dict, List
+
+# 약물 ID -> 계열 매핑 (룰 엔진 v2 필수 데이터)
+ID_TO_CATEGORY = {
+    "DRUG_LOSARTAN": "ACE/ARB",
+    "DRUG_ENALAPRIL": "ACE/ARB",
+    "DRUG_ACE_ARB": "ACE/ARB",
+    "DRUG_AMLODIPINE": "CCB",
+    "DRUG_CCB": "CCB",
+    "DRUG_HYDROCHLOROTHIAZIDE": "이뇨제",
+    "DRUG_DIURETIC_LOOP": "이뇨제",
+    "DRUG_SPIRONOLACTONE": "이뇨제",
+    "DRUG_SULFONYLUREA": "설폰요소제",
+    "DRUG_METFORMIN": "비구아나이드",
+    "DRUG_DAPAGLIFLOZIN": "SGLT2",
+    "DRUG_EMPAGLIFLOZIN": "SGLT2",
+    "DRUG_SGLT2": "SGLT2",
+    "DRUG_IBUPROFEN": "NSAIDs",
+    "DRUG_NAPROXEN": "NSAIDs",
+    "DRUG_NSAID": "NSAIDs"
+}
 
 def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
     """
-    entities: 파싱+정규화된 엔티티 딕셔너리
-    rules: ruleset.json에서 불러온 룰 리스트
-    return: matched_rules 리스트 (rule_id, risk_level_hint, description, evidence_key 포함)
+    ruleset v2.0 매칭 엔진
+    - drug_category: ALL 또는 특정 계열 매칭
+    - drug_name: ALL 또는 Regex 매칭
+    - food_keyword_match: Regex 기반 복합 대상 매칭 (식품, 상황, 타 약물)
+    - persona: 사용자 기저 질환 매칭
     """
-
-    food_ids = {v["entity_id"] for v in entities.get("foods", [])}
-    drug_ids = {v["entity_id"] for v in entities.get("drugs", [])}
-    situation_ids = {v["entity_id"] for v in entities.get("situations", [])}
+    
+    drugs = entities.get("drugs", [])
+    foods = entities.get("foods", [])
+    situations = entities.get("situations", [])
+    
+    # 모든 엔터티의 텍스트 및 ID 집합 (Target Matching용)
+    all_targets = []
+    for d in drugs:
+        all_targets.append(d.get("raw", ""))
+        all_targets.append(d.get("entity_id", ""))
+    for f in foods:
+        all_targets.append(f.get("raw", ""))
+        all_targets.append(f.get("entity_id", ""))
+    for s in situations:
+        all_targets.append(s.get("raw", ""))
+        all_targets.append(s.get("canonical", ""))
+        all_targets.append(s.get("entity_id", ""))
+    
+    # 사용자 페르소나 (CONDITION_... ID 보유 여부)
+    user_persona_ids = {
+        s["entity_id"].replace("CONDITION_", "") 
+        for s in situations if s["entity_id"].startswith("CONDITION_")
+    }
+    # 텍스트상 매칭된 질환 이름도 포함
+    user_persona_raws = {
+        s["raw"] for s in situations if s["entity_id"].startswith("CONDITION_")
+    }
 
     matched = []
 
     for rule in rules:
-        cond = rule.get("conditions", {})
-
-        rule_foods = set(cond.get("foods", []))
-        rule_drugs = set(cond.get("drugs", []))
-        rule_situations = set(cond.get("situations", []))
-
-        # 1. 핵심 도메인 매칭: AND 조건 적용
-        # 룰이 특정 Foods를 정의했다면, 그 중 하나라도 포함되어야 함
-        if rule_foods and not (rule_foods & food_ids):
-            continue
-            
-        # 룰이 특정 Drugs를 정의했다면 매칭 확인
-        if rule_drugs:
-            matched_drug_count = len(rule_drugs & drug_ids)
-            if matched_drug_count == 0:
-                continue
-            
-            # [특수 케이스] 약물 중복/병용 룰 (SITUATION_DRUG_DUPLICATION 요구 시)
-            # 최소 2종 이상의 약물이 해당 리스트 내에서 매칭되어야 함
-            if "SITUATION_DRUG_DUPLICATION" in rule_situations and matched_drug_count < 2:
-                continue
-
-        # 룰이 Drugs도 Foods도 정의하지 않은 경우 (SITUATION ONLY?) -> 일단 허용하거나 pass
-        # 하지만 보통 최소한 하나는 있음. 둘 다 비어있으면 매칭된 것으로 간주(Precondition이 없는 셈)
-        
-        # 2. 상황 조건 및 페르소나 체크
-        # 2.1 페르소나 체크 (Persona 필드가 있으면 사용자 상태와 대조)
-        rule_persona = rule.get("persona")
+        # 1. 페르소나 체크
+        rule_persona = rule.get("persona", "")
         if rule_persona:
-            # entities["situations"]에서 CONDITION_... 들의 raw 값 추출
-            user_specs = {
-                v["raw"] for v in entities.get("situations", []) 
-                if v.get("entity_id", "").startswith("CONDITION_")
-            }
             persona_parts = set(rule_persona.split("_"))
-            # 페르소나 매칭 실패 시: Level 1 룰(특정 약물-식품 상호작용)은 
-            # 사용자 정보가 없더라도 안전을 위해 매칭 허용
-            if not (persona_parts & user_specs) and rule.get("level") != 1:
+            # 고령_고혈압 -> {고령, 고혈압}
+            # user_persona_ids는 {hypertension, diabetes...} 이므로 한글명칭/ID 둘다 체크 필요
+            is_persona_match = False
+            for p in persona_parts:
+                if p in user_persona_raws: is_persona_match = True
+                # ID가 룰에 적혀있을 경우 대비 (예: hypertension)
+                if p.lower() in [id.lower() for id in user_persona_ids]: is_persona_match = True
+            
+            # 페르소나가 정의되었는데 매칭 안되면 제외 (단, Level 1 룰은 안전상 미매칭시에도 일단 허용 고려 가능하나 여기선 엄격히 적용)
+            if not is_persona_match:
                 continue
 
-        # 2.2 개별 상황 조건 체크: ALL 매칭 (issubset)
-        # 룰에서 정의한 모든 상황이 사용자 상황에 포함되어야 함
-        if rule_situations and not rule_situations.issubset(situation_ids):
+        # 2. 약물 매칭 (Category & Name)
+        rule_cat = rule.get("drug_category", "ALL")
+        rule_drug_name = rule.get("drug_name", "ALL")
+        
+        # 해당 룰의 주체가 되는 약물 찾기
+        primary_drugs = []
+        if rule_cat == "ALL" and rule_drug_name == "ALL":
+            # 약물 상관 없이 발동하는 룰 (예: DM_004 공복)
+            # 하지만 최소한 '약'이 감지된 맥락이어야 함
+            if drugs:
+                primary_drugs = drugs
+            else:
+                # 약이 없어도 상황만으로 발동하는 룰이면 허용 (예: 당뇨 환자가 공복일 때)
+                # 이 경우 더미 약물 객체 생성
+                primary_drugs = [{"raw": "약물", "entity_id": "DRUG_GENERIC"}]
+        else:
+            for d in drugs:
+                d_id = d.get("entity_id", "UNKNOWN")
+                d_raw = d.get("raw", "")
+                d_cat = ID_TO_CATEGORY.get(d_id, "UNKNOWN")
+                
+                # Category 매칭
+                cat_match = (rule_cat == "ALL") or (rule_cat == d_cat)
+                
+                # Name 매칭 (Regex)
+                name_match = (rule_drug_name == "ALL") or bool(re.search(rule_drug_name, d_raw + "|" + d_id, re.I))
+                
+                if cat_match and name_match:
+                    primary_drugs.append(d)
+        
+        if not primary_drugs:
             continue
 
-        # matched_rule에 필요한 key만 안전하게 포함
+        # 3. 타겟 매칭 (food_keyword_match)
+        rule_target = rule.get("food_keyword_match", "ALL")
+        target_match = False
+        
+        if rule_target == "ALL":
+            target_match = True
+        else:
+            # any target matches the regex
+            for target_text in all_targets:
+                if target_text and re.search(rule_target, target_text, re.I):
+                    # 주체 약물과 타켓이 동일한 경우는 제외 (자기 자신과의 매칭 방지)
+                    # 단, rule_target에 주체 약물명이 명시된 drug-drug interaction인 경우는 허용해야 함
+                    # 여기서는 일단 단순하게 매칭되면 OK
+                    target_match = True
+                    break
+        
+        if not target_match:
+            continue
+
+        # 모든 조건 충족
         matched.append({
             "rule_id": rule.get("rule_id"),
-            "level": rule.get("level", 3),  # 기본값 Level 3 (가장 낮음)
             "risk_level_hint": rule.get("risk_level_hint"),
+            "risk_type": rule.get("risk_type"),
             "description": rule.get("description"),
-            "evidence_key": rule.get("evidence_key")
+            "evidence_key": rule.get("evidence_key"),
+            "level": rule.get("level", 2)
         })
 
     return matched

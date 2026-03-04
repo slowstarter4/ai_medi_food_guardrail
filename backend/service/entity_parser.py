@@ -4,10 +4,18 @@ import difflib
 
 def _normalize(text: str) -> str:
     text = text.lower()
-    text = re.sub(r"\s+", "", text)  # 모든 공백 제거 (암 로 디 핀 → 암로디핀 대응)
-    # 접미사 제거 (정, 캡슐, 서방정 등) - 매칭률 향상을 위해
-    text = re.sub(r"(정|캡슐|서방정|시럽|액)$", "", text)
-    return text
+    # 1. 괄호 및 그 안의 내용 처리 (예: 제품명(성분명) -> 제품명 성분명)
+    # 괄호를 공백으로 치환하여 두 단어 모두 검색 가능하게 함
+    text = re.sub(r"[\(\)\[\]\{\}]", " ", text)
+    # 2. 특수문자 제거 (정규화용)
+    text = re.sub(r"[^a-zA-Z0-9가-힣\s]", "", text)
+    # 3. 약물 접미사 제거 (정, 캡슐, 서방정, 시럽, 액 등)
+    # 문자열 중간이나 끝에 있는 접미사를 공백과 함께 처리
+    text = re.sub(r"(서방정|서방캡슐|정|캡슐|시럽|액|정제)(\s|$)", " ", text)
+    # 4. 모든 공백 제거 (암 로 디 핀 → 암로디핀 대응용 최종 비교용)
+    # 주의: 여기서 공백을 완전히 제거하면 단어 경계가 사라짐. 
+    # parse_entities에서 name_norm in normalized_text로 비교하므로 공백 제거 버전도 유용함.
+    return re.sub(r"\s+", "", text)
 
 def parse_entities(
     raw_text: str,

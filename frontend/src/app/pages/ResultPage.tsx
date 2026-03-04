@@ -2,10 +2,10 @@ import { useLocation, useNavigate } from "react-router";
 import { BottomNav } from "../components/BottomNav";
 import { SafetyCard } from "../components/SafetyCard";
 import { IngredientChip } from "../components/IngredientChip";
-import { ArrowLeft, Share2, Heart, ExternalLink } from "lucide-react";
+import { ArrowLeft, Share2, Heart, ExternalLink, ShieldCheck, Sparkles, AlertCircle, Info } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 
 interface AlternativeFood {
@@ -28,7 +28,6 @@ export function ResultPage() {
   // 백엔드 설명을 섹션별로 파싱하는 함수
   const parseExplanation = (text: string) => {
     if (!text) return null;
-    console.log("Parsing explanation text:", text);
     const sections: Record<string, string> = {};
     const patterns = {
       conclusion: /■\s*\*?\*?\[결론\]\*?\*?:\s*(.*?)(?=\s*■|$)/s,
@@ -42,15 +41,15 @@ export function ResultPage() {
       const match = text.match(pattern);
       if (match) {
         sections[key] = match[1].trim();
-        console.log(`Matched ${key}:`, sections[key]);
       }
     });
 
-    // 하나라도 매칭되면 객체 반환, 아니면 null (fallback 유도)
     return Object.keys(sections).length > 0 ? sections : null;
   };
 
   const explanationSections = parseExplanation(backendResult?.explanation);
+  const durAlerts = backendResult?.risk_result?.supplementary_info?.dur_alerts || [];
+  const verifiedDrugs = backendResult?.risk_result?.supplementary_info?.api_verified_drugs || [];
 
   // Mock data if no scan data provided
   const mockData = {
@@ -95,13 +94,21 @@ export function ResultPage() {
   const rawRisk = backendResult?.risk_result?.risk_level?.toLowerCase() || data.riskLevel || "safe";
   const riskLevel = riskLevelMap[rawRisk] || (rawRisk as any);
 
+  // Get matched rule's evidence info
+  const matchedRule = backendResult?.risk_result?.matched_rule;
+  const evidenceKey = matchedRule?.evidence_key;
+  // Note: Backend might need to send evidence details, or we pull from a local map if needed.
+  // Assuming backend already includes processed evidence in risk_result from evaluator/assessor.
+  const evidenceInfo = backendResult?.risk_result?.evidence_details;
+
   const getRiskInfo = () => {
     if (explanationSections) {
       return {
         title: explanationSections.conclusion || (riskLevel === "danger" ? "섭취 중단 권고" : "주의 필요"),
         message: explanationSections.reason || "상세 이유를 불러오고 있습니다.",
-        evidence: explanationSections.action || "권장 대처 방안을 확인하세요.",
-        evidenceSource: explanationSections.source || "SafeEat AI 분석 결과",
+        evidence: evidenceInfo?.evidence_summary_user || explanationSections.action || "권장 대처 방안을 확인하세요.",
+        evidenceSource: evidenceInfo?.evidence_source_label || explanationSections.source || "SafeEat AI 분석 결과",
+        evidenceStrength: evidenceInfo?.evidence_strength,
       };
     }
 
@@ -146,7 +153,7 @@ export function ResultPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20">
+    <div className="min-h-screen bg-[#F5F5F5] pb-20 font-sans">
       {/* Header */}
       <div className="bg-[#009688] text-white p-6 pb-6">
         <button
@@ -161,6 +168,12 @@ export function ResultPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 mt-4">
+        {/* AI Analysis Label */}
+        <div className="flex items-center gap-1.5 mb-2 px-1">
+          <Sparkles className="w-4 h-4 text-[#009688]" />
+          <span className="text-xs font-bold text-[#009688]">SafeEat AI 맞춤 분석 가이드</span>
+        </div>
+
         {/* Main Safety Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -172,52 +185,88 @@ export function ResultPage() {
             message={riskInfo.message}
             evidence={riskInfo.evidence}
             evidenceSource={riskInfo.evidenceSource}
+            evidenceStrength={riskInfo.evidenceStrength as any}
           />
         </motion.div>
 
         {/* Analysis Context (Personalized) */}
-        <div className="bg-[#009688]/5 border border-[#009688]/20 rounded-xl p-4 mb-4">
-          <h2 className="text-sm font-bold text-[#009688] mb-2 flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#009688]"></div>
-            맞춤 분석 정보
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4 mt-4">
+          <h2 className="text-sm font-bold text-gray-800 mb-3 flex items-center justify-between">
+            <span className="flex items-center gap-1.5">
+              <Info className="w-4 h-4 text-[#009688]" />
+              분석 기반 정보
+            </span>
+            <span className="text-[10px] text-gray-400 font-normal">사용자 맞춤형</span>
           </h2>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div>
-              <span className="text-xs text-gray-500 block mb-1">등록된 질환/상태</span>
+              <span className="text-xs text-gray-500 block mb-1.5">활성화된 페르소나 (질환/상태)</span>
               <div className="flex flex-wrap gap-1.5">
                 {(backendResult?.risk_result?.user_conditions?.length > 0) ? (
                   backendResult.risk_result.user_conditions.map((c: string, i: number) => (
-                    <span key={i} className="px-2 py-0.5 bg-white border border-[#009688]/30 rounded text-[11px] text-[#009688]">
+                    <span key={i} className="px-2 py-0.5 bg-[#009688]/5 border border-[#009688]/20 rounded-md text-[11px] font-medium text-[#009688]">
                       {c}
                     </span>
                   ))
                 ) : (
-                  <span className="text-[11px] text-gray-400">등록된 질환 정보 없음</span>
+                  <span className="text-[11px] text-gray-400 italic">등록된 질환 정보 없음</span>
                 )}
               </div>
             </div>
             <div>
-              <span className="text-xs text-gray-500 block mb-1">복용 중인 약물</span>
+              <span className="text-xs text-gray-500 block mb-1.5">분석에 포함된 약물</span>
               <div className="flex flex-wrap gap-1.5">
                 {(backendResult?.risk_result?.entities_involved?.drugs?.filter((d: any) => d.entity_id !== "DRUG_UNKNOWN").length > 0) ? (
                   backendResult.risk_result.entities_involved.drugs
                     .filter((d: any) => d.entity_id !== "DRUG_UNKNOWN")
-                    .map((d: any, i: number) => (
-                      <span key={i} className="px-2 py-0.5 bg-white border border-[#009688]/30 rounded text-[11px] text-[#009688]">
-                        {d.raw}
-                      </span>
-                    ))
+                    .map((d: any, i: number) => {
+                      const isVerified = verifiedDrugs.includes(d.raw);
+                      return (
+                        <span key={i} className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border ${isVerified ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
+                          {d.raw}
+                          {isVerified && <ShieldCheck className="w-3 h-3 text-blue-500" />}
+                        </span>
+                      );
+                    })
                 ) : (
-                  <span className="text-[11px] text-gray-400">등록된 약물 정보 없음</span>
+                  <span className="text-[11px] text-gray-400 italic">감지된 약물 정보 없음</span>
                 )}
               </div>
             </div>
           </div>
         </div>
 
+        {/* Supplementary AI Analysis (DUR) */}
+        {durAlerts.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-[#FFF9C4] border border-[#FBC02D] rounded-xl p-4 mb-4"
+          >
+            <h2 className="text-sm font-bold text-[#F57F17] mb-2 flex items-center gap-1.5">
+              <AlertCircle className="w-4 h-4" />
+              공공 API(e약은요) 보조 정보
+            </h2>
+            <div className="space-y-2">
+              {durAlerts.map((alert: string, i: number) => (
+                <div key={i} className="text-xs text-[#7B5E00] leading-relaxed flex gap-2">
+                  <span className="shrink-0">•</span>
+                  <span>{alert}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-[#F57F17]/70 mt-3 italic">
+              * 식약처 공공 데이터를 기반으로 AI가 추출한 보조 상호작용 정보입니다.
+            </p>
+          </motion.div>
+        )}
+
         {/* Detected Ingredients */}
         <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
-          <h2 className="font-bold text-[#263238] mb-3">인식된 성분</h2>
+          <h2 className="font-bold text-[#263238] mb-3 flex items-center gap-1.5 text-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#009688]"></div>
+            인식된 성분
+          </h2>
           <div className="flex flex-wrap gap-2">
             {data.ingredients?.map((ingredient: string, index: number) => {
               const box = boundingBoxes?.find(
@@ -229,7 +278,7 @@ export function ResultPage() {
                   label={ingredient}
                   riskLevel={box?.riskLevel}
                   onClick={() => {
-                    alert(`${ingredient}에 대한 상세 정보`);
+                    toast.info(`${ingredient}에 대한 상세 정보는 상세 정보 탭을 이용해 주세요.`);
                   }}
                 />
               );
@@ -241,23 +290,23 @@ export function ResultPage() {
         <div className="grid grid-cols-3 gap-3 mb-4">
           <Button
             variant="outline"
-            className="flex flex-col h-auto py-3 gap-1"
+            className="flex flex-col h-auto py-3 gap-1 bg-white border-gray-200 text-gray-700 shadow-sm"
             onClick={() => setShowAlternatives(!showAlternatives)}
           >
-            <Heart className="w-5 h-5" />
-            <span className="text-xs">대체 식품</span>
+            <Heart className={`w-5 h-5 ${showAlternatives ? 'fill-red-500 text-red-500' : ''}`} />
+            <span className="text-[11px] font-bold">대체 식품</span>
           </Button>
           <Button
             variant="outline"
-            className="flex flex-col h-auto py-3 gap-1"
-            onClick={() => alert("가족과 공유 기능은 준비 중입니다")}
+            className="flex flex-col h-auto py-3 gap-1 bg-white border-gray-200 text-gray-700 shadow-sm"
+            onClick={() => toast("공유 기능은 준비 중입니다.")}
           >
-            <Share2 className="w-5 h-5" />
-            <span className="text-xs">공유하기</span>
+            <Share2 className="w-5 h-5 text-gray-500" />
+            <span className="text-[11px] font-bold">공유하기</span>
           </Button>
           <Button
             variant="outline"
-            className="flex flex-col h-auto py-3 gap-1"
+            className="flex flex-col h-auto py-3 gap-1 bg-white border-gray-200 text-gray-700 shadow-sm"
             onClick={() =>
               window.open(
                 "https://nedrug.mfds.go.kr/index",
@@ -265,114 +314,105 @@ export function ResultPage() {
               )
             }
           >
-            <ExternalLink className="w-5 h-5" />
-            <span className="text-xs">상세 정보</span>
+            <ExternalLink className="w-5 h-5 text-gray-500" />
+            <span className="text-[11px] font-bold">의약품백과</span>
           </Button>
         </div>
 
         {/* Alternative Foods */}
-        {showAlternatives && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-[#263238]">추천 대체 식품</h2>
-                <span className="text-xs text-gray-500">
-                  SafeEat 맞춤 추천
-                </span>
-              </div>
-
-              {explanationSections?.alternative ? (
-                <div className="p-4 bg-[#009688]/5 border border-[#009688]/20 rounded-lg">
-                  <p className="text-[#263238] leading-relaxed">
-                    {explanationSections.alternative}
-                  </p>
+        <AnimatePresence>
+          {showAlternatives && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-bold text-[#263238] flex items-center gap-1.5 text-sm">
+                    <Sparkles className="w-4 h-4 text-[#009688]" />
+                    AI 추천 대체 식품
+                  </h2>
                 </div>
-              ) : (
-                <>
-                  <p className="text-sm text-gray-600 mb-4">
-                    {data.mainRisk?.ingredient || "위험 성분"}이 없는 안전한 대체품을
-                    추천합니다
-                  </p>
 
-                  <div className="space-y-3">
-                    {alternatives.map((alt, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="flex gap-3 p-3 bg-[#4CAF50]/5 border border-[#4CAF50]/20 rounded-lg hover:bg-[#4CAF50]/10 transition cursor-pointer"
-                        onClick={() => {
-                          alert(`${alt.name}에 대한 상세 정보`);
-                        }}
-                      >
-                        <img
-                          src={alt.imageUrl}
-                          alt={alt.name}
-                          className="w-20 h-20 object-cover rounded-lg"
-                        />
-                        <div className="flex-1">
-                          <h3 className="font-bold text-[#263238] mb-1">
-                            {alt.name}
-                          </h3>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {alt.reason}
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))}
+                {explanationSections?.alternative ? (
+                  <div className="p-4 bg-[#009688]/5 border border-[#009688]/20 rounded-lg">
+                    <p className="text-sm text-[#263238] leading-relaxed">
+                      {explanationSections.alternative}
+                    </p>
                   </div>
-                </>
-              )}
-            </div>
-          </motion.div>
-        )}
+                ) : (
+                  <>
+                    <p className="text-xs text-gray-500 mb-4 italic">
+                      맞춤형 분석 결과 위험 성분이 없는 안전한 대체품을 추천합니다.
+                    </p>
 
-        {/* Recommended Actions */}
-        {riskLevel === "danger" && (
-          <div className="bg-[#E53935]/5 border-2 border-[#E53935]/20 rounded-xl p-4 mb-4">
-            <h3 className="font-bold text-[#E53935] mb-2">권장 조치</h3>
-            <ul className="text-sm text-[#263238] space-y-1.5">
-              <li>• 즉시 섭취를 중단하세요</li>
-              <li>• 이미 섭취한 경우 의사와 상담하세요</li>
-              <li>• 약물 복용 전후 최소 2시간 간격을 두세요</li>
-              <li>• 대체 식품 목록을 참고하세요</li>
-            </ul>
+                    <div className="space-y-3">
+                      {alternatives.map((alt, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="flex gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg hover:border-[#009688]/30 transition cursor-pointer"
+                        >
+                          <img
+                            src={alt.imageUrl}
+                            alt={alt.name}
+                            className="w-16 h-16 object-cover rounded-lg shrink-0"
+                          />
+                          <div className="flex-1">
+                            <h3 className="font-bold text-sm text-[#263238] mb-1">
+                              {alt.name}
+                            </h3>
+                            <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">
+                              {alt.reason}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* AI Disclaimer & Info */}
+        <div className="mt-8 mb-6 bg-gray-100 rounded-xl p-5 border border-gray-200">
+          <div className="flex gap-3 mb-4">
+            <div className="shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-200">
+              <Sparkles className="w-4 h-4 text-[#009688]" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-xs font-bold text-gray-700">SafeEat 분석의 두 가지 위계</h3>
+              <p className="text-[10px] text-gray-500 leading-relaxed">
+                1. **자체 룰 가드레일 (Tier 1)**: 식약처 및 의학 전문가 가이드 기반의 확정적 위험 감지 시스템입니다.<br />
+                2. **AI 보조 분석 (Tier 2)**: 공공 API 데이터와 LLM 추론을 결합하여 개인별 정황(오타, 상황)을 보조적으로 분석합니다.
+              </p>
+            </div>
           </div>
-        )}
+          <p className="text-[10px] text-gray-400 leading-relaxed border-t border-gray-200 pt-4 text-center">
+            본 결과는 AI의 보조 정보이며 의학적 확진이 아닙니다.<br />
+            기저질환자의 최종 판단은 반드시 담당 의사 및 약사와 상담하시기 바랍니다.
+          </p>
+        </div>
 
         <div className="flex gap-3 mb-4">
           <Button
             onClick={() => recordIntake()}
-            className="flex-1 bg-white border-[#009688] text-[#009688] hover:bg-[#E0F2F1] border"
+            className="flex-1 bg-white border-[#009688] text-[#009688] hover:bg-[#E0F2F1] border h-12 font-bold shadow-sm"
           >
             기록으로 남기기
           </Button>
           <Button
             onClick={() => navigate("/")}
-            className="flex-1 bg-[#009688] hover:bg-[#00796B] text-white"
+            className="flex-1 bg-[#009688] hover:bg-[#00796B] text-white h-12 font-bold shadow-sm"
           >
             홈으로 돌아가기
           </Button>
-        </div>
-
-        {/* AI Disclaimer & Roadmap Link */}
-        <div className="mt-8 mb-4 border-t border-gray-200 pt-6">
-          <p className="text-xs text-gray-400 leading-relaxed mb-3">
-            본 결과는 공신력 있는 기준(식약처, FDA 등)을 바탕으로 한 AI의 보조 정보입니다. 기저질환자의 최종적인 판단 및 대처는 반드시 담당 의사 및 약사와 상담하시기 바랍니다.
-          </p>
-          <button
-            onClick={() => navigate("/info")}
-            className="w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-medium transition flex justify-between items-center"
-          >
-            <span>SafeEat 분석 기준 및 서비스 로드맵 보기</span>
-            <ExternalLink className="w-4 h-4" />
-          </button>
         </div>
       </div>
 

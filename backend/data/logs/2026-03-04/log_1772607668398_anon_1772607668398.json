@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-03-04T16:01:08.398212",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복",
+    "medications": [
+      "글리메피리드"
+    ],
+    "conditions": [],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "DM_010",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.  \n■ **[이유]**: 사용자가 현재 복용 중인 글리메피리드, 글리메피드, 글리메필리드는 모두 혈당 강하제입니다. 이 약물들은 인슐린 분비를 촉진하고 혈당을 낮추는 작용을 합니다. 만약 '없음'이라는 식품이 혈당 수치를 급격히 변화시키는 성분을 포함할 경우, 약물의 효과와 상충하여 저혈당이나 고혈당...",
+    "full_result": {
+      "input_text": "공복",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "DM_010",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_010"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "글리메피리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            },
+            {
+              "raw": "글리메피드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            },
+            {
+              "raw": "글리메필리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [],
+        "input_text": "공복"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.  \n■ **[이유]**: 사용자가 현재 복용 중인 글리메피리드, 글리메피드, 글리메필리드는 모두 혈당 강하제입니다. 이 약물들은 인슐린 분비를 촉진하고 혈당을 낮추는 작용을 합니다. 만약 '없음'이라는 식품이 혈당 수치를 급격히 변화시키는 성분을 포함할 경우, 약물의 효과와 상충하여 저혈당이나 고혈당의 위험을 초래할 수 있습니다. 예를 들어, 특정 식품이 혈당을 급격하게 낮춘다면, 이미 혈당을 낮추는 약물을 복용 중인 사용자에게는 심각한 저혈당 상태를 유발할 수 있습니다.  \n■ **[대안]**: 안전하게 섭취할 수 있는 대체 식품으로는 통곡물, 신선한 과일(사과, 배), 채소(브로콜리, 시금치) 등을 추천드립니다. 이러한 식품들은 혈당을 안정적으로 유지하는 데 도움을 줄 수 있습니다.  \n■ **[대처]**: 즉시 현재 섭취하고 있는 식품을 중단하고, 전문의와 상담하여 적절한 대체 식품 및 복약 관리를 받으시기 바랍니다.  \n■ **[출처]**: 식약처 e약은요, 세이프잇 내부 가이드라인 등",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "글리메피리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            },
+            {
+              "raw": "글리메피드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            },
+            {
+              "raw": "글리메필리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

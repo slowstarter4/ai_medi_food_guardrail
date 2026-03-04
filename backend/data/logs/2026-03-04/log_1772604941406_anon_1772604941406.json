@@ -1,0 +1,130 @@
+{
+  "timestamp": "2026-03-04T15:15:41.406669",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "CCB 약 먹는데 자몽 주스 괜찮나요?",
+    "medications": [],
+    "conditions": [
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_003",
+    "explanation_summary": "■ **[결론]**: 자몽, 자몽주스, 자몽청은 CCB를 복용 중이신 경우 절대 섭취를 피해야 합니다.\n\n■ **[이유]**: 현재 CCB를 복용 중이신 상태에서 자몽이나 자몽주스를 섭취할 경우, 약물의 농도가 증가할 수 있습니다. 이는 어지럼증이나 저혈압 같은 부작용을 초래할 위험이 높아지며, 고혈압을 관리해야 하는 상황에서는 더욱 위험할 수 있습니다. ...",
+    "full_result": {
+      "input_text": "CCB 약 먹는데 자몽 주스 괜찮나요?",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽주스",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "CCB",
+              "entity_id": "DRUG_AMLODIPINE",
+              "inferred_class": "HTN_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EV_HTN_004"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EV_HTN_004",
+            "evidence_source_label": "영국 NHS 약물 안내 (Felodipine 등 CCB 계열) – 자몽 섭취 주의",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "자몽이나 자몽주스는 약물 농도를 높여 어지럼·저혈압 같은 부작용 위험을 증가시킬 수 있어요.",
+            "evidence_tags": [
+              "저혈압",
+              "어지럼증"
+            ],
+            "title": "CCB + 자몽"
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "고혈압"
+        ],
+        "input_text": "CCB 약 먹는데 자몽 주스 괜찮나요?"
+      },
+      "explanation": "■ **[결론]**: 자몽, 자몽주스, 자몽청은 CCB를 복용 중이신 경우 절대 섭취를 피해야 합니다.\n\n■ **[이유]**: 현재 CCB를 복용 중이신 상태에서 자몽이나 자몽주스를 섭취할 경우, 약물의 농도가 증가할 수 있습니다. 이는 어지럼증이나 저혈압 같은 부작용을 초래할 위험이 높아지며, 고혈압을 관리해야 하는 상황에서는 더욱 위험할 수 있습니다. 자몽이 CCB의 대사에 영향을 미치는 메커니즘은 자몽에 포함된 특정 성분이 약물 대사에 관여하는 효소의 활성을 억제하기 때문입니다. 이는 CCB의 효과를 증가시켜 부작용을 유발할 수 있습니다.\n\n■ **[대안]**: 자몽 대신 오렌지나 사과와 같은 안전한 과일을 섭취하는 것을 권장합니다. 이 과일들은 비타민을 공급하면서도 CCB와의 상호작용이 없어 안전하게 드실 수 있습니다.\n\n■ **[대처]**: 즉시 자몽, 자몽주스 및 자몽청의 섭취를 중단하시고, 대안으로 제안드린 오렌지나 사과를 대신 드시는 것이 좋습니다. 또한, 정기적으로 혈압을 체크하며 변동이 있는 경우 의사와 상담하시길 권장합니다.\n\n■ **[출처]**: 영국 NHS 약물 안내 (Felodipine 등 CCB 계열) – 자몽 섭취 주의.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽주스",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "CCB",
+              "entity_id": "DRUG_AMLODIPINE",
+              "inferred_class": "HTN_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

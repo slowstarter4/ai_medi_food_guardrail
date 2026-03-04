@@ -1,0 +1,133 @@
+{
+  "timestamp": "2026-03-04T15:42:17.065393",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복",
+    "medications": [
+      "글리메파리드"
+    ],
+    "conditions": [
+      "고령",
+      "당뇨"
+    ]
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "DM_010",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 절대 금지입니다.\n\n■ **[이유]**: 현재 글리메피리드를 복용 중이신 상황에서 식사가 없는 상태로 당뇨약을 복용하면 저혈당이 발생할 수 있습니다. 고령이시라 신체 기능이 저하된 상태에서 저혈당 증상이 나타나면 떨림, 식은땀 등 심각한 증상을 유발할 수 있으며, 이로 인해 심각한 건강 위협이 될 수 있습니다. 특히,...",
+    "full_result": {
+      "input_text": "공복",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "DM_010",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_004",
+            "DM_010"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "글리메피리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EXTRA_DM_MEAL_SKIP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EXTRA_DM_MEAL_SKIP",
+            "evidence_source_label": "식품의약품안전처 (복약지도 정보)",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 저혈당이 발생할 수 있습니다. 떨림, 식은땀 등 증상이 나타나면 당분을 섭취하세요.",
+            "evidence_tags": [
+              "저혈당"
+            ],
+            "title": "식사 거름과 저혈당",
+            "url": "https://nedrug.mfds.go.kr"
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "고령",
+          "당뇨"
+        ],
+        "input_text": "공복"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 절대 금지입니다.\n\n■ **[이유]**: 현재 글리메피리드를 복용 중이신 상황에서 식사가 없는 상태로 당뇨약을 복용하면 저혈당이 발생할 수 있습니다. 고령이시라 신체 기능이 저하된 상태에서 저혈당 증상이 나타나면 떨림, 식은땀 등 심각한 증상을 유발할 수 있으며, 이로 인해 심각한 건강 위협이 될 수 있습니다. 특히, 고령자는 저혈당에 대한 반응이 둔감할 수 있어 더욱 주의가 필요합니다. 따라서 식사가 없는 상태에서 글리메피리드를 복용하는 것은 매우 위험합니다.\n\n■ **[대안]**: 식사를 거르지 않고 규칙적으로 섭취하는 것이 가장 중요합니다. 만약 식사 준비가 어려운 상황이라면, 간단한 스낵이나 과일(예: 바나나, 사과)을 통해 혈당을 안정적으로 유지하는 것이 좋습니다.\n\n■ **[대처]**: 지금 즉시 식사를 하고, 다음 번에는 반드시 식사와 함께 글리메피리드를 복용해 주세요. 만약 떨림이나 식은땀 등의 저혈당 증상이 나타나면 즉시 당분(예: 사탕, 주스 등)을 섭취하고, 필요 시 의료진에게 상담하세요.\n\n■ **[출처]**: 식품의약품안전처 (복약지도 정보)",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "글리메피리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

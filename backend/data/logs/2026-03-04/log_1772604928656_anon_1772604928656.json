@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-03-04T15:15:28.656773",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "ACE/ARB 계열 혈압약 복용 중인데 바나나 먹어도 될까요?",
+    "medications": [],
+    "conditions": [
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "ACE/ARB 계열 혈압약 복용 중인데 바나나 먹어도 될까요?",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_BANANA"
+            },
+            {
+              "raw": "바나나즙",
+              "entity_id": "FOOD_BANANA"
+            },
+            {
+              "raw": "바나나칩",
+              "entity_id": "FOOD_BANANA"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "혈압약",
+              "entity_id": "DRUG_AMLODIPINE",
+              "verification_status": "VERIFIED"
+            },
+            {
+              "raw": "고혈압약",
+              "entity_id": "DRUG_AMLODIPINE",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": [
+            "혈압약",
+            "고혈압약"
+          ]
+        },
+        "user_conditions": [
+          "고혈압"
+        ],
+        "input_text": "ACE/ARB 계열 혈압약 복용 중인데 바나나 먹어도 될까요?"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_BANANA"
+            },
+            {
+              "raw": "바나나즙",
+              "entity_id": "FOOD_BANANA"
+            },
+            {
+              "raw": "바나나칩",
+              "entity_id": "FOOD_BANANA"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "혈압약",
+              "entity_id": "DRUG_AMLODIPINE",
+              "verification_status": "VERIFIED"
+            },
+            {
+              "raw": "고혈압약",
+              "entity_id": "DRUG_AMLODIPINE",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

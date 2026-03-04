@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-03-04T16:24:12.438039",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "음주(예정)",
+    "medications": [
+      "타이레놀ㄹ"
+    ],
+    "conditions": [
+      "고령",
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "음주(예정)",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "타이레놀",
+              "entity_id": "DRUG_ACETAMINOPHEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "고령",
+          "관절염"
+        ],
+        "input_text": "음주(예정)"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "타이레놀",
+              "entity_id": "DRUG_ACETAMINOPHEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

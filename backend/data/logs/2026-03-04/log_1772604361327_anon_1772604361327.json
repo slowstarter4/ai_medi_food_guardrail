@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-03-04T15:06:01.327465",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "오늘 저녁에 젓갈이랑 국물이랑 짜게 먹었어요",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_010",
+    "explanation_summary": "■ **[결론]**: 로사르탄을 복용 중이신 경우, 국물과 젓갈 섭취는 주의가 필요합니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 사용자님은 고혈압 관리에 도움을 받기 위해 이 약을 사용하고 계십니다. 그러나 국물과 젓갈은 일반적으로 나트륨 함량이 매우 높은 식품입니다. 고혈압 환자에게는 나트륨 섭취를 제한하는 것이 중요한데, 나트륨이 체내에 ...",
+    "full_result": {
+      "input_text": "오늘 저녁에 젓갈이랑 국물이랑 짜게 먹었어요",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_010",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_010"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "국물",
+              "entity_id": "FOOD_SODIUM_HIGH"
+            },
+            {
+              "raw": "젓갈",
+              "entity_id": "FOOD_SODIUM_HIGH"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "고혈압"
+        ],
+        "input_text": "오늘 저녁에 젓갈이랑 국물이랑 짜게 먹었어요"
+      },
+      "explanation": "■ **[결론]**: 로사르탄을 복용 중이신 경우, 국물과 젓갈 섭취는 주의가 필요합니다.\n\n■ **[이유]**: 현재 로사르탄을 복용 중이신 사용자님은 고혈압 관리에 도움을 받기 위해 이 약을 사용하고 계십니다. 그러나 국물과 젓갈은 일반적으로 나트륨 함량이 매우 높은 식품입니다. 고혈압 환자에게는 나트륨 섭취를 제한하는 것이 중요한데, 나트륨이 체내에 과도하게 축적되면 혈압이 상승할 수 있습니다. 로사르탄은 혈압을 낮추는 데 도움을 주지만, 나트륨 섭취가 많아지면 그 효과가 감소할 수 있습니다. 따라서 국물과 젓갈은 고혈압 관리에 있어 바람직하지 않은 선택입니다.\n\n■ **[대안]**: 대신 무염 국물이나 저염 젓갈과 같은 저염식으로 대체하시면 좋습니다. 예를 들어, 신선한 채소를 이용한 국물이나 저염 간장으로 만든 양념을 사용하는 것이 안전합니다.\n\n■ **[대처]**: 즉시 국물과 젓갈의 섭취를 줄이고, 대신 저염 식품으로 식단을 조절하시기 바랍니다. 또한, 나트륨 섭취량을 점검하고, 필요 시 영양사와 상담하는 것이 좋습니다.\n\n■ **[출처]**: 세이프잇 내부 가이드라인, 식약처 e약은요.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "국물",
+              "entity_id": "FOOD_SODIUM_HIGH"
+            },
+            {
+              "raw": "젓갈",
+              "entity_id": "FOOD_SODIUM_HIGH"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

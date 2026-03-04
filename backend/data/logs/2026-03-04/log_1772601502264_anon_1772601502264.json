@@ -1,0 +1,127 @@
+{
+  "timestamp": "2026-03-04T14:18:22.264369",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "칼륨",
+    "medications": [
+      "엔알라프릴"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "HTN_002",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.\n\n■ **[이유]**: 현재 엔알라프릴을 복용 중이신 경우, 칼륨과 칼륨염이 포함된 식품은 매우 위험할 수 있습니다. 엔알라프릴은 ACE 억제제의 일종으로, 혈압을 낮추는 데 도움을 주지만, 신장에서의 칼륨 배설을 억제하여 체내 칼륨 수치를 상승시킬 수 있습니다. 특히 고령이시라 신장 기능이 저하되어...",
+    "full_result": {
+      "input_text": "칼륨",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "HTN_002",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_002"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            },
+            {
+              "raw": "칼륨염",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EV_HTN_002"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EV_HTN_002",
+            "evidence_source_label": "미국 FDA 의약품 허가사항 (ACE 억제제 계열) – 칼륨 보충제 병용 주의",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "ACE 억제제 복용 중 칼륨 소금(저염소금)을 사용하면 고칼륨혈증 위험이 있어요. 임의로 함께 사용하지 마세요.",
+            "evidence_tags": [
+              "고칼륨혈증"
+            ],
+            "title": "ACE억제제 + 칼륨 소금대체제"
+          }
+        ],
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "칼륨"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.\n\n■ **[이유]**: 현재 엔알라프릴을 복용 중이신 경우, 칼륨과 칼륨염이 포함된 식품은 매우 위험할 수 있습니다. 엔알라프릴은 ACE 억제제의 일종으로, 혈압을 낮추는 데 도움을 주지만, 신장에서의 칼륨 배설을 억제하여 체내 칼륨 수치를 상승시킬 수 있습니다. 특히 고령이시라 신장 기능이 저하되어 있을 가능성이 높습니다. 이로 인해 고칼륨혈증의 위험이 증가하며, 이는 심각한 부정맥이나 심장마비를 초래할 수 있습니다. 따라서 칼륨이나 칼륨염이 포함된 식품을 함께 섭취하는 것은 절대 피해야 합니다.\n\n■ **[대안]**: 칼륨이 적은 안전한 식품으로는 사과, 배, 또는 오렌지를 추천드립니다. 이러한 과일들은 칼륨 수치에 영향을 미치지 않으면서도 맛있고 건강합니다.\n\n■ **[대처]**: 즉시 칼륨이나 칼륨염이 포함된 식품의 섭취를 중단하시고, 추가적인 질문이나 우려 사항이 있으시면 의료 전문가와 상담하시기 바랍니다.\n\n■ **[출처]**: 미국 FDA 의약품 허가사항 (ACE 억제제 계열) – 칼륨 보충제 병용 주의.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            },
+            {
+              "raw": "칼륨염",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

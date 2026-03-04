@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-03-04T16:39:34.385127",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "gllemipiride 공복",
+    "medications": [],
+    "conditions": [],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "gllemipiride 공복",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "glimepiride",
+              "entity_id": "DRUG_METFORMIN",
+              "inferred_class": "DIABETES_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [],
+        "input_text": "gllemipiride 공복"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "glimepiride",
+              "entity_id": "DRUG_METFORMIN",
+              "inferred_class": "DIABETES_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "timestamp": "2026-03-04T16:48:35.951780",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "술.jpg",
+    "medications": [
+      "이부프로팬"
+    ],
+    "conditions": [
+      "고령",
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "NSAID_003",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 소주와 이부프로펜의 조합은 절대 금지입니다.\n\n■ **[이유]**: 현재 이부프로펜을 복용 중이신데, 이부프로펜은 비스테로이드성 항염증제(NSAID)로, 소주와 같은 알코올과 함께 섭취할 경우 출혈 위험이 크게 증가합니다. 고령이시고 관절염을 앓고 계시기 때문에 신장 기능이 약해져 있을 가능성이 높습니다. 이부프로펜이...",
+    "full_result": {
+      "input_text": "98.10.1%(자료가,정제수,주정,종류식소주)보리국산 더불어 애리스리틀 스테비올배당체·품목보고번호:2011001 소재지,롯데칠성음료(주)강원도 강릉시 관슬길 7 · 제조연월일 용기·유리무형내면·폴리에틸렌· 병 파손 위험 있으니 결봉 직후 주리할 것. 직사공선을 피하고 서늘한 곳에 보관 소비자상 333-2323 부정불량 신고는 국번없이 1399 음식점·주점 판매불가 영양정보 출내89360m2 100ml당 90 kcal 0% 탄수화물 0g 0 % 당류 0 ou % s 지방0g0% 트랜스지방 0 g 포화지방 : 0% 10 콜레스테롤 36 0 mg 0 % 단백질 0 9 0 % 138217111 중고 지나친음주는 뇌졸중, 기억력손상이나 자리를 합니다. 임신 중 음주는 기형아 출생 위한을 입입니다. 80 19세 미만 판매금지",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "NSAID_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_005",
+            "NSAID_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "소주",
+              "entity_id": "FOOD_ALCOHOL"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            },
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_DUPLICATION",
+          "EVD_HTN_NSAID_BP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_source_label": "FDA NSAID safety warning",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "여러 NSAID 진통제를 동시에 복용하면 출혈 위험이 크게 증가할 수 있습니다.",
+            "evidence_tags": [
+              "NSAID",
+              "duplication",
+              "bleeding"
+            ]
+          },
+          {
+            "evidence_source_label": "Clinical pharmacology review",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "이부프로펜 같은 NSAID는 혈압을 상승시키거나 혈압약 효과를 감소시킬 수 있습니다.",
+            "evidence_tags": [
+              "NSAID",
+              "blood_pressure",
+              "drug_interaction"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "관절염"
+        ],
+        "input_text": "98.10.1%(자료가,정제수,주정,종류식소주)보리국산 더불어 애리스리틀 스테비올배당체·품목보고번호:2011001 소재지,롯데칠성음료(주)강원도 강릉시 관슬길 7 · 제조연월일 용기·유리무형내면·폴리에틸렌· 병 파손 위험 있으니 결봉 직후 주리할 것. 직사공선을 피하고 서늘한 곳에 보관 소비자상 333-2323 부정불량 신고는 국번없이 1399 음식점·주점 판매불가 영양정보 출내89360m2 100ml당 90 kcal 0% 탄수화물 0g 0 % 당류 0 ou % s 지방0g0% 트랜스지방 0 g 포화지방 : 0% 10 콜레스테롤 36 0 mg 0 % 단백질 0 9 0 % 138217111 중고 지나친음주는 뇌졸중, 기억력손상이나 자리를 합니다. 임신 중 음주는 기형아 출생 위한을 입입니다. 80 19세 미만 판매금지"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 소주와 이부프로펜의 조합은 절대 금지입니다.\n\n■ **[이유]**: 현재 이부프로펜을 복용 중이신데, 이부프로펜은 비스테로이드성 항염증제(NSAID)로, 소주와 같은 알코올과 함께 섭취할 경우 출혈 위험이 크게 증가합니다. 고령이시고 관절염을 앓고 계시기 때문에 신장 기능이 약해져 있을 가능성이 높습니다. 이부프로펜이 신장에 미치는 영향과, 알코올이 간에서 약물 대사를 방해하면서 혈중 약물 농도를 높일 수 있기 때문에 더욱 위험합니다. 또한, NSAID는 혈압을 상승시키고 혈압약의 효과를 감소시킬 수 있는데, 이는 고령자에게 특히 위험합니다. \n\n■ **[대안]**: 대신 안전하게 섭취할 수 있는 대체 음료로는 생수나 허브차를 권장드립니다. 이러한 음료는 관절 건강에 도움이 되는 수분 보충과 항염 효과를 기대할 수 있습니다.\n\n■ **[대처]**: 즉시 소주와 같은 알코올 음료의 섭취를 중단하시고, 이부프로펜 복용에 대해 의사와 상담하시기 바랍니다. 필요시 대체 약물이나 치료 방법에 대해서도 논의해 보시는 것이 좋습니다.\n\n■ **[출처]**: FDA NSAID safety warning, Clinical pharmacology review.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "소주",
+              "entity_id": "FOOD_ALCOHOL"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT"
+            },
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

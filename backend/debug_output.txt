@@ -1,0 +1,14 @@
+
+=== DEBUG: Scenario 1 ===
+Risk: YELLOW
+Matched Rules: []
+Situations IDs: ['SITUATION_DEHYDRATION', 'SITUATION_DEHYDRATION', 'CONDITION_hypertension', 'SITUATION_CONCURRENT']
+Drug IDs: ['DRUG_LOSARTAN']
+PASS: Risk detected
+
+=== DEBUG: Scenario 11 ===
+Risk: RED
+Matched Rules: []
+Situations IDs: ['CONDITION_diabetes', 'SITUATION_FASTING', 'SITUATION_CONCURRENT']
+Drug IDs: ['DRUG_SULFONYLUREA']
+PASS: Risk detected

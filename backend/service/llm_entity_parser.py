@@ -28,24 +28,31 @@ def _load_entity_index() -> Dict:
     return _INDEX_CACHE
 
 
-def _extract_entities_via_llm(raw_text: str) -> Dict[str, List[str]]:
+def _extract_entities_via_llm(raw_text: str) -> Dict:
     """
-    [Step 1] LLM으로 텍스트에서 엔티티명(표면어)만 추출합니다.
-    인덱스 전체를 프롬프트에 넣지 않아 토큰 비용이 적고 빠릅니다.
+    [Step 1] LLM으로 텍스트에서 엔티티와 약물 계열(Class)을 함께 추출합니다.
     """
     system_prompt = """
     당신은 의료·식품 상호작용 검사를 위한 엔티티 추출 전문가입니다.
-    사용자가 제공하는 텍스트에서 다음 세 가지 카테고리에 해당하는 항목만 추출하세요.
+    사용자가 제공하는 텍스트에서 다음 카테고리에 해당하는 항목을 분석하고 추출하세요.
     
-    - drugs: 약물명, 의약품명 (예: 암로디핀, 이부프로펜, 로사르탄, 혈압약, 당뇨약 등)
-    - foods: 식품, 음료, 영양 성분 (예: 자몽, 바나나, 알코올, 소주 등)
-    - situations: 복용 상황/행위 (예: 공복, 식전, 병용 복용, 아침 식사 안 하고 등)
+    [추출 카테고리]
+    1. drugs: 약물명(성분명/상품명)
+       - 각 약물별로 'name'(원본명)과 'inferred_class'(추론된 계열)를 JSON 객체로 추출하세요.
+       - 'inferred_class'는 다음 중 하나로 분류하세요: [DECONGESTANT, NSAID, ANTIHISTAMINE, ANTIBIOTIC, HTN_MED, DIABETES_MED, STATIN, PAINKILLER, DIGESTIVE, UNKNOWN]
+    2. foods: 식품, 음료, 영양 성분
+       - 예: 자몽, 바나나, 술, 알코올(음주), 카페인(커피/에너지음료), 고염식(국물/젓갈/김치), 단 음식(케이크/당류) 등
+    3. situations: 복용 상황/사용자 행태/신체 상태
+       - 예: 공복(식사거름), 식전/식후, 사우나(찜질방), 격한 운동, 탈수, 장기 복용(매일 복용), 불규칙한 식사 등
     
     [주의사항]
-    - 위 세 카테고리에 해당하지 않는 단어는 포함하지 마세요.
-    - 가능한 한 원문에 나온 그대로 추출하세요.
+    - 일상적인 말투(예: "운동하고 왔어", "사우나 갈 거야", "아침 걸렀어")에서 핵심 상황 키워드를 정확히 추출하세요.
     - 결과는 JSON 형식으로만 응답하세요. 예시:
-      {"drugs": ["암로디핀", "이부프로펜"], "foods": ["자몽주스"], "situations": ["공복"]}
+      {
+        "drugs": [{"name": "슈다페드", "inferred_class": "DECONGESTANT"}],
+        "foods": ["커피", "고염식"],
+        "situations": ["격한 운동", "공복"]
+      }
     """
 
     try:
@@ -57,10 +64,9 @@ def _extract_entities_via_llm(raw_text: str) -> Dict[str, List[str]]:
             ],
             response_format={"type": "json_object"},
             temperature=0,
-            timeout=30  # 30초 타임아웃
+            timeout=30
         )
         data = json.loads(response.choices[0].message.content)
-        # 기본 구조 보장
         return {
             "drugs": data.get("drugs", []),
             "foods": data.get("foods", []),
@@ -71,70 +77,76 @@ def _extract_entities_via_llm(raw_text: str) -> Dict[str, List[str]]:
         return {"drugs": [], "foods": [], "situations": []}
 
 
-def _normalize_to_ids(extracted: Dict[str, List[str]]) -> Dict[str, List[Dict]]:
+def _normalize_to_ids(extracted: Dict) -> Dict[str, List[Dict]]:
     """
-    [Step 2] 추출된 표면어를 entity_index.json 기반으로 표준 ID에 매핑합니다.
-    기존 entity_normalizer.py 로직을 재사용합니다.
+    [Step 2] 추출된 항목을 entity_index.json 기반 표준 ID로 매핑합니다.
+    색인에 없어도 LLM이 추론한 계열 정보(inferred_class)를 활용합니다.
     """
-    import re
     index = _load_entity_index()
-
     normalized = {"foods": [], "drugs": [], "situations": []}
 
-    for entity_type in ["drugs", "foods", "situations"]:
-        lookup = index.get(entity_type, {})
-        for raw in extracted.get(entity_type, []):
+    # 1. 약물 정규화 (이름 매핑 우선, 실패 시 계열 매핑)
+    lookup_drugs = index.get("drugs", {})
+    for drug_info in extracted.get("drugs", []):
+        name = drug_info.get("name", "")
+        inferred_class = drug_info.get("inferred_class", "UNKNOWN")
+        name_clean = name.strip().lower().replace(" ", "")
+
+        matched_id = None
+        # 이름 기반 완전/부분 매칭
+        for key, eid in lookup_drugs.items():
+            key_norm = key.lower().replace(" ", "")
+            if key_norm == name_clean or key_norm in name_clean or name_clean in key_norm:
+                matched_id = eid
+                break
+        
+        # 이름 매칭 실패 시 계열 기반 매칭
+        if not matched_id and inferred_class != "UNKNOWN":
+            class_to_id_map = {
+                "DECONGESTANT": "DRUG_DECONGESTANT",
+                "NSAID": "DRUG_NSAID",
+                "ANTIHISTAMINE": "DRUG_ANTIHISTAMINE",
+                "ANTIBIOTIC": "DRUG_ANTIBIOTIC",
+                "PAINKILLER": "DRUG_PAINKILLER_GENERAL",
+                "DIGESTIVE": "DRUG_DIGESTIVE_GENERAL",
+                "HTN_MED": "DRUG_AMLODIPINE",  # 기본 대표 ID
+                "DIABETES_MED": "DRUG_METFORMIN",
+                "STATIN": "DRUG_STATIN"
+            }
+            matched_id = class_to_id_map.get(inferred_class)
+
+        normalized["drugs"].append({
+            "raw": name,
+            "entity_id": matched_id if matched_id else "UNKNOWN",
+            "inferred_class": inferred_class
+        })
+
+    # 2. 식품 및 상황 정규화
+    for etype in ["foods", "situations"]:
+        lookup = index.get(etype, {})
+        for raw in extracted.get(etype, []):
             raw_clean = raw.strip().lower().replace(" ", "")
-
             matched_id = None
-            matched_key = None
-
-            # 1. 완전 일치 (공백 제거 기준)
             for key, eid in lookup.items():
-                if key.lower().replace(" ", "") == raw_clean:
+                key_norm = key.lower().replace(" ", "")
+                if key_norm == raw_clean or key_norm in raw_clean or raw_clean in key_norm:
                     matched_id = eid
-                    matched_key = key
                     break
-
-            # 2. 부분 포함 (raw가 key를 포함하거나 key가 raw를 포함)
-            if not matched_id:
-                for key, eid in lookup.items():
-                    key_norm = key.lower().replace(" ", "")
-                    if key_norm in raw_clean or raw_clean in key_norm:
-                        matched_id = eid
-                        matched_key = key
-                        break
-
-            if matched_id:
-                normalized[entity_type].append({
-                    "raw": raw,
-                    "entity_id": matched_id
-                })
-            else:
-                # 미등록 엔티티는 UNKNOWN으로 기록 (LLM 설명 생성 시 참고)
-                normalized[entity_type].append({
-                    "raw": raw,
-                    "entity_id": "UNKNOWN"
-                })
+            
+            normalized[etype].append({
+                "raw": raw,
+                "entity_id": matched_id if matched_id else "UNKNOWN"
+            })
 
     return normalized
 
 
 def parse_entities_with_llm(raw_text: str) -> Dict[str, List[Dict]]:
     """
-    LLM으로 표면어를 추출(Step 1)한 뒤, 표준 ID에 매핑(Step 2)합니다.
-    LLM에 전체 인덱스를 넘기지 않아 속도와 비용 모두 최적화됩니다.
+    LLM 추론을 활용하여 엔티티를 추출하고 표준 ID로 정규화합니다.
     """
     if not client:
-        logging.warning("OpenAI API key not set. Falling back to empty entities.")
         return {"foods": [], "drugs": [], "situations": []}
 
-    # Step 1: LLM으로 표면어 추출
     extracted = _extract_entities_via_llm(raw_text)
-    logging.info(f"[LLM Parser] Extracted: {extracted}")
-
-    # Step 2: 표준 ID 매핑
-    normalized = _normalize_to_ids(extracted)
-    logging.info(f"[LLM Parser] Normalized: {normalized}")
-
-    return normalized
+    return _normalize_to_ids(extracted)

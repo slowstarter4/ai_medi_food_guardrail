@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-03-04T14:42:33.774605",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "격한 운동 하고 왔는데 아직 밥은 안 먹었어요",
+    "medications": [
+      "메트포르민"
+    ],
+    "conditions": [
+      "당뇨"
+    ]
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "격한 운동 하고 왔는데 아직 밥은 안 먹었어요",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "메트포르민",
+              "entity_id": "DRUG_METFORMIN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [
+          "당뇨"
+        ],
+        "input_text": "격한 운동 하고 왔는데 아직 밥은 안 먹었어요"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "메트포르민",
+              "entity_id": "DRUG_METFORMIN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

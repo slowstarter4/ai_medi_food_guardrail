@@ -1,0 +1,133 @@
+{
+  "timestamp": "2026-03-04T15:46:53.831171",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복",
+    "medications": [
+      "글리메피리드"
+    ],
+    "conditions": [
+      "고령",
+      "당뇨"
+    ]
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "DM_010",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.\n\n■ **[이유]**: 현재 글리메피리드를 복용 중이신 고령의 당뇨 환자이신데, 식사를 거르는 것은 저혈당의 위험을 높입니다. 글리메피리드는 인슐린 분비를 촉진하여 혈당을 낮추는 작용을 하며, 식사를 하지 않을 경우 혈당이 급격히 떨어져 떨림, 식은땀 등의 저혈당 증상이 나타날 수 있습니다. 특히 고...",
+    "full_result": {
+      "input_text": "공복",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "DM_010",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_004",
+            "DM_010"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "글리메피리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EXTRA_DM_MEAL_SKIP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EXTRA_DM_MEAL_SKIP",
+            "evidence_source_label": "식품의약품안전처 (복약지도 정보)",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 저혈당이 발생할 수 있습니다. 떨림, 식은땀 등 증상이 나타나면 당분을 섭취하세요.",
+            "evidence_tags": [
+              "저혈당"
+            ],
+            "title": "식사 거름과 저혈당",
+            "url": "https://nedrug.mfds.go.kr"
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "고령",
+          "당뇨"
+        ],
+        "input_text": "공복"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 절대 금지합니다.\n\n■ **[이유]**: 현재 글리메피리드를 복용 중이신 고령의 당뇨 환자이신데, 식사를 거르는 것은 저혈당의 위험을 높입니다. 글리메피리드는 인슐린 분비를 촉진하여 혈당을 낮추는 작용을 하며, 식사를 하지 않을 경우 혈당이 급격히 떨어져 떨림, 식은땀 등의 저혈당 증상이 나타날 수 있습니다. 특히 고령이시라면 신체의 반응이 느리거나 약해질 수 있어 이러한 증상이 더욱 위험하게 진행될 수 있습니다.\n\n■ **[대안]**: 식사를 거르지 않도록 하시고, 규칙적인 식사를 통해 혈당을 안정적으로 유지하는 것이 중요합니다. 만약 식사를 거를 수밖에 없는 상황이라면, 당분이 포함된 간단한 스낵(예: 과일, 사탕)을 미리 준비해 두시는 것이 좋습니다.\n\n■ **[대처]**: 즉시 식사를 하시고, 만약 저혈당 증상이 나타나시면 즉각적으로 당분을 섭취하시기 바랍니다. 또한, 정기적으로 혈당 수치를 체크하시고, 이상이 있을 경우 의사와 상담하시기 바랍니다.\n\n■ **[출처]**: 식품의약품안전처 (복약지도 정보)",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "글리메피리드",
+              "entity_id": "DRUG_SULFONYLUREA"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

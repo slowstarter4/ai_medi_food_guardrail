@@ -1,0 +1,136 @@
+{
+  "timestamp": "2026-03-04T16:47:18.226504",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "음주(예정)",
+    "medications": [
+      "이부프로팬"
+    ],
+    "conditions": [
+      "고령",
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "NSAID_003",
+    "explanation_summary": "■ **[결론]**: 음주와 이부프로펜의 조합은 매우 위험합니다. 절대 금지입니다.\n\n■ **[이유]**: 현재 이부프로펜을 복용 중이신데, 음주를 하게 되면 출혈 위험이 크게 증가합니다. 이부프로펜은 비스테로이드성 항염증제(NSAID)로서 소화관 출혈의 위험을 높이는 특성이 있습니다. 고령이신 점을 고려할 때, 신장 기능이 약해져 있어 이부프로펜의 대사와...",
+    "full_result": {
+      "input_text": "음주(예정)",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "NSAID_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_005",
+            "NSAID_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_DUPLICATION",
+          "EVD_HTN_NSAID_BP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_source_label": "FDA NSAID safety warning",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "여러 NSAID 진통제를 동시에 복용하면 출혈 위험이 크게 증가할 수 있습니다.",
+            "evidence_tags": [
+              "NSAID",
+              "duplication",
+              "bleeding"
+            ]
+          },
+          {
+            "evidence_source_label": "Clinical pharmacology review",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "이부프로펜 같은 NSAID는 혈압을 상승시키거나 혈압약 효과를 감소시킬 수 있습니다.",
+            "evidence_tags": [
+              "NSAID",
+              "blood_pressure",
+              "drug_interaction"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "관절염"
+        ],
+        "input_text": "음주(예정)"
+      },
+      "explanation": "■ **[결론]**: 음주와 이부프로펜의 조합은 매우 위험합니다. 절대 금지입니다.\n\n■ **[이유]**: 현재 이부프로펜을 복용 중이신데, 음주를 하게 되면 출혈 위험이 크게 증가합니다. 이부프로펜은 비스테로이드성 항염증제(NSAID)로서 소화관 출혈의 위험을 높이는 특성이 있습니다. 고령이신 점을 고려할 때, 신장 기능이 약해져 있어 이부프로펜의 대사와 배설이 저하될 수 있으며, 이는 출혈 위험을 더욱 증가시킵니다. 게다가 음주는 간에 부담을 주어 이부프로펜의 효과를 저하시킬 수 있고, 혈압을 상승시키는 부작용이 있어 관절염 관리에 도움이 되지 않습니다.\n\n■ **[대안]**: 음주 대신 물이나 허브 차와 같은 안전한 음료를 선택하시는 것이 좋습니다. 특히, 카모마일 차는 진정 효과가 있어 관절염으로 인한 통증 완화에 도움이 될 수 있습니다.\n\n■ **[대처]**: 즉시 음주를 중단하시고, 이부프로펜 복용에 대한 상담을 위해 주치의와 연락하시기 바랍니다. 또한, 관절염 관리에 대한 추가적인 조언을 받는 것도 좋습니다.\n\n■ **[출처]**: FDA NSAID safety warning, Clinical pharmacology review.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

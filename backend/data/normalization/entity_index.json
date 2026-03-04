@@ -9,7 +9,11 @@
     "다파글리플로진": "DRUG_DAPAGLIFLOZIN",
     "설폰요소제": "DRUG_SULFONYLUREA",
     "글리메피리드": "DRUG_SULFONYLUREA",
+    "글레미피리드": "DRUG_SULFONYLUREA",
+    "글리메피드": "DRUG_SULFONYLUREA",
+    "글리메필리드": "DRUG_SULFONYLUREA",
     "글리벤클라미드": "DRUG_SULFONYLUREA",
+    "글리클라지드": "DRUG_SULFONYLUREA",
     "이부프로펜": "DRUG_IBUPROFEN",
     "디부루펜": "DRUG_IBUPROFEN",
     "이부루펜": "DRUG_IBUPROFEN",
@@ -169,7 +173,21 @@
     "레보큐": "DRUG_ANTIBIOTIC",
     "레보큐정": "DRUG_ANTIBIOTIC",
     "트라몰8시간서방": "DRUG_PAINKILLER_STRONG",
-    "트라몰8시간서방정": "DRUG_PAINKILLER_STRONG"
+    "트라몰8시간서방정": "DRUG_PAINKILLER_STRONG",
+    "항응고제": "DRUG_ANTICOAGULANT",
+    "비소프로롤": "DRUG_BETA_BLOCKER",
+    "베타차단제": "DRUG_BETA_BLOCKER",
+    "비구아나이드": "DRUG_METFORMIN",
+    "ACE/ARB": "DRUG_ACE_ARB",
+    "ARB": "DRUG_ACE_ARB",
+    "ACE억제제": "DRUG_ACE_ARB",
+    "안지오텐신": "DRUG_ACE_ARB",
+    "CCB": "DRUG_CCB",
+    "칼슘채널차단제": "DRUG_CCB",
+    "SGLT2": "DRUG_SGLT2",
+    "SGLT2억제제": "DRUG_SGLT2",
+    "NSAIDs": "DRUG_NSAID",
+    "NSAID": "DRUG_NSAID"
   },
   "foods": {
     "바나나": "FOOD_BANANA",
@@ -237,7 +255,19 @@
     "칼륨염": "POTASSIUM_SUPPLEMENT",
     "소금대체제": "POTASSIUM_SUPPLEMENT",
     "짠맛내기": "POTASSIUM_SUPPLEMENT",
-    "kcl": "POTASSIUM_SUPPLEMENT"
+    "kcl": "POTASSIUM_SUPPLEMENT",
+    "카페인": "FOOD_CAFFEINE",
+    "커피": "FOOD_CAFFEINE",
+    "에너지음료": "FOOD_CAFFEINE",
+    "핫식스": "FOOD_CAFFEINE",
+    "레드불": "FOOD_CAFFEINE",
+    "고염식": "FOOD_SODIUM_HIGH",
+    "짠 음식": "FOOD_SODIUM_HIGH",
+    "국물": "FOOD_SODIUM_HIGH",
+    "젓갈": "FOOD_SODIUM_HIGH",
+    "김치": "FOOD_SODIUM_HIGH",
+    "소금": "FOOD_SODIUM_HIGH",
+    "음주": "FOOD_ALCOHOL"
   },
   "situations": {
     "동시 섭취": "SITUATION_CONCURRENT",
@@ -262,6 +292,15 @@
     "식사 후": "SITUATION_POST_MEAL",
     "식사 후 복용": "SITUATION_POST_MEAL",
     "공복": "SITUATION_FASTING",
-    "식사거름": "SITUATION_FASTING"
+    "식사거름": "SITUATION_FASTING",
+    "찜질방": "SITUATION_DEHYDRATION",
+    "격한 운동": "SITUATION_EXERCISE",
+    "운동 후": "SITUATION_EXERCISE",
+    "운동": "SITUATION_EXERCISE",
+    "장기 복용": "SITUATION_LONG_TERM_USE",
+    "연속 복용": "SITUATION_LONG_TERM_USE",
+    "매일 복용": "SITUATION_LONG_TERM_USE",
+    "불규칙한 식사": "SITUATION_MEAL_IRREGULAR",
+    "식사 불규칙": "SITUATION_MEAL_IRREGULAR"
   }
 }

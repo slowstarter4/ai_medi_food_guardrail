@@ -12,6 +12,8 @@ from src.rules.loader import load_ruleset
 from src.rules.evaluator import evaluate_rules
 from service.entity_parser import parse_entities
 from service.entity_normalizer import normalize_entities, load_entity_index
+from service.llm_entity_parser import parse_entities_with_llm
+from src.external_api.drug_info_client import fetch_drug_info_from_api
 from src.service.risk_assessor import assess_risk
 from src.ocr.processor import extract_text_from_image
 from src.utils.logger import save_analysis_log
@@ -31,16 +33,73 @@ LABEL_TO_ID = {
 }
 
 
-def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list = None):
-    """핵심 분석 파이프라인: 파싱 → 정규화 → 규칙 매칭 → 위험도 판정 → LLM 설명"""
+def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list = None, user_situations: list = None):
+    """핵심 분석 파이프라인: 고속 로컬 매칭 → (필요시) LLM 추론 → API 교차 검증 → 규칙 매칭"""
     ruleset = load_ruleset()
     rules = ruleset["rules"]
     entity_index = load_entity_index()
     known_entities = {etype: list(entity_index[etype].keys()) for etype in entity_index}
 
-    # 1. 입력 텍스트 파싱 & 정규화
+    # 1. [Fast Path] 로컬 색인 매칭
     parsed = parse_entities(input_text, known_entities)
     normalized = normalize_entities(parsed)
+    # 로컬 매칭은 이미 검증된 것으로 간주
+    for d in normalized.get("drugs", []):
+        d["verification_status"] = "VERIFIED"
+
+    # 2. [AI Path] 하이브리드 판단
+    needs_ai = False
+    if not normalized.get("drugs"):
+        needs_ai = True
+    else:
+        # 상황적 맥락이나 식품/약물 상호작용 의심 키워드 확장
+        trigger_keywords = [
+            "감기", "약", "처방", "성분", "같이", "함께", "먹어", 
+            "운동", "사우나", "찜질방", "공복", "거름", "안먹", "밥못",
+            "매일", "계속", "장기", "한달", "커피", "카페인", "에너지음료",
+            "짜게", "젓갈", "국물", "소금", "주스", "자몽"
+        ]
+        text_no_space = input_text.replace(" ", "")
+        if any(kw in text_no_space for kw in trigger_keywords):
+            needs_ai = True
+
+    if needs_ai:
+        ai_normalized = parse_entities_with_llm(input_text)
+        
+        # 3. [Cross-Check] 공공 API를 통한 AI 추론 검증
+        for ai_item in ai_normalized.get("drugs", []):
+            existing_ids = [d["entity_id"] for d in normalized.get("drugs", [])]
+            if ai_item["entity_id"] != "UNKNOWN" and ai_item["entity_id"] not in existing_ids:
+                
+                # API 교차 확인 로직
+                drug_name = ai_item["raw"]
+                inferred_class = ai_item.get("inferred_class", "UNKNOWN")
+                
+                api_data = fetch_drug_info_from_api(drug_name)
+                is_verified = False
+                if api_data and "summary" in api_data:
+                    # 계열별 키워드 매칭 (간단 버전)
+                    check_map = {
+                        "DECONGESTANT": ["코막힘", "비충혈", "비염", "감기"],
+                        "NSAID": ["해열", "진통", "소염", "염증"],
+                        "PAINKILLER": ["해열", "진통"],
+                        "HTN_MED": ["혈압", "고혈압"],
+                        "DIABETES_MED": ["당뇨", "혈당"]
+                    }
+                    keywords = check_map.get(inferred_class, [])
+                    summary = api_data["summary"]
+                    if any(kw in summary for kw in keywords):
+                        is_verified = True
+                
+                ai_item["verification_status"] = "VERIFIED" if is_verified else "INFERRED"
+                normalized.setdefault("drugs", []).append(ai_item)
+
+        # 식품 및 상황 병합
+        for etype in ["foods", "situations"]:
+            existing_ids = [item["entity_id"] for item in normalized.get(etype, [])]
+            for ai_item in ai_normalized.get(etype, []):
+                if ai_item["entity_id"] != "UNKNOWN" and ai_item["entity_id"] not in existing_ids:
+                    normalized.setdefault(etype, []).append(ai_item)
 
     # 2. 사용자 약물 주입
     if user_meds:
@@ -52,21 +111,46 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
                     if d["entity_id"] not in existing_ids:
                         normalized.setdefault("drugs", []).append(d)
 
-    # 3. 상황어 자동 감지
+    # 3. 상황어 자동 감지 고도화
     input_norm = input_text.replace(" ", "")
-    if any(kw in input_norm for kw in ["공복", "밥안먹고", "식사안하고", "밥못먹고"]):
+    if any(kw in input_norm for kw in ["공복", "밥안먹", "식사안", "밥못", "식사거름", "아침안"]):
         normalized.setdefault("situations", []).append(
             {"raw": "공복", "canonical": "공복 복용", "entity_id": "SITUATION_FASTING"})
-    if any(kw in input_norm for kw in ["사우나", "땀많이", "더웠어"]):
+    if any(kw in input_norm for kw in ["사우나", "찜질방", "땀많이", "더웠", "땀흘린"]):
         normalized.setdefault("situations", []).append(
             {"raw": "탈수", "canonical": "탈수/수분부족", "entity_id": "SITUATION_DEHYDRATION"})
+    if any(kw in input_norm for kw in ["운동", "격한", "헬스", "달리기"]):
+        normalized.setdefault("situations", []).append(
+            {"raw": "운동", "canonical": "격한 운동", "entity_id": "SITUATION_EXERCISE"})
+    if any(kw in input_norm for kw in ["매일", "계속", "장기", "한달", "연속"]):
+        normalized.setdefault("situations", []).append(
+            {"raw": "장기복용", "canonical": "장기 연속 복용", "entity_id": "SITUATION_LONG_TERM_USE"})
+    if any(kw in input_norm for kw in ["불규칙", "제때", "들쑥날쑥"]):
+        normalized.setdefault("situations", []).append(
+            {"raw": "불규칙식사", "canonical": "불규칙한 식사", "entity_id": "SITUATION_MEAL_IRREGULAR"})
 
-    # 4. 사용자 질환 주입
+    # 4. 사용자 질환 및 상황(칩) 주입
     if user_conditions:
         for cond in user_conditions:
             cid = LABEL_TO_ID.get(cond, cond)
             normalized.setdefault("situations", []).append(
                 {"raw": cond, "canonical": cond, "entity_id": f"CONDITION_{cid}"})
+
+    if user_situations:
+        for situ in user_situations:
+            # entity_index의 situations에서 ID 조회
+            s_clean = situ.strip()
+            sid = entity_index.get("situations", {}).get(s_clean, "UNKNOWN")
+            print(f"DEBUG: Processing user_situation: '{s_clean}' -> ID: {sid}")
+            if sid == "UNKNOWN":
+                # 직접 ID로 왔을 가능성 대비 (예: SITUATION_FASTING)
+                sid = situ if situ.startswith("SITUATION_") else "UNKNOWN"
+            
+            # 기존에 없는 경우에만 추가
+            existing_sids = [s["entity_id"] for s in normalized.get("situations", [])]
+            if sid not in existing_sids:
+                normalized.setdefault("situations", []).append(
+                    {"raw": situ, "canonical": situ, "entity_id": sid})
 
     # 5. 병용 상황어 자동 주입
     has_multi = len(normalized.get("drugs", [])) >= 2
@@ -85,17 +169,39 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
         normalized["situations"].append(
             {"raw": "공복 음주", "canonical": "공복 음주", "entity_id": "SITUATION_FASTING_ALCOHOL"})
 
-    # 6. 규칙 매칭 & 위험도 평가
+    # 6. 규칙 매칭 & 위험도 평가 (Tier 1: 자체 룰셋)
+    print(f"DEBUG: Starting evaluate_rules...")
+    print(f"DEBUG: Drugs to check: {[d['entity_id'] for d in normalized.get('drugs', [])]}")
+    print(f"DEBUG: Foods to check: {[f['entity_id'] for f in normalized.get('foods', [])]}")
+    print(f"DEBUG: Situations to check: {[s['entity_id'] for s in normalized.get('situations', [])]}")
+    
     matched_rules = evaluate_rules(normalized, rules)
+    print(f"DEBUG: matched_rules count: {len(matched_rules)}")
+    for r in matched_rules:
+        print(f"DEBUG: Matched Rule ID: {r['rule_id']} (Level: {r.get('level')}, Risk: {r.get('risk_level_hint')})")
+
     risk_result = assess_risk(normalized, matched_rules)
+    print(f"DEBUG: Final Risk Result: {risk_result.get('risk_level')}")
+
+    # 7. DUR 상호작용 체크 (Tier 2: 보조 정보)
+    drug_names = [d["raw"] for d in normalized.get("drugs", [])]
+    dur_alerts = []
+    if len(drug_names) >= 2:
+        from src.external_api.dur_client import get_drug_interaction
+        dur_alerts = get_drug_interaction(drug_names)
+    
+    risk_result["supplementary_info"] = {
+        "dur_alerts": dur_alerts,
+        "api_verified_drugs": [d["raw"] for d in normalized.get("drugs", []) if d.get("verification_status") == "VERIFIED"]
+    }
 
     # user_conditions을 결과에 포함 (프론트엔드에서 사용)
     risk_result["user_conditions"] = user_conditions or []
     risk_result["input_text"] = input_text
 
-    # 7. LLM 설명 생성 (RAG)
+    # 8. LLM 설명 생성 (RAG)
     explanation = ""
-    if HAS_EXPLANATION and risk_result.get("risk_level") != "GREEN":
+    if HAS_EXPLANATION and (risk_result.get("risk_level") != "GREEN" or dur_alerts):
         try:
             explanation = run_explanation({"risk_result": risk_result})
         except Exception as e:
@@ -110,12 +216,12 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
     }
 
 
-def analyze_text(text: str, medications: list = None, conditions: list = None):
+def analyze_text(text: str, medications: list = None, conditions: list = None, situations: list = None):
     """텍스트 기반 분석"""
-    return _run_pipeline(text, medications, conditions)
+    return _run_pipeline(text, medications, conditions, situations)
 
 
-def analyze_image(image_path: str, medications: list = None, conditions: list = None):
+def analyze_image(image_path: str, medications: list = None, conditions: list = None, situations: list = None):
     """이미지 기반 분석 (OCR → 텍스트 → 파이프라인)"""
     extracted_text = extract_text_from_image(image_path)
     if not extracted_text:
@@ -128,7 +234,7 @@ def analyze_image(image_path: str, medications: list = None, conditions: list = 
             "explanation": "이미지에서 텍스트를 인식하지 못했습니다. 다시 촬영해주세요.",
             "debug_info": {"entities": {}}
         }
-    return _run_pipeline(extracted_text, medications, conditions)
+    return _run_pipeline(extracted_text, medications, conditions, situations)
 
 
 app = FastAPI(title="SafeEat API")
@@ -158,6 +264,7 @@ class TextAnalysisRequest(BaseModel):
     text: str
     medications: Optional[List[str]] = []
     conditions: Optional[List[str]] = []
+    situations: Optional[List[str]] = []
 
 class ImageAnalysisRequest(BaseModel):
     pass
@@ -169,7 +276,7 @@ async def health_check():
 @app.post("/api/analyze/text")
 async def api_analyze_text(request: TextAnalysisRequest):
     try:
-        result = analyze_text(request.text, request.medications, request.conditions)
+        result = analyze_text(request.text, request.medications, request.conditions, request.situations)
         
         # 로그 저장
         save_analysis_log(
@@ -177,7 +284,8 @@ async def api_analyze_text(request: TextAnalysisRequest):
                 "type": "text",
                 "text": request.text,
                 "medications": request.medications,
-                "conditions": request.conditions
+                "conditions": request.conditions,
+                "situations": request.situations
             },
             result_data=result
         )
@@ -193,9 +301,10 @@ async def api_analyze_text(request: TextAnalysisRequest):
 async def api_analyze_image(
     file: UploadFile = File(...), 
     medications: Optional[str] = Form(None),
-    conditions: Optional[str] = Form(None)
+    conditions: Optional[str] = Form(None),
+    manual_situations: Optional[str] = Form(None)
 ):
-    # medications, conditions는 JSON string으로 전달받음
+    # medications, conditions, situations는 JSON string으로 전달받음
     user_meds = []
     if medications:
         try:
@@ -212,6 +321,14 @@ async def api_analyze_image(
         except:
             pass
 
+    user_situations = []
+    if manual_situations:
+        try:
+            import json
+            user_situations = json.loads(manual_situations)
+        except:
+            pass
+
     try:
         suffix = os.path.splitext(file.filename)[1]
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
@@ -219,7 +336,7 @@ async def api_analyze_image(
             tmp_path = tmp.name
         
         try:
-            result = analyze_image(tmp_path, user_meds, user_conditions)
+            result = analyze_image(tmp_path, user_meds, user_conditions, user_situations)
             
             # 로그 저장
             save_analysis_log(
@@ -227,7 +344,8 @@ async def api_analyze_image(
                     "type": "image",
                     "filename": file.filename,
                     "medications": user_meds,
-                    "conditions": user_conditions
+                    "conditions": user_conditions,
+                    "situations": user_situations
                 },
                 result_data=result
             )

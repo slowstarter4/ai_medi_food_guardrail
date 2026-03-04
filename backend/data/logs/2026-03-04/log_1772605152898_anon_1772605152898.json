@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-03-04T15:19:12.898993",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "SGLT2 억제제 처방받았는데 오늘 사우나 가도 되나요?",
+    "medications": [],
+    "conditions": [
+      "당뇨"
+    ]
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "DM_009",
+    "explanation_summary": "■ **[결론]**: 현재 SGLT2 억제제를 복용 중인 사용자에게는 특별한 위험이 없지만, 당뇨 관리에 주의가 필요합니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 SGLT2 억제제는 혈당 조절을 돕고, 신장 기능을 개선하는 데 도움을 줍니다. 여기서 스캔한 식품이 '없음'으로 나타났다는 것은 구체적인 위험 요소가 없음을 의미하지만, 당뇨 환자이기...",
+    "full_result": {
+      "input_text": "SGLT2 억제제 처방받았는데 오늘 사우나 가도 되나요?",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "DM_009",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_009"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "SGLT2 억제제",
+              "entity_id": "DRUG_METFORMIN",
+              "inferred_class": "DIABETES_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "사우나",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "탈수",
+              "canonical": "탈수/수분부족",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "당뇨"
+        ],
+        "input_text": "SGLT2 억제제 처방받았는데 오늘 사우나 가도 되나요?"
+      },
+      "explanation": "■ **[결론]**: 현재 SGLT2 억제제를 복용 중인 사용자에게는 특별한 위험이 없지만, 당뇨 관리에 주의가 필요합니다.\n\n■ **[이유]**: 사용자가 현재 복용 중인 SGLT2 억제제는 혈당 조절을 돕고, 신장 기능을 개선하는 데 도움을 줍니다. 여기서 스캔한 식품이 '없음'으로 나타났다는 것은 구체적인 위험 요소가 없음을 의미하지만, 당뇨 환자이기 때문에 지속적인 혈당 관리를 염두에 두어야 합니다. SGLT2 억제제는 체내에서 포도당의 재흡수를 억제하여 혈당 수치를 낮추는 역할을 하므로, 특정 식품의 섭취가 혈당에 미치는 영향을 고려해야 합니다.\n\n■ **[대안]**: 혈당 조절에 도움이 될 수 있는 안전한 대체 식품으로는 고섬유질 채소(예: 시금치, 브로콜리)나 저당 과일(예: 딸기, 블루베리)을 추천드립니다. 이러한 식품은 혈당 수치를 안정적으로 유지하는 데 기여할 수 있습니다.\n\n■ **[대처]**: 현재 특별한 위험 요소가 없지만, 정기적으로 혈당 수치를 체크하고, 영양 균형을 잘 맞추어 건강한 식사를 하는 것이 중요합니다. 필요시 의료 전문가와 상담하여 개인의 상황에 맞는 식단을 계획하는 것이 좋습니다.\n\n■ **[출처]**: 세이프잇 내부 가이드라인",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "SGLT2 억제제",
+              "entity_id": "DRUG_METFORMIN",
+              "inferred_class": "DIABETES_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "사우나",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "탈수",
+              "canonical": "탈수/수분부족",
+              "entity_id": "SITUATION_DEHYDRATION"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

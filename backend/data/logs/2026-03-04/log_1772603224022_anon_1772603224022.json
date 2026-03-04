@@ -1,0 +1,100 @@
+{
+  "timestamp": "2026-03-04T14:47:04.022173",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "혈압약 처방전.png",
+    "medications": [],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ]
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "[별지 제10호서식] (환자보관용) 처 방 전 V 의료보험 2의료보호 3 재재험험 4 자동차보험 5기타( ) 요양기관기호: 12313831 교부번호 2022 년08월27일-제 01013 호 명 칭 길내과의원 의료기관 전화번호 02-456-8197 환 성 명 팩스번호 02-456-8577 자 주민등록번호 E-Mail주소 질병 1 0 9 처방 길선연 면허종별 의사 분류 기호 의료인의 성명 (서명 또는 날인) 면허번호 제 23412 호 *환자의 요구가 있는 때에는 질병분류기호를 기재하지아니합니다. 1회 1일 총 처방 의약품의 명칭 투약량 투여횟수 투약일수 용 법 매식(전,간,후) 시 분복을 054301130 텔미칸에이정40/5mg(내복/1정 1 1 60 645405790 로제코연질캡슐(내복)/캡캡 1 1 60",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "텔미칸에이정",
+              "entity_id": "DRUG_AMLODIPINE",
+              "inferred_class": "HTN_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_entities": []
+        },
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "[별지 제10호서식] (환자보관용) 처 방 전 V 의료보험 2의료보호 3 재재험험 4 자동차보험 5기타( ) 요양기관기호: 12313831 교부번호 2022 년08월27일-제 01013 호 명 칭 길내과의원 의료기관 전화번호 02-456-8197 환 성 명 팩스번호 02-456-8577 자 주민등록번호 E-Mail주소 질병 1 0 9 처방 길선연 면허종별 의사 분류 기호 의료인의 성명 (서명 또는 날인) 면허번호 제 23412 호 *환자의 요구가 있는 때에는 질병분류기호를 기재하지아니합니다. 1회 1일 총 처방 의약품의 명칭 투약량 투여횟수 투약일수 용 법 매식(전,간,후) 시 분복을 054301130 텔미칸에이정40/5mg(내복/1정 1 1 60 645405790 로제코연질캡슐(내복)/캡캡 1 1 60"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "텔미칸에이정",
+              "entity_id": "DRUG_AMLODIPINE",
+              "inferred_class": "HTN_MED",
+              "verification_status": "INFERRED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
