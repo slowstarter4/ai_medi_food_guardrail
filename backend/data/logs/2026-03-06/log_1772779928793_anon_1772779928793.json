@@ -1,0 +1,139 @@
+{
+  "timestamp": "2026-03-06T15:52:08.793313",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "자몽",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_003",
+    "explanation_summary": "■ **[결론]**: 자몽과 자몽청은 로사르탄과 함께 섭취할 경우 심각한 위험이 있으므로 절대 금지입니다.\n\n■ **[이유]**: 김영순 여사님께서 복용 중인 로사르탄은 혈압을 조절하는 약물입니다. NHS medication guide에 따르면, 자몽 성분이 혈압약의 대사를 방해하여 약효가 과도하게 강해질 수 있습니다. 이로 인해 심한 어지럼증이나 저혈압이...",
+    "full_result": {
+      "input_text": "자몽",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_HTN_GRAPEFRUIT_CCB"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_HTN_GRAPEFRUIT_CCB",
+            "evidence_source_label": "NHS medication guide",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "자몽 성분이 혈압약(암로디핀 등)의 대사를 방해합니다. 약효가 너무 강해져 심한 어지럼증이나 저혈압이 올 수 있으니 자몽 섭취를 피하세요.",
+            "evidence_tags": [
+              "grapefruit",
+              "CYP3A4",
+              "CCB"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "자몽"
+      },
+      "explanation": "■ **[결론]**: 자몽과 자몽청은 로사르탄과 함께 섭취할 경우 심각한 위험이 있으므로 절대 금지입니다.\n\n■ **[이유]**: 김영순 여사님께서 복용 중인 로사르탄은 혈압을 조절하는 약물입니다. NHS medication guide에 따르면, 자몽 성분이 혈압약의 대사를 방해하여 약효가 과도하게 강해질 수 있습니다. 이로 인해 심한 어지럼증이나 저혈압이 발생할 위험이 있으며, 이는 특히 고령이신 여사님께서 더욱 주의해야 할 상황입니다. 강도 높은 경고(HIGH)로 명시된 만큼, 자몽 섭취는 매우 위험합니다.\n\n■ **[대안]**: 자몽 대신에 오렌지나 사과를 섭취하시는 것을 추천드립니다. 이들은 혈압약과의 상호작용이 없으면서도 맛있고 영양가가 높은 대체 식품입니다.\n\n■ **[대처]**: 즉시 자몽과 자몽청을 포함한 어떤 식품도 피하시고, 안전한 대체 식품으로 변경하시기 바랍니다. 또한, 복용 중인 로사르탄에 대한 의사와의 상담을 고려해보시는 것도 좋습니다.\n\n■ **[출처]**: NHS medication guide, 세이프잇 내부 가이드라인",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "자몽청",
+              "entity_id": "FOOD_GRAPEFRUIT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

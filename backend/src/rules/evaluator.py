@@ -97,8 +97,8 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                 d_raw = d.get("raw", "")
                 d_cat = ID_TO_CATEGORY.get(d_id, "UNKNOWN")
                 
-                # Category 매칭
-                cat_match = (rule_cat == "ALL") or (rule_cat == d_cat)
+                # Category 매칭 (Regex 허용 - 예: CCB|ARB 가 ACE/ARB 에 매칭되도독 설정 가능. 하지만 CCB|ARB는 ARB만 쓰였을때 직관적이지 않으므로 contains로 처리하거나 정규식 사용)
+                cat_match = (rule_cat == "ALL") or bool(re.search(rule_cat, d_cat, re.I))
                 
                 # Name 매칭 (Regex)
                 name_match = (rule_drug_name == "ALL") or bool(re.search(rule_drug_name, d_raw + "|" + d_id, re.I))

@@ -3,7 +3,7 @@
     "evidence_id": "EVD_HTN_POTASSIUM_FOOD",
     "evidence_source_label": "FDA drug label (losartan)",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "ACE/ARB 고혈압약은 칼륨 배출을 억제합니다. 고칼륨 식품(바나나, 토마토 등)을 과다 섭취하면 심장 부담을 줄 수 있으므로 섭취량을 조절하세요.",
+    "evidence_summary_user": "혈압약(ACE/ARB) 복용 시 칼륨 배출이 억제됩니다. 바나나나 토마토 등 고칼륨 식품을 많이 드시면 위험한 부정맥이 올 수 있으니 섭취량을 조절하세요.",
     "evidence_tags": [
       "ACE_ARB",
       "potassium",
@@ -12,9 +12,9 @@
   },
   "EVD_HTN_POTASSIUM_SUPPLEMENT": {
     "evidence_id": "EVD_HTN_POTASSIUM_SUPPLEMENT",
-    "evidence_source_label": "FDA drug label (enalapril)",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "고혈압약 성분이 혈중 칼륨 농도를 높입니다. 칼륨 보충제나 소금 대체제와 병용 시 심각한 부정맥 위험이 있으므로 병용 전 의사와 상의하세요.",
+    "evidence_source_label": "FDA drug label (enalapril)",
+    "evidence_summary_user": "혈압약이 체내 칼륨 농도를 높이는 작용을 합니다. 칼륨 보충제나 저염 소금을 같이 드시면 심각한 심장 이상이 생길 수 있으므로 피하세요.",
     "evidence_tags": [
       "ACE",
       "potassium",
@@ -25,7 +25,7 @@
     "evidence_id": "EVD_HTN_GRAPEFRUIT_CCB",
     "evidence_source_label": "NHS medication guide",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "자몽 성분이 암로디핀의 분해를 방해합니다. 혈중 약물 농도가 급격히 높아져 어지럼이나 저혈압이 발생할 수 있으니 자몽 섭취를 피하세요.",
+    "evidence_summary_user": "자몽 성분이 혈압약(암로디핀 등)의 대사를 방해합니다. 약효가 너무 강해져 심한 어지럼증이나 저혈압이 올 수 있으니 자몽 섭취를 피하세요.",
     "evidence_tags": [
       "grapefruit",
       "CYP3A4",
@@ -36,7 +36,7 @@
     "evidence_id": "EVD_HTN_DECONGESTANT_BP",
     "evidence_source_label": "NHS medicine safety",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "코막힘약의 슈도에페드린 성분이 혈관을 수축시킵니다. 고혈압 환자의 혈압을 갑자기 높일 수 있으므로 복용 전 혈압 상태를 확인하세요.",
+    "evidence_summary_user": "감기약의 코막힘 제거 성분(슈도에페드린)이 혈관을 수축시킵니다. 이로 인해 혈압이 갑자기 오를 수 있으므로 복용 전 의사나 약사와 꼭 상의하세요.",
     "evidence_tags": [
       "decongestant",
       "pseudoephedrine",
@@ -47,7 +47,7 @@
     "evidence_id": "EVD_HTN_NSAID_BP",
     "evidence_source_label": "Clinical pharmacology review",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "이부프로펜 등 진통제는 체내 나트륨 배출을 방해합니다. 혈압약의 효과를 떨어뜨리고 혈압을 올릴 수 있으니 장기 복용 시 주의하세요.",
+    "evidence_summary_user": "이부프로펜 같은 진통소염제는 체내 수분과 나트륨을 잡아둡니다. 이 때문에 혈압약의 효과가 떨어지고 혈압이 오를 수 있으니 장기 복용을 피하세요.",
     "evidence_tags": [
       "NSAID",
       "blood_pressure",
@@ -58,7 +58,7 @@
     "evidence_id": "EVD_HTN_LICORICE_BP",
     "evidence_source_label": "British Heart Foundation",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "감초의 글리시리진 성분이 나트륨 저류를 유발합니다. 혈압 상승 및 부종이 나타날 수 있으므로 감초가 포함된 식품이나 한약 섭취 시 주의하세요.",
+    "evidence_summary_user": "감초의 특정 성분(글리시리진)이 체내에 나트륨을 축적시킵니다. 혈압이 크게 오르거나 몸이 부을 수 있으므로 감초가 든 식품 열 섭취를 피하세요.",
     "evidence_tags": [
       "licorice",
       "glycyrrhizin",
@@ -69,7 +69,7 @@
     "evidence_id": "EVD_HTN_DIURETIC_DEHYDRATION",
     "evidence_source_label": "DailyMed labels",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "이뇨제는 체내 수분을 배출시킵니다. 과도한 땀 배출이나 사우나 시 탈수로 인한 실신 위험이 있으므로 충분한 수분을 섭취하세요.",
+    "evidence_summary_user": "이뇨제 성분의 약물은 소변으로 수분을 많이 배출합니다. 땀을 낸 상태(사우나, 운동)에서 무리하면 실신할 위험이 크니 수분을 충분히 보충하세요.",
     "evidence_tags": [
       "diuretic",
       "dehydration",
@@ -80,7 +80,7 @@
     "evidence_id": "EVD_DM_ALCOHOL_HYPO",
     "evidence_source_label": "American Diabetes Association",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "당뇨약 복용 중 알코올이 간의 포도당 생성을 막습니다. 심각한 저혈당에 빠질 위험이 크므로 빈속에 술을 마시지 않도록 절대 주의하세요.",
+    "evidence_summary_user": "당뇨약 복용 중에 술을 마시면 간이 포도당을 만들지 못합니다. 이로 인해 심각한 저혈당에 빠질 위험이 커지므로 빈속에 음주하는 것은 절대 피해야 합니다.",
     "evidence_tags": [
       "alcohol",
       "hypoglycemia",
@@ -91,7 +91,7 @@
     "evidence_id": "EVD_DM_SUGAR_SPIKE",
     "evidence_source_label": "ADA nutrition guidance",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "고당분 식품은 혈당 수치를 급격히 올립니다. 당뇨 환자의 혈당 조절을 어렵게 하므로 당 함량이 높은 음료나 간식은 가급적 피하세요.",
+    "evidence_summary_user": "설탕이나 시럽이 많이 든 단 음식은 혈당을 급격하게 올립니다. 당뇨 환자의 혈당 조절을 매우 어렵게 하므로 섭취를 가급적 피하세요.",
     "evidence_tags": [
       "sugar",
       "hyperglycemia",
@@ -102,7 +102,7 @@
     "evidence_id": "EVD_DM_METFORMIN_ALCOHOL",
     "evidence_source_label": "FDA drug label (metformin)",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "메트포르민과 과도한 알코올 섭취는 체내 젖산 합성을 촉진합니다. 치명적인 젖산산증 위험이 있으므로 복용 중 과음은 반드시 피해야 합니다.",
+    "evidence_summary_user": "메트포르민(당뇨약)을 먹고 과음하면 체내에 젖산이 과하게 쌓입니다. 생명이 위험할 수 있는 유산산증이 발생할 수 있으니 복용 중 과음을 엄격히 금지하세요.",
     "evidence_tags": [
       "metformin",
       "alcohol",
@@ -113,7 +113,7 @@
     "evidence_id": "EVD_DM_MEAL_SKIP",
     "evidence_source_label": "ADA guidelines",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "당뇨약 복용 후 식사를 거르면 인슐린 작용으로 혈당이 너무 낮아집니다. 떨림이나 식은땀 등 저혈당 증상이 생길 수 있으니 규칙적으로 식사하세요.",
+    "evidence_summary_user": "당뇨약을 먹고 끼니를 거르면 식사 없이 인슐린만 분비되어 혈당이 곤두박질칩니다. 심한 어지럼증과 쇼크가 올 수 있으므로 반드시 규칙적으로 식사하세요.",
     "evidence_tags": [
       "fasting",
       "hypoglycemia",
@@ -124,7 +124,7 @@
     "evidence_id": "EVD_DM_SGLT2_DEHYDRATION",
     "evidence_source_label": "FDA drug label (SGLT2)",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "SGLT2 억제제는 소변으로 당과 수분을 함께 배출합니다. 체내 수분이 부족해지면 탈수 및 혈압 저하가 올 수 있으니 수분을 꾸준히 섭취하세요.",
+    "evidence_summary_user": "SGLT2 억제제 계열 당뇨약은 소변으로 당과 수분을 대량 배출합니다. 체내 수분이 모자라 심한 탈수나 저혈압이 올 수 있으니 물을 자주, 충분히 드세요.",
     "evidence_tags": [
       "SGLT2",
       "dehydration",
@@ -135,7 +135,7 @@
     "evidence_id": "EVD_NSAID_ALCOHOL_BLEEDING",
     "evidence_source_label": "FDA ibuprofen facts",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "진통제와 술이 위 점막을 동시에 자극합니다. 위장 출혈이나 천공 위험이 높아질 수 있으므로 복용 전후 음주를 삼가야 합니다.",
+    "evidence_summary_user": "진통제와 술은 모두 위 점막을 강하게 자극합니다. 함께 먹으면 위장에 피가 나거나 천공이 생길 위험이 크게 높아지므로 절대 같이 드시지 마세요.",
     "evidence_tags": [
       "NSAID",
       "alcohol",
@@ -146,7 +146,7 @@
     "evidence_id": "EVD_NSAID_FASTING",
     "evidence_source_label": "NSAID safety guidance",
     "evidence_strength": "MODERATE",
-    "evidence_summary_user": "진통제 성분이 위벽 보호 물질 생성을 억제합니다. 공복 복용 시 속쓰림이나 위염이 발생할 수 있으므로 식후 또는 우유와 함께 복용하세요.",
+    "evidence_summary_user": "진통제 성분이 위벽을 보호하는 물질의 생성을 막습니다. 빈속에 약을 드시면 심한 속쓰림이나 위염이 올 수 있으니 꼭 식후에 복용하세요.",
     "evidence_tags": [
       "NSAID",
       "gastric_irritation"
@@ -156,7 +156,7 @@
     "evidence_id": "EVD_NSAID_DUPLICATION",
     "evidence_source_label": "FDA safety warning",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "비슷한 성분의 진통제를 중복 복용하면 위장 및 신장에 부담을 줍니다. 부작용 발생 빈도가 급증하므로 동일 계열 약물을 하나 이상 먹지 마세요.",
+    "evidence_summary_user": "비슷한 진통소염제 여러 개가 몸에 한꺼번에 들어오면 위와 신장에 큰 무리를 줍니다. 부작용 위험이 기하급수적으로 커지니 한 번에 한 가지 약만 드세요.",
     "evidence_tags": [
       "NSAID",
       "duplication",
@@ -167,7 +167,7 @@
     "evidence_id": "EVD_NSAID_DEHYDRATION",
     "evidence_source_label": "DailyMed label insight",
     "evidence_strength": "HIGH",
-    "evidence_summary_user": "진통제가 신장 혈류량을 조절하는 효소를 억제합니다. 탈수 상태에서 복용 시 급성 신손상 위험이 있으므로 충분한 수분 상태에서 복용하세요.",
+    "evidence_summary_user": "진통제는 신장(콩팥)으로 가는 혈류량을 줄이는 특징이 있습니다. 땀을 빼서 몸에 수분이 부족할 때 약을 먹으면 급성 신손상이 올 수 있으니 주의하세요.",
     "evidence_tags": [
       "NSAID",
       "renal",

@@ -30,8 +30,8 @@
     {
       "rule_id": "HTN_003",
       "persona": "고령_고혈압",
-      "drug_category": "CCB",
-      "drug_name": "암로디핀",
+      "drug_category": "CCB|ARB",
+      "drug_name": "암로디핀|로사르탄",
       "food_keyword_match": "자몽|자몽주스|자몽청|자몽캔디",
       "condition": "동시 섭취",
       "risk_type": "부작용 증가",

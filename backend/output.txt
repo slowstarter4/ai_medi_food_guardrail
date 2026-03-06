@@ -1,0 +1,90 @@
+
+>>> Testing [OCR] Source
+DEBUG: Fuzzy match found [drugs/ocr]: '타이레놀ㄹ' -> '타이레놀' (Score: 94.7, ID: DRUG_ACETAMINOPHEN)
+DEBUG: Fuzzy match found [foods/ocr]: '바나나나' -> '바나나' (Score: 85.7, ID: FOOD_BANANA)
+DEBUG: Fuzzy match found [foods/ocr]: '자몽쥬쓰' -> '자몽' (Score: 90.0, ID: FOOD_GRAPEFRUIT)
+{
+  "foods": [
+    {
+      "raw": "바나나나",
+      "entity_id": "FOOD_BANANA",
+      "match_type": "fuzzy",
+      "score": 85.7
+    },
+    {
+      "raw": "자몽쥬쓰",
+      "entity_id": "FOOD_GRAPEFRUIT",
+      "match_type": "fuzzy",
+      "score": 90.0
+    }
+  ],
+  "drugs": [
+    {
+      "raw": "글레미피리드",
+      "entity_id": "DRUG_SULFONYLUREA",
+      "match_type": "exact"
+    },
+    {
+      "raw": "타이레놀ㄹ",
+      "entity_id": "DRUG_ACETAMINOPHEN",
+      "match_type": "fuzzy",
+      "score": 94.7
+    }
+  ],
+  "situations": [
+    {
+      "raw": "공복복용",
+      "entity_id": "SITUATION_FASTING",
+      "match_type": "exact"
+    }
+  ]
+}
+
+>>> Testing [MANUAL] Source
+DEBUG: Fuzzy match found [drugs/manual]: '이부프로팬' -> '이부프로펜' (Score: 90.9, ID: DRUG_IBUPROFEN)
+DEBUG: Fuzzy match found [drugs/manual]: '타이레놀서방정' -> '타이레놀' (Score: 90.0, ID: DRUG_ACETAMINOPHEN)
+DEBUG: Fuzzy match found [foods/manual]: '탄수화물함유' -> '탄수화물' (Score: 90.0, ID: NUTRITION_CARB)
+{
+  "foods": [
+    {
+      "raw": "탄수화물함유",
+      "entity_id": "NUTRITION_CARB",
+      "match_type": "fuzzy",
+      "score": 90.0
+    }
+  ],
+  "drugs": [
+    {
+      "raw": "이부프로팬",
+      "entity_id": "DRUG_IBUPROFEN",
+      "match_type": "fuzzy",
+      "score": 90.9
+    },
+    {
+      "raw": "타이레놀서방정",
+      "entity_id": "DRUG_ACETAMINOPHEN",
+      "match_type": "fuzzy",
+      "score": 90.0
+    }
+  ],
+  "situations": [
+    {
+      "raw": "격한운동",
+      "entity_id": "SITUATION_EXERCISE",
+      "match_type": "exact"
+    }
+  ]
+}
+
+>>> Testing Ambiguity Check
+{
+  "foods": [],
+  "drugs": [
+    {
+      "raw": "유글로콜",
+      "entity_id": "DRUG_SULFONYLUREA",
+      "match_type": "exact"
+    }
+  ],
+  "situations": []
+}

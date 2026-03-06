@@ -42,7 +42,7 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
 
     # 1. [Fast Path] 로컬 색인 매칭
     parsed = parse_entities(input_text, known_entities)
-    normalized = normalize_entities(parsed)
+    normalized = normalize_entities(parsed, source="ocr") # 기본 분석 요청은 OCR/텍스트 입력을 의미
     # 로컬 매칭은 이미 검증된 것으로 간주
     for d in normalized.get("drugs", []):
         d["verification_status"] = "VERIFIED"
@@ -104,7 +104,7 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
     # 2. 사용자 약물 주입
     if user_meds:
         for med in user_meds:
-            med_norm = normalize_entities(parse_entities(med, known_entities))
+            med_norm = normalize_entities(parse_entities(med, known_entities), source="manual")
             if med_norm.get("drugs"):
                 existing_ids = [d["entity_id"] for d in normalized.get("drugs", [])]
                 for d in med_norm["drugs"]:

@@ -39,6 +39,7 @@ export function SafetyCard({
   message,
   evidence,
   evidenceSource,
+  evidenceStrength,
 }: SafetyCardProps) {
   const [showEvidence, setShowEvidence] = useState(false);
   const config = riskConfig[riskLevel];

@@ -1,0 +1,115 @@
+{
+  "timestamp": "2026-03-06T16:00:55.559794",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "rosa.jpg",
+    "medications": [],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "http://www.bife 전문의약품 전문점 214 BINEX 바이코자정 3 로사르탄칼륨 300정 kk 영화제공(4개입)24 가하구 대대로 368-3",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": [
+            "로사르탄"
+          ]
+        },
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "http://www.bife 전문의약품 전문점 214 BINEX 바이코자정 3 로사르탄칼륨 300정 kk 영화제공(4개입)24 가하구 대대로 368-3"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "verification_status": "VERIFIED"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
