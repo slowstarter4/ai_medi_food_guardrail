@@ -18,7 +18,12 @@ ID_TO_CATEGORY = {
     "DRUG_SGLT2": "SGLT2",
     "DRUG_IBUPROFEN": "NSAIDs",
     "DRUG_NAPROXEN": "NSAIDs",
-    "DRUG_NSAID": "NSAIDs"
+    "DRUG_NSAID": "NSAIDs",
+    # Generic mappings for categorical terms
+    "DRUG_HYPERTENSION_GENERIC": "ACE/ARB|CCB|이뇨제",
+    "DRUG_DIABETES_GENERIC": "비구아나이드|설폰요소제|SGLT2",
+    "DRUG_DIURETIC_GENERIC": "이뇨제",
+    "DRUG_PAINKILLER_GENERIC": "NSAIDs"
 }
 
 def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
@@ -72,7 +77,9 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                 # ID가 룰에 적혀있을 경우 대비 (예: hypertension)
                 if p.lower() in [id.lower() for id in user_persona_ids]: is_persona_match = True
             
-            # 페르소나가 정의되었는데 매칭 안되면 제외 (단, Level 1 룰은 안전상 미매칭시에도 일단 허용 고려 가능하나 여기선 엄격히 적용)
+            # if not is_persona_match:
+            #     print(f"DEBUG: Rule {rule['rule_id']} persona mismatch. Rule needs: {rule_persona}, User has: {user_persona_raws}/{user_persona_ids}")
+            #     continue
             if not is_persona_match:
                 continue
 
@@ -107,6 +114,7 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                     primary_drugs.append(d)
         
         if not primary_drugs:
+            # print(f"DEBUG: Rule {rule['rule_id']} drug mismatch. Rule cat: {rule_cat}, name: {rule_drug_name}")
             continue
 
         # 3. 타겟 매칭 (food_keyword_match)
@@ -120,8 +128,16 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
             for target_text in all_targets:
                 if target_text and re.search(rule_target, target_text, re.I):
                     # 주체 약물과 타켓이 동일한 경우는 제외 (자기 자신과의 매칭 방지)
-                    # 단, rule_target에 주체 약물명이 명시된 drug-drug interaction인 경우는 허용해야 함
-                    # 여기서는 일단 단순하게 매칭되면 OK
+                    # 단, persona가 비어있지 않은 룰은 페르소나-약물 간의 관계이므로 자기 자신(약물) 매칭을 허용함
+                    if not rule_persona:
+                        # 주체 약물들의 raw/id와 겹치는지 체크
+                        primary_texts = []
+                        for pd in primary_drugs:
+                            primary_texts.append(pd.get("raw", ""))
+                            primary_texts.append(pd.get("entity_id", ""))
+                        if target_text in primary_texts:
+                            continue
+
                     target_match = True
                     break
         

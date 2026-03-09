@@ -58,7 +58,11 @@
 - [x] 약물 사전 양방향 동기화: `entity_index.json` 상용약 10종 추가, `medi_info.csv` 110+ 키워드 통합
 - [x] `엔알라프릴` 표기 통일
 - [x] `ProfilePage.tsx` 질환 선택 UI → 2열 그리드 칩 리팩토링
+- [x] MVP 시나리오 50개 확장 및 100% 검증 (`test_mvp_scenarios.py`)
+- [x] 규칙 엔진 고도화: 페르소나 자가 상호작용 및 범용 카테고리 매핑 지원
+- [x] `ruleset.json` / `entity_index.json` 키워드 및 Entity ID 동기화 (50/50 통과)
 
-**[B] 데모 준비**
+**[B] 데모 준비 (진행 중)**
+- [x] 최종 테스트 결과 리포트 (`test_results.json`) 생성 및 검증
 - [ ] 데모 영상 촬영 및 편집
 - [ ] 발표 자료 준비

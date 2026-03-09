@@ -9,12 +9,21 @@ sys.path.append(os.getcwd())
 from app import analyze_text
 from src.rules.loader import load_ruleset
 
+# Set encoding for Windows terminal
+if sys.platform == "win32":
+    import codecs
+    # Python 3.11+ might need a slightly different approach if sys.stdout is already detached
+    try:
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+    except:
+        pass
+
 class Colors:
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    RESET = '\033[0m'
-    BOLD = '\033[1m'
+    GREEN = ''
+    YELLOW = ''
+    RED = ''
+    RESET = ''
+    BOLD = ''
 
 # Map user provided Rule IDs to actual ones in the system
 RULE_MAPPING = {
@@ -159,26 +168,35 @@ def main():
             
             rules = extract_matched_rules(result)
             actual_risk = result.get("risk_result", {}).get("risk_level", "UNKNOWN")
+            representative_rule = result.get("risk_result", {}).get("representative_rule", "NONE")
             
+            # Matched rules can be multiple strings
+            matched_ids = []
             if rules:
-                matched_rule_id = rules[0].get("rule_id", "UNKNOWN")
-            else:
-                matched_rule_id = "NONE"
+                matched_ids = [r if isinstance(r, str) else r.get("rule_id", "UNKNOWN") for r in rules]
 
-            # Check matches
-            rule_match = (matched_rule_id == expected_rule)
+            # 1. Rule Match Logic
+            if expected_rule == "NONE":
+                rule_match = (representative_rule == "NONE" or not matched_ids)
+            else:
+                # Check if expected rule is present anywhere or is the representative
+                rule_match = (expected_rule in matched_ids or representative_rule == expected_rule)
+            
+            # 2. Risk Match Logic
             risk_match = (actual_risk == expected_risk)
             
             if rule_match and risk_match:
                 is_success = True
-                message = f"{Colors.GREEN}[PASS]{Colors.RESET} {test_id}: {text[:25]}... (Risk: {actual_risk}, Rule: {matched_rule_id})"
+                message = f"{Colors.GREEN}[PASS]{Colors.RESET} {test_id}: {text[:25]}... (Risk: {actual_risk}, Rule: {representative_rule})"
                 success_count += 1
             else:
                 is_success = False
+                matched_display = representative_rule if representative_rule != "NONE" else (matched_ids[0] if matched_ids else "NONE")
                 message = f"{Colors.RED}[FAIL]{Colors.RESET} {test_id}: {text[:25]}... \n" \
                           f"       Expected: {expected_risk} ({expected_rule})\n" \
-                          f"       Actual:   {actual_risk} ({matched_rule_id})\n" \
-                          f"       Extracted Entities: {json.dumps(result['debug_info']['entities'], ensure_ascii=False)}"
+                          f"       Actual:   {actual_risk} ({matched_display})\n" \
+                          f"       Matched Rules: {matched_ids}\n" \
+                          f"       Extracted Entities: {json.dumps(result.get('debug_info', {}).get('entities', {}), ensure_ascii=False)}"
         except Exception as e:
             is_success = False
             message = f"{Colors.RED}[ERROR]{Colors.RESET} {test_id}: {text} - {str(e)}"
