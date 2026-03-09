@@ -1,0 +1,123 @@
+{
+  "timestamp": "2026-03-09T15:18:01.977522",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "칼륨",
+    "medications": [
+      "엔알라프릴"
+    ],
+    "conditions": [
+      "고혈압",
+      "고령"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "...",
+    "full_result": {
+      "input_text": "칼륨",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": []
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "칼륨염",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [],
+        "evidence_info": [],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고혈압",
+          "고령"
+        ],
+        "input_text": "칼륨"
+      },
+      "explanation": "",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "칼륨염",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

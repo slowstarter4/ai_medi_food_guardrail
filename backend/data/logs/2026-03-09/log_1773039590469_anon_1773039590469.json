@@ -1,0 +1,227 @@
+{
+  "timestamp": "2026-03-09T15:59:50.469110",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복, 음주(예정)",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "고령",
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다. 절대 금지입니다.\n\n■ **[이유]**: 김영순 여사님께서는 현재 이부프로펜을 복용 중이신데, 이부프로펜과 음주를 함께 섭취하면 위와 신장에 큰 무리를 줄 수 있습니다. FDA의 높은 강도(HIGH) 경고에 따르면, 비슷한 진통소염제와 음주가 동시에 체내에 들어오면 부작용의 위험이 기하급수적으로 증가합니다. 또한, 이...",
+    "full_result": {
+      "input_text": "공복, 음주(예정)",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "primary_rule": "NSAID_003",
+        "secondary_rules": [
+          {
+            "rule_id": "DM_ALL_MEAL_SKIP_YELLOW",
+            "risk_level": "YELLOW",
+            "description": "식사 없이 복용 시 저혈당 가능",
+            "risk_type": "저혈당"
+          },
+          {
+            "rule_id": "HTN_005",
+            "risk_level": "YELLOW",
+            "description": "혈압약 효과 저하 및 혈압 조절 실패 가능",
+            "risk_type": "효과 감소"
+          },
+          {
+            "rule_id": "NSAID_002",
+            "risk_level": "YELLOW",
+            "description": "위 점막 자극 및 통증 가능",
+            "risk_type": "위 점막 손상"
+          }
+        ],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "NSAID_003",
+            "DM_ALL_MEAL_SKIP_YELLOW",
+            "HTN_005",
+            "NSAID_002"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_FASTING",
+          "EVD_NSAID_DUPLICATION",
+          "EVD_DM_MEAL_SKIP",
+          "EVD_HTN_NSAID_BP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_NSAID_FASTING",
+            "evidence_source_label": "NSAID safety guidance",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "진통제 성분이 위벽을 보호하는 물질의 생성을 막습니다. 빈속에 약을 드시면 심한 속쓰림이나 위염이 올 수 있으니 꼭 식후에 복용하세요.",
+            "evidence_tags": [
+              "NSAID",
+              "gastric_irritation"
+            ]
+          },
+          {
+            "evidence_id": "EVD_NSAID_DUPLICATION",
+            "evidence_source_label": "FDA safety warning",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "비슷한 진통소염제 여러 개가 몸에 한꺼번에 들어오면 위와 신장에 큰 무리를 줍니다. 부작용 위험이 기하급수적으로 커지니 한 번에 한 가지 약만 드세요.",
+            "evidence_tags": [
+              "NSAID",
+              "duplication",
+              "bleeding"
+            ]
+          },
+          {
+            "evidence_id": "EVD_DM_MEAL_SKIP",
+            "evidence_source_label": "ADA guidelines",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "당뇨약을 먹고 끼니를 거르면 식사 없이 인슐린만 분비되어 혈당이 곤두박질칩니다. 심한 어지럼증과 쇼크가 올 수 있으므로 반드시 규칙적으로 식사하세요.",
+            "evidence_tags": [
+              "fasting",
+              "hypoglycemia",
+              "diabetes"
+            ]
+          },
+          {
+            "evidence_id": "EVD_HTN_NSAID_BP",
+            "evidence_source_label": "Clinical pharmacology review",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "이부프로펜 같은 진통소염제는 체내 수분과 나트륨을 잡아둡니다. 이 때문에 혈압약의 효과가 떨어지고 혈압이 오를 수 있으니 장기 복용을 피하세요.",
+            "evidence_tags": [
+              "NSAID",
+              "blood_pressure",
+              "interaction"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "관절염"
+        ],
+        "input_text": "공복, 음주(예정)"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다. 절대 금지입니다.\n\n■ **[이유]**: 김영순 여사님께서는 현재 이부프로펜을 복용 중이신데, 이부프로펜과 음주를 함께 섭취하면 위와 신장에 큰 무리를 줄 수 있습니다. FDA의 높은 강도(HIGH) 경고에 따르면, 비슷한 진통소염제와 음주가 동시에 체내에 들어오면 부작용의 위험이 기하급수적으로 증가합니다. 또한, 이부프로펜은 체내에서 수분과 나트륨을 잡아두기 때문에 혈압에 영향을 줄 수 있으며, 고령의 관절염 환자에게는 더욱 위험할 수 있습니다.\n\n■ **[대안]**: 음주 대신 허브차나 생강차와 같은 건강한 음료를 드시는 것이 좋습니다. 이러한 대체 음료는 염증 완화에 도움을 줄 수 있습니다.\n\n■ **[대처]**: 즉시 음주를 중단하시고, 이부프로펜 복용 시에는 반드시 식사 후에 복용하시기를 권장합니다. 또한, 필요시 의사와 상담하여 적절한 진통제를 찾는 것이 좋습니다.\n\n■ **[출처]**: FDA 약물 라벨, 세이프잇 내부 가이드라인, Clinical pharmacology review",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-03-09T13:44:59.841379",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복",
+    "medications": [],
+    "conditions": [
+      "고령",
+      "당뇨"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "DM_ALL_MEAL_SKIP_YELLOW",
+    "explanation_summary": "■ **[결론]**: 고령이시고 당뇨를 앓고 계신 김영순 여사님께서는 규칙적인 식사가 매우 중요합니다.\n\n■ **[이유]**: 미국당뇨병협회(ADA)의 지침에 따르면, 당뇨약을 복용하지 않고 식사를 거르면 인슐린만 분비되어 혈당이 급격히 떨어질 수 있습니다. 이는 심한 어지럼증과 쇼크를 유발할 위험이 있으며, 특히 고령인 경우 이러한 증상에 더욱 취약합니다...",
+    "full_result": {
+      "input_text": "공복",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "DM_ALL_MEAL_SKIP_YELLOW",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "DM_ALL_MEAL_SKIP_YELLOW"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_DM_MEAL_SKIP"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_DM_MEAL_SKIP",
+            "evidence_source_label": "ADA guidelines",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "당뇨약을 먹고 끼니를 거르면 식사 없이 인슐린만 분비되어 혈당이 곤두박질칩니다. 심한 어지럼증과 쇼크가 올 수 있으므로 반드시 규칙적으로 식사하세요.",
+            "evidence_tags": [
+              "fasting",
+              "hypoglycemia",
+              "diabetes"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "당뇨"
+        ],
+        "input_text": "공복"
+      },
+      "explanation": "■ **[결론]**: 고령이시고 당뇨를 앓고 계신 김영순 여사님께서는 규칙적인 식사가 매우 중요합니다.\n\n■ **[이유]**: 미국당뇨병협회(ADA)의 지침에 따르면, 당뇨약을 복용하지 않고 식사를 거르면 인슐린만 분비되어 혈당이 급격히 떨어질 수 있습니다. 이는 심한 어지럼증과 쇼크를 유발할 위험이 있으며, 특히 고령인 경우 이러한 증상에 더욱 취약합니다. 따라서 규칙적인 식사는 당뇨 관리에 필수적입니다.\n\n■ **[대안]**: 규칙적으로 식사하시면서 저혈당을 예방하기 위해, 건강한 간식으로는 견과류나 요거트, 신선한 과일(예: 사과나 블루베리)을 추천드립니다.\n\n■ **[대처]**: 매 끼니를 거르지 않도록 식사 계획을 세우고, 정기적으로 식사를 하시는 것이 중요합니다. 만약 식사 시간이 미뤄질 경우, 가벼운 간식을 준비해 두시는 것도 좋은 방법입니다.\n\n■ **[출처]**: ADA guidelines, 세이프잇 내부 가이드라인",
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "당뇨",
+              "canonical": "당뇨",
+              "entity_id": "CONDITION_diabetes"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -7,6 +7,8 @@ import { Button } from "../components/ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
+import { CounselingOverlay } from "../components/CounselingOverlay";
+import { PinpointFAQ } from "../components/PinpointFAQ";
 
 interface AlternativeFood {
   name: string;
@@ -19,6 +21,7 @@ export function ResultPage() {
   const navigate = useNavigate();
   const { scanData, boundingBoxes, backendResult } = location.state || {};
   const [showAlternatives, setShowAlternatives] = useState(false);
+  const [isCounselingOpen, setIsCounselingOpen] = useState(true);
 
   // Helper for Object.entries-like mapping in TS if needed, or just use plain objects
   function items<T>(obj: T): [keyof T, T[keyof T]][] {
@@ -139,21 +142,35 @@ export function ResultPage() {
 
   const riskInfo = getRiskInfo();
 
+  const [isSaved, setIsSaved] = useState(false);
+
   const recordIntake = () => {
+    if (isSaved) {
+      toast.info("이미 기록된 정보입니다.");
+      return;
+    }
+
     const history = JSON.parse(localStorage.getItem("scan_history") || "[]");
     const newEntry = {
       id: Date.now().toString(),
       date: new Date().toLocaleString(),
       foodName: data.foodName,
       riskLevel: riskLevel,
-      explanation: backendResult?.explanation
+      explanation: backendResult?.explanation,
+      ingredients: data.ingredients,
+      backendResult: backendResult,
+      boundingBoxes: boundingBoxes,
     };
-    localStorage.setItem("scan_history", JSON.stringify([newEntry, ...history]));
+
+    // 최근 10개만 유지
+    const updatedHistory = [newEntry, ...history].slice(0, 10);
+    localStorage.setItem("scan_history", JSON.stringify(updatedHistory));
+    setIsSaved(true);
     toast.success("섭취 정보가 기록되었습니다.");
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] pb-20 font-sans">
+    <div className="min-h-screen bg-[#FDF7FF] pb-24">
       {/* Header */}
       <div className="bg-[#009688] text-white p-6 pb-6">
         <button
@@ -186,6 +203,7 @@ export function ResultPage() {
             evidence={riskInfo.evidence}
             evidenceSource={riskInfo.evidenceSource}
             evidenceStrength={riskInfo.evidenceStrength as any}
+            secondaryRules={backendResult?.risk_result?.secondary_rules}
           />
         </motion.div>
 
@@ -285,6 +303,13 @@ export function ResultPage() {
             })}
           </div>
         </div>
+
+        {/* Pinpoint FAQ */}
+        <PinpointFAQ
+          userConditions={backendResult?.risk_result?.user_conditions || []}
+          detectedDrugs={backendResult?.risk_result?.entities_involved?.drugs?.map((d: any) => d.raw) || []}
+          detectedIngredients={data.ingredients || []}
+        />
 
         {/* Action Buttons */}
         <div className="grid grid-cols-3 gap-3 mb-4">
@@ -403,9 +428,13 @@ export function ResultPage() {
         <div className="flex gap-3 mb-4">
           <Button
             onClick={() => recordIntake()}
-            className="flex-1 bg-white border-[#009688] text-[#009688] hover:bg-[#E0F2F1] border h-12 font-bold shadow-sm"
+            disabled={isSaved || !!(location.state?.scanData?.id && !location.state?.fromScan)}
+            className={`flex-1 h-12 font-bold shadow-sm border ${isSaved || !!(location.state?.scanData?.id && !location.state?.fromScan)
+                ? "bg-gray-100 border-gray-200 text-gray-400"
+                : "bg-white border-[#009688] text-[#009688] hover:bg-[#E0F2F1]"
+              }`}
           >
-            기록으로 남기기
+            {isSaved || !!(location.state?.scanData?.id && !location.state?.fromScan) ? "기록 완료" : "기록으로 남기기"}
           </Button>
           <Button
             onClick={() => navigate("/")}
@@ -417,6 +446,13 @@ export function ResultPage() {
       </div>
 
       <BottomNav />
+
+      {/* Counseling Overlay */}
+      <CounselingOverlay
+        riskLevel={riskLevel}
+        isOpen={isCounselingOpen}
+        onClose={() => setIsCounselingOpen(false)}
+      />
     </div>
   );
 }

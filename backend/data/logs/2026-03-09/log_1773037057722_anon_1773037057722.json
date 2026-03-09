@@ -1,0 +1,199 @@
+{
+  "timestamp": "2026-03-09T15:17:37.722080",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "1772006064.jpg",
+    "medications": [
+      "엔알라프릴"
+    ],
+    "conditions": [
+      "고혈압",
+      "고령"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": "HTN_003",
+    "explanation_summary": "■ **[결론]**: 자몽은 엔알라프릴과 상호작용할 수 있으므로 섭취를 피해야 합니다.\n\n■ **[이유]**: 김영순 여사님, 현재 복용 중인 엔알라프릴은 혈압을 조절하는 약물입니다. NHS medication guide에 따르면 자몽 성분이 혈압약의 대사를 방해하여 약효가 너무 강해질 수 있습니다. 이로 인해 심한 어지럼증이나 저혈압이 발생할 수 있으니,...",
+    "full_result": {
+      "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다.",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "representative_rule": "HTN_003",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_003"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB",
+              "match_type": "exact"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY",
+              "match_type": "exact"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN",
+              "match_type": "exact"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM",
+              "match_type": "exact"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_HTN_GRAPEFRUIT_CCB"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_HTN_GRAPEFRUIT_CCB",
+            "evidence_source_label": "NHS medication guide",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "자몽 성분이 혈압약(암로디핀 등)의 대사를 방해합니다. 약효가 너무 강해져 심한 어지럼증이나 저혈압이 올 수 있으니 자몽 섭취를 피하세요.",
+            "evidence_tags": [
+              "grapefruit",
+              "CYP3A4",
+              "CCB"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고혈압",
+          "고령"
+        ],
+        "input_text": "ITEM #635817 한글표시사항 제품명 돈 시몬 핑크 그레이프후훗 주스 식품유형 과·채 주스 원산지: 스페인 제조사 GARCIA CARRION 1890 SL 수입 (주)코스트코코리아T.1899-9900 판매업소 경기도광명시일직로40 소비기한 제품의 별도 표기일까지(일월년순 내용량 1L(총열량: 370kcal) 포장재질. 원재료명 자몽과즙 97%, 자몽과육 3% 보관방법 직사광선을 피하고실온에 보관하십 오 반품 및 교환장소: 구입처 및 수입판매업소 *개봉된 * 제품은 냉장보관하시고 5일 연출된 이내에 이미지 드십 \" *잘 흔들어 드십시오 *제품 사진은 부정· 불량식품 신고는 국번없이 1399\" 내용량 1, 영양정보 나트륨 4 mg 0% 탄수화물 8.5g 3% 총 100 ml당 포화지방 0 당류 37 7.6 Q 지방 0.1g 0% 트랜스지방0g 1% 콜레스테롤 단백질0.6g 기준이므로 0mg 0% 1일 개인의 영양성분 기준치에 대한 비율(%)은 2,000kcal 필요 열량에 따라 다를 수 있습니다."
+      },
+      "explanation": "■ **[결론]**: 자몽은 엔알라프릴과 상호작용할 수 있으므로 섭취를 피해야 합니다.\n\n■ **[이유]**: 김영순 여사님, 현재 복용 중인 엔알라프릴은 혈압을 조절하는 약물입니다. NHS medication guide에 따르면 자몽 성분이 혈압약의 대사를 방해하여 약효가 너무 강해질 수 있습니다. 이로 인해 심한 어지럼증이나 저혈압이 발생할 수 있으니, 자몽 섭취는 절대 금지입니다. 특히 고혈압과 고령인 상태에서는 이러한 위험이 더욱 커질 수 있습니다.\n\n■ **[대안]**: 자몽 대신 안전하게 섭취할 수 있는 과일로는 오렌지나 사과가 있습니다. 이들 과일은 비타민과 미네랄을 제공하면서도 엔알라프릴과의 상호작용 위험이 없습니다.\n\n■ **[대처]**: 앞으로 자몽이 포함된 식품은 피하고, 오렌지나 사과와 같은 대체 과일을 선택하여 건강한 식단을 유지하시기 바랍니다. 또한, 복용 중인 약물과의 상호작용을 항상 유의하여 주시고, 의사와 상담 후 식단을 조정하는 것이 좋습니다.\n\n■ **[출처]**: NHS medication guide, 세이프잇 내부 가이드라인",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "자몽",
+              "entity_id": "FOOD_GRAPEFRUIT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB",
+              "match_type": "exact"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY",
+              "match_type": "exact"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN",
+              "match_type": "exact"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM",
+              "match_type": "exact"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

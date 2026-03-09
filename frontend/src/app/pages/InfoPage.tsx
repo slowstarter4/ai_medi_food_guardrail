@@ -22,7 +22,7 @@ export function InfoPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 -mt-4 space-y-6">
-        
+
         {/* Section 1: 투명한 데이터 출처 */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -79,7 +79,7 @@ export function InfoPage() {
           <p className="text-sm text-gray-600 mb-4 leading-relaxed">
             개인의 질환 및 복용 약물에 맞춰, 허가사항 및 임상 가이드라인의 "경고 강도"를 기준으로 3단계 등급을 부여합니다.
           </p>
-          
+
           <div className="space-y-3">
             <div className="p-3 bg-[#E53935]/5 border border-[#E53935]/20 rounded-lg">
               <div className="flex items-center gap-2 mb-1">
@@ -90,7 +90,7 @@ export function InfoPage() {
                 의약품 허가사항 내 "병용금기 / 피해야 함" 등 즉각적이고 중대한 부작용(출혈, 심혈관 이상 등) 위험이 공식 보고된 경우
               </p>
             </div>
-            
+
             <div className="p-3 bg-[#FFB74D]/5 border border-[#FFB74D]/20 rounded-lg">
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-3 h-3 rounded-full bg-[#FFB74D]"></span>
@@ -137,59 +137,109 @@ export function InfoPage() {
             </div>
             <span className="text-gray-400 text-lg">+</span>
             <div className="bg-white border border-[#2196F3] text-[#2196F3] text-xs px-2 py-2 rounded shadow-sm text-center font-medium">
-              식품 내<br/>핵심 성분
+              식품 내<br />핵심 성분
             </div>
             <span className="text-[#009688] text-lg font-bold">→</span>
             <div className="bg-[#009688] text-white text-xs px-3 py-2 rounded shadow-sm text-center font-bold">
-              공식 룰 매칭<br/>& 위험 판정
+              공식 룰 매칭<br />& 위험 판정
             </div>
           </div>
         </motion.div>
 
-        {/* Section 4: 서비스 발전 로드맵 */}
+
+        {/* Section 5: 사용자 교육 콘텐츠 (신규) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-[#263238] text-white rounded-2xl shadow-sm p-6"
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-2xl shadow-sm p-6"
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-white/10 p-2 rounded-lg">
-              <Rocket className="w-6 h-6 text-white" />
+          <div className="flex items-center gap-3 mb-6">
+            <div className="bg-[#FF9800]/10 p-2 rounded-lg">
+              <BookOpen className="w-6 h-6 text-[#FF9800]" />
             </div>
-            <h2 className="text-lg font-bold">서비스 향후 로드맵</h2>
+            <h2 className="text-lg font-bold text-[#263238]">사용자 교육 콘텐츠</h2>
           </div>
-          <p className="text-sm text-white/80 mb-6 leading-relaxed">
-            현재 SafeEat은 사용자 여러분께 빠르고 직관적인 초기 가이드를 제공하는 <b>"AI 보조 도구"</b>입니다. 
-            더욱 완전한 헬스케어 서비스를 위해 다음과 같이 진화할 예정입니다.
-          </p>
-          
-          <div className="relative border-l-2 border-[#009688] ml-3 pl-5 space-y-6">
-            <div className="relative">
-              <span className="absolute -left-[27px] bg-[#009688] w-4 h-4 rounded-full border-4 border-[#263238]"></span>
-              <p className="font-bold text-sm text-[#009688]">Phase 1 (현재)</p>
-              <p className="text-sm font-medium mt-1">공공 보건 데이터 기반 AI 1차 스크리닝</p>
+
+          <div className="space-y-6">
+            {/* Video Education */}
+            <div>
+              <h3 className="text-sm font-bold text-[#263238] mb-3 flex items-center gap-2">
+                <span className="w-1 h-4 bg-[#FF9800] rounded-full"></span>
+                영상으로 배우는 안전한 식생활
+              </h3>
+              <div className="aspect-video bg-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-200 group cursor-pointer hover:bg-gray-50 transition">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-2 shadow-sm group-hover:scale-110 transition">
+                    <Rocket className="w-6 h-6 text-[#FF9800] fill-[#FF9800]/20" />
+                  </div>
+                  <p className="text-xs text-gray-500 font-medium">교육 영상 시청하기 (3~5분)</p>
+                </div>
+              </div>
             </div>
-            <div className="relative">
-              <span className="absolute -left-[27px] bg-gray-500 w-4 h-4 rounded-full border-4 border-[#263238]"></span>
-              <p className="font-bold text-sm text-gray-400">Phase 2 (예정)</p>
-              <p className="text-sm font-medium mt-1 text-white/70">전문가(의사/약사) 자문위원단 교차 검증 시스템 도입</p>
+
+            {/* Downloads */}
+            <div>
+              <h3 className="text-sm font-bold text-[#263238] mb-3 flex items-center gap-2">
+                <span className="w-1 h-4 bg-[#FF9800] rounded-full"></span>
+                가이드북 및 매뉴얼
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#FF9800]/30 transition cursor-pointer">
+                  <p className="text-xs font-bold text-[#263238] mb-1">세이프잇 가이드</p>
+                  <p className="text-[10px] text-gray-500">PDF 다운로드</p>
+                </div>
+                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#FF9800]/30 transition cursor-pointer">
+                  <p className="text-xs font-bold text-[#263238] mb-1">상담 준비 체크리스트</p>
+                  <p className="text-[10px] text-gray-500">인쇄용 제공</p>
+                </div>
+              </div>
             </div>
-            <div className="relative">
-              <span className="absolute -left-[27px] bg-gray-500 w-4 h-4 rounded-full border-4 border-[#263238]"></span>
-              <p className="font-bold text-sm text-gray-400">Phase 3 (예정)</p>
-              <p className="text-sm font-medium mt-1 text-white/70">비대면 진료 서비스 연계 및 주치의 다이렉트 상담 기능</p>
+
+            {/* Newsletter/News */}
+            <div className="p-4 bg-[#FF9800]/5 border border-[#FF9800]/10 rounded-xl">
+              <h3 className="text-xs font-bold text-[#F57C00] mb-2">📢 최신 건강 소식</h3>
+              <ul className="space-y-2">
+                <li className="text-[11px] text-[#A65B00] flex items-center justify-between border-b border-[#FF9800]/10 pb-2">
+                  <span>환절기 고혈압 환자 주의해야 할 식품</span>
+                  <ChevronRight className="w-3 h-3" />
+                </li>
+                <li className="text-[11px] text-[#A65B00] flex items-center justify-between">
+                  <span>신규 당뇨병 임상 가이드라인 요약</span>
+                  <ChevronRight className="w-3 h-3" />
+                </li>
+              </ul>
             </div>
           </div>
         </motion.div>
 
         {/* Disclaimer Warning */}
         <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-sm text-yellow-800 leading-relaxed">
-          <span className="font-bold">⚠️ 주의사항:</span> 본 서비스가 제공하는 결과는 참고용 보조 지표입니다. 
+          <span className="font-bold">⚠️ 주의사항:</span> 본 서비스가 제공하는 결과는 참고용 보조 지표입니다.
           질병의 진단, 치료, 예방 등 최종적인 의학적 결정은 반드시 의사 또는 약사와 같은 의료 전문가와 상담하시기 바랍니다.
         </div>
       </div>
       <BottomNav />
-    </div>
+    </div >
+  );
+}
+
+// Helper components if needed
+function ChevronRight(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
   );
 }

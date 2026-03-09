@@ -19,6 +19,9 @@ interface ScanResult {
   riskLevel: "safe" | "warning" | "danger";
   date: string;
   explanation?: string;
+  ingredients?: string[];
+  backendResult?: any;
+  boundingBoxes?: any;
 }
 
 export function MainPage() {
@@ -139,8 +142,9 @@ export function MainPage() {
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition"
                   onClick={() => navigate("/result", {
                     state: {
-                      scanData: { foodName: scan.foodName, riskLevel: scan.riskLevel },
-                      backendResult: { explanation: scan.explanation }
+                      scanData: scan,
+                      boundingBoxes: scan.boundingBoxes,
+                      backendResult: scan.backendResult
                     }
                   })}
                 >

@@ -230,19 +230,18 @@ export function ScanPage() {
       date: new Date().toLocaleString(),
       riskLevel: resultToPass?.risk_result?.risk_level?.toLowerCase() === "red" ? "danger" :
         resultToPass?.risk_result?.risk_level?.toLowerCase() === "yellow" ? "warning" : "safe",
-      explanation: resultToPass?.explanation || resultToPass?.risk_result?.explanation
+      explanation: resultToPass?.explanation || resultToPass?.risk_result?.explanation,
+      backendResult: resultToPass,
+      boundingBoxes: boundingBoxes
     };
-
-    const scan_history = JSON.parse(localStorage.getItem("scan_history") || "[]");
-    scan_history.unshift(scanData);
-    localStorage.setItem("scan_history", JSON.stringify(scan_history.slice(0, 10)));
 
     setIsLoading(false);
     navigate("/result", {
       state: {
         scanData,
         boundingBoxes,
-        backendResult: resultToPass
+        backendResult: resultToPass,
+        fromScan: true
       }
     });
   };

@@ -1,0 +1,139 @@
+{
+  "timestamp": "2026-03-09T15:18:31.843617",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "칼륨보충제",
+    "medications": [
+      "엔알라프릴"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": "HTN_002",
+    "explanation_summary": "■ **[결론]**: 매우 위험합니다! 칼륨 보충제를 절대 금지합니다.\n\n■ **[이유]**: 김영순 여사님께서 복용 중인 엔알라프릴은 혈압을 낮추는 약물로, 체내 칼륨 농도를 높이는 작용을 합니다. FDA 약물 라벨의 높은 강도(HIGH) 경고에 따르면, 칼륨 보충제나 저염 소금을 함께 복용하실 경우 심각한 심장 이상이 발생할 수 있으므로, 칼륨이 포함된...",
+    "full_result": {
+      "input_text": "칼륨보충제",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "representative_rule": "HTN_002",
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_002"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "칼륨보충제",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_HTN_POTASSIUM_SUPPLEMENT"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_HTN_POTASSIUM_SUPPLEMENT",
+            "evidence_strength": "HIGH",
+            "evidence_source_label": "FDA drug label (enalapril)",
+            "evidence_summary_user": "혈압약이 체내 칼륨 농도를 높이는 작용을 합니다. 칼륨 보충제나 저염 소금을 같이 드시면 심각한 심장 이상이 생길 수 있으므로 피하세요.",
+            "evidence_tags": [
+              "ACE",
+              "potassium",
+              "arrhythmia"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "칼륨보충제"
+      },
+      "explanation": "■ **[결론]**: 매우 위험합니다! 칼륨 보충제를 절대 금지합니다.\n\n■ **[이유]**: 김영순 여사님께서 복용 중인 엔알라프릴은 혈압을 낮추는 약물로, 체내 칼륨 농도를 높이는 작용을 합니다. FDA 약물 라벨의 높은 강도(HIGH) 경고에 따르면, 칼륨 보충제나 저염 소금을 함께 복용하실 경우 심각한 심장 이상이 발생할 수 있으므로, 칼륨이 포함된 식품을 섭취하는 것은 매우 위험합니다. 특히 고령이신 김영순 여사님께서는 심혈관계에 더욱 취약하셔서 이 위험이 더욱 커질 수 있습니다.\n\n■ **[대안]**: 칼륨 대신 안전하게 섭취할 수 있는 식품으로는 사과, 배, 또는 오렌지를 추천드립니다. 이러한 과일들은 영양가가 높으면서도 칼륨 함량이 상대적으로 낮아 안전하게 드실 수 있습니다.\n\n■ **[대처]**: 즉시 칼륨 보충제를 포함한 식품의 섭취를 중단하시고, 필요하시다면 의사와 상담하여 대체 식품에 대한 조언을 받으시기 바랍니다. 또한, 혈압과 칼륨 수치를 정기적으로 체크하는 것이 중요합니다.\n\n■ **[출처]**: FDA drug label (enalapril), 세이프잇 내부 가이드라인",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "칼륨보충제",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "칼륨",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "엔알라프릴",
+              "entity_id": "DRUG_ENALAPRIL",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
