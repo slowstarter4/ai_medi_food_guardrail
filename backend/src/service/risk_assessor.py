@@ -68,6 +68,7 @@ def assess_risk(normalized_entities, matched_rules):
         "risk_level": final_risk,
         "risk_code": final_risk,
         "primary_rule": primary_rule_data["rule_id"],
+        "matched_entities": primary_rule_data.get("matched_entities"),
         "secondary_rules": secondary_rules,
         "decision_basis": {
             "rule_based": True,

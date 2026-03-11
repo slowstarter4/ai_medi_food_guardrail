@@ -208,10 +208,17 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
             logging.warning(f"LLM 설명 생성 실패: {e}")
             explanation = ""
 
+    # 9. 응답 구성 (후보군 포함)
+    all_candidates = []
+    for d in normalized.get("drugs", []):
+        if d.get("match_type") == "candidate":
+            all_candidates.extend(d.get("candidates", []))
+
     return {
         "input_text": input_text,
         "risk_result": risk_result,
         "explanation": explanation,
+        "candidates": all_candidates, # 프론트엔드에서 보정 다이얼로그 노출용
         "debug_info": {"entities": normalized}
     }
 
@@ -421,4 +428,9 @@ if __name__ == "__main__":
     import uvicorn
     # Render는 PORT 환경 변수를 제공하므로 이를 우선 사용합니다.
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # 로컬 개발 환경에서는 hot-reload를 활성화합니다.
+    is_dev = os.environ.get("RENDER") != "true"
+    if is_dev:
+        uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
+    else:
+        uvicorn.run(app, host="0.0.0.0", port=port)

@@ -1,18 +1,22 @@
-import { AlertTriangle, CheckCircle, XCircle, ShieldCheck, ShieldAlert, Shield, Info, Lightbulb } from "lucide-react";
+import { ShieldCheck, Info, FileText, ChevronRight, AlertCircle, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
-export type RiskLevel = "safe" | "warning" | "danger";
-
-interface SecondaryRule {
+export interface SecondaryRule {
   rule_id: string;
+  drug_name?: string;
+  food_keyword?: string;
   risk_level: string;
-  description: string;
-  risk_type: string;
+  risk_type?: string;
+  description?: string;
+  title?: string;
+  message?: string;
+  evidence?: string;
+  evidence_source?: string;
 }
 
 interface SafetyCardProps {
-  riskLevel: RiskLevel;
+  riskLevel: "safe" | "warning" | "danger";
   title: string;
   message: string;
   evidence?: string;
@@ -21,30 +25,6 @@ interface SafetyCardProps {
   secondaryRules?: SecondaryRule[];
 }
 
-const riskConfig = {
-  safe: {
-    headerBg: "bg-[#E8F5E9]", // 부드러운 그린
-    headerTextColor: "text-[#2E7D32]",
-    subTitle: "Normal",
-    icon: CheckCircle,
-    label: "✅ 안전 상태",
-  },
-  warning: {
-    headerBg: "bg-[#FFF9C4]", // 파스텔 옐로우
-    headerTextColor: "text-[#F57F17]",
-    subTitle: "Low/Caution",
-    icon: AlertTriangle,
-    label: "⚠️ 주의 권고",
-  },
-  danger: {
-    headerBg: "bg-[#E53935]", // 강렬한 레드
-    headerTextColor: "text-white",
-    subTitle: "High/Danger",
-    icon: XCircle,
-    label: "🚨 긴급 위급",
-  },
-};
-
 export function SafetyCard({
   riskLevel,
   title,
@@ -52,156 +32,190 @@ export function SafetyCard({
   evidence,
   evidenceSource,
   evidenceStrength,
-  secondaryRules,
+  secondaryRules
 }: SafetyCardProps) {
   const [showEvidence, setShowEvidence] = useState(false);
-  const config = riskConfig[riskLevel];
-  const Icon = config.icon;
+  const [openSecondary, setOpenSecondary] = useState<string | null>(null);
+
+  const getTheme = () => {
+    switch (riskLevel) {
+      case "danger":
+        return {
+          bg: "bg-[#E53935]",
+          lightBg: "bg-red-50",
+          border: "border-red-100",
+          text: "text-white",
+          accent: "text-red-600",
+          icon: "text-white",
+          strengthBg: "bg-red-100/20",
+          strengthText: "text-white"
+        };
+      case "warning":
+        return {
+          bg: "bg-[#FFB74D]",
+          lightBg: "bg-orange-50",
+          border: "border-orange-100",
+          text: "text-white",
+          accent: "text-orange-700",
+          icon: "text-white",
+          strengthBg: "bg-orange-100/30",
+          strengthText: "text-white"
+        };
+      case "safe":
+      default:
+        return {
+          bg: "bg-[#009688]",
+          lightBg: "bg-green-50",
+          border: "border-green-100",
+          text: "text-white",
+          accent: "text-green-700",
+          icon: "text-white",
+          strengthBg: "bg-green-100/20",
+          strengthText: "text-white"
+        };
+    }
+  };
+
+  const theme = getTheme();
 
   return (
-    <div className="flex flex-col gap-3 mb-6">
-      {/* 1. Header Status Card */}
-      <motion.div
-        initial={{ y: -10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className={`${config.headerBg} rounded-[1.8rem] p-6 shadow-sm relative overflow-hidden`}
-      >
-        <div className="relative z-10">
-          <p className={`${config.headerTextColor} font-bold text-xs mb-3 opacity-80 uppercase tracking-wide`}>
-            {title}
-          </p>
-          <div className="flex items-baseline gap-2 mb-1">
-            <span className={`${config.headerTextColor} text-4xl font-black tracking-tighter`}>
-              {riskLevel === "danger" ? "High" : riskLevel === "warning" ? "Caution" : "Normal"}
-            </span>
-          </div>
-          <p className={`${config.headerTextColor} text-base font-black opacity-90`}>
-            {config.subTitle}
-          </p>
-        </div>
-
-        {/* Background Accent Icon */}
-        <Icon className={`absolute -right-3 -bottom-3 w-28 h-28 ${riskLevel === "danger" ? "text-white/10" : "text-black/5"}`} />
-      </motion.div>
-
-      {/* 2. Description Card (Main Analysis Message) */}
-      <motion.div
-        initial={{ y: 0, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-        className="bg-white/70 backdrop-blur-md rounded-[1.2rem] p-5 border border-white/50 shadow-sm"
-      >
-        <h4 className="text-[#4A148C] font-black text-[10px] mb-2 uppercase tracking-widest opacity-50">분석 요약</h4>
-        <p className="text-[#263238] text-[14px] font-bold leading-[1.6]">
-          {message}
-        </p>
-      </motion.div>
-
-      {/* 3. Action/Evidence Card (Compacted) */}
-      <motion.div
-        initial={{ y: 0, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="bg-[#EDE7F6]/40 rounded-[1.2rem] p-5 relative overflow-hidden border border-[#4A148C]/5"
-      >
-        <div className="flex items-start gap-3">
-          <div className="bg-[#4A148C] p-2 rounded-xl shadow-md shrink-0">
-            <Lightbulb className="w-4 h-4 text-white" />
+    <div className="space-y-4">
+      {/* Primary Safety Card */}
+      <div className={`rounded-xl shadow-lg border-2 ${theme.bg} overflow-hidden transition-all duration-300`}>
+        {/* Risk Header */}
+        <div className="p-5 flex items-start gap-4">
+          <div className={`p-2 rounded-lg bg-white/20 backdrop-blur-sm`}>
+            {riskLevel === "danger" ? (
+              <AlertCircle className="w-6 h-6 text-white" />
+            ) : riskLevel === "warning" ? (
+              <Info className="w-6 h-6 text-white" />
+            ) : (
+              <ShieldCheck className="w-6 h-6 text-white" />
+            )}
           </div>
           <div className="flex-1">
-            <h4 className="text-[#4A148C] font-black text-[11px] mb-1 uppercase tracking-wide">
-              {riskLevel === "danger" ? "🚨 즉시 권고" : "✅ 다음 조치"}
-            </h4>
-            <div className="flex flex-col gap-2">
-              <p className="text-[#263238] text-[13px] font-semibold leading-relaxed opacity-70">
-                {riskLevel === "danger"
-                  ? "섭취를 즉시 중단하고 전문가와 상담하세요."
-                  : (evidence || "전문가와 상담해보시는 것을 추천드립니다.")}
-              </p>
-
-              {evidence && (
-                <button
-                  onClick={() => setShowEvidence(!showEvidence)}
-                  className="text-[9px] font-black text-[#4A148C]/60 flex items-center gap-1 hover:text-[#4A148C] transition-colors"
-                >
-                  <Info className="w-3 h-3" />
-                  {showEvidence ? "상세 근거 숨기기" : "의학적 근거 보기"}
-                </button>
-              )}
-            </div>
+            <h3 className="text-lg font-bold text-white mb-1.5 leading-tight">
+              {title}
+            </h3>
+            <p className="text-sm font-medium text-white/95 leading-relaxed">
+              {message}
+            </p>
           </div>
         </div>
 
-        <AnimatePresence>
-          {showEvidence && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="mt-3 pt-3 border-t border-[#4A148C]/10"
-            >
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-black tracking-widest ${evidenceStrength === "HIGH" ? "bg-blue-100 text-blue-700" : "bg-orange-100 text-orange-700"
-                    }`}>
-                    EVIDENCE: {evidenceStrength}
-                  </span>
-                </div>
-                {evidenceSource && (
-                  <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest">
-                    Source: {evidenceSource}
-                  </p>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+        {/* Action/Evidence Footer (Compact) */}
+        <div className="bg-white/10 backdrop-blur-sm border-t border-white/10">
+          <button
+            onClick={() => setShowEvidence(!showEvidence)}
+            className="w-full flex items-center justify-between p-3"
+          >
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-white/80" />
+              <span className="text-xs font-bold text-white">분석 요약 및 의학적 근거</span>
+            </div>
+            <ChevronRight className={`w-4 h-4 text-white/60 transition-transform duration-300 ${showEvidence ? 'rotate-90' : ''}`} />
+          </button>
 
-      {/* 4. Secondary Alerts (Supplementary Precautions) */}
-      {secondaryRules && secondaryRules.length > 0 && (
-        <motion.div
-          initial={{ y: 0, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col gap-2 mt-1"
-        >
-          <div className="flex items-center justify-between px-1">
-            <h4 className="text-[#4A148C] font-black text-[10px] flex items-center gap-1.5 opacity-60">
-              <ShieldAlert className="w-3 h-3 text-orange-500" />
-              보조 주의사항
-            </h4>
-            <span className="text-[9px] font-bold text-[#4A148C]/50 bg-[#4A148C]/5 px-2 py-0.5 rounded-full">
-              {secondaryRules.length}건 더 발견됨
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            {secondaryRules.map((rule) => (
+          <AnimatePresence>
+            {showEvidence && (
               <motion.div
-                key={rule.rule_id}
-                whileHover={{ scale: 1.01 }}
-                className="bg-white/80 rounded-[1rem] p-4 border border-white shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex items-start gap-4 transition-all"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden bg-white/5"
               >
-                <div className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${rule.risk_level.toLowerCase() === "red" ? "bg-[#E53935]" : "bg-[#F57F17]"
-                  }`} />
-                <div className="flex-1">
-                  <p className="text-[13px] font-bold text-[#263238] leading-[1.5]">
-                    {rule.description}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <span className="text-[9px] font-black text-[#4A148C]/30 uppercase tracking-tighter">
-                      {rule.risk_type}
-                    </span>
-                    <span className="text-[9px] font-bold text-gray-200">
-                      ID: {rule.rule_id}
-                    </span>
+                <div className="p-4 space-y-3.5 border-t border-white/10">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-white/50 uppercase tracking-wider">분석 요약</span>
+                      {evidenceStrength && (
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${theme.strengthBg} ${theme.strengthText}`}>
+                          신뢰도 {evidenceStrength}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-white/90 leading-relaxed font-medium">
+                      {evidence}
+                    </p>
                   </div>
+                  {evidenceSource && (
+                    <div className="flex items-center gap-1.5 pt-1.5 border-t border-white/5">
+                      <div className="px-1 py-0.5 bg-white/10 rounded text-[9px] text-white/60 font-medium">SOURCE</div>
+                      <span className="text-[10px] text-white/40 italic font-medium">
+                        {evidenceSource}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Secondary Rules Section */}
+      {secondaryRules && secondaryRules.length > 0 && (
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2 px-1">
+            <Sparkles className="w-4 h-4 text-[#009688]" />
+            <span className="text-xs font-bold text-gray-700">추가 확인이 필요한 주의사항</span>
+            <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full font-bold">{secondaryRules.length}</span>
+          </div>
+
+          <div className="space-y-2">
+            {secondaryRules.map((rule, idx) => (
+              <div
+                key={rule.rule_id}
+                className="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                <button
+                  onClick={() => setOpenSecondary(openSecondary === rule.rule_id ? null : rule.rule_id)}
+                  className="w-full flex items-center justify-between p-4 text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-2 h-2 rounded-full ${rule.risk_level === 'RED' ? 'bg-[#E53935]' : 'bg-[#FFB74D]'}`} />
+                    <span className="text-[14px] font-bold text-gray-800 leading-tight">
+                      {rule.title || rule.description}
+                    </span>
+                  </div>
+                  {openSecondary === rule.rule_id ? (
+                    <ChevronUp className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  )}
+                </button>
+
+                <AnimatePresence>
+                  {openSecondary === rule.rule_id && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden border-t border-gray-50 bg-gray-50/50"
+                    >
+                      <div className="p-4 pt-3.5 space-y-3">
+                        <p className="text-[14px] text-gray-700 leading-relaxed font-medium">
+                          {rule.message || rule.description}
+                        </p>
+                        {rule.evidence && (
+                          <div className="p-3 bg-white/50 rounded-lg border border-gray-100">
+                            <div className="flex items-center gap-1.5 mb-1.5">
+                              <Info className="w-3.5 h-3.5 text-gray-400" />
+                              <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">상세 근거</span>
+                            </div>
+                            <p className="text-[13px] text-gray-600 leading-relaxed italic">
+                              {rule.evidence}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       )}
     </div>
   );

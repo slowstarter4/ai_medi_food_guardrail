@@ -1,0 +1,164 @@
+{
+  "timestamp": "2026-03-11T14:13:07.806201",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "image.jpg",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "고령",
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 위험합니다, 절대 금지입니다.  \n■ **[이유]**: 이부프로펜과 소주를 함께 섭취하면 위장에 심각한 손상을 줄 수 있습니다. 고령자이시기 때문에 위험성이 더욱 높습니다.  \n■ **[대안]**: 물이나 허브차를 대신 드시는 것이 안전합니다.  \n■ **[대처]**: 즉시 소주를 중단하고 안전한 음료로 대체하세요.  \n■ **[출처]...",
+    "full_result": {
+      "input_text": "주정,종류식소주(보리,쌀국산 ·품목보고번호:201100 즐길거·제조여 그때 이마 도감릉 주점판매불가 충 니용량 360m 음식점 · BOLIN lica 300mlg90 000% 1399 있다. 영양정보 中,2000.00 060 * 탄수화물 트랜스지방 0g 0% Grand 나트륨0mg 08 판매금지 ROBORT 6m -100원 0 美BVB 미만 HY6L",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "primary_rule": "NSAID_ALL_ALCOHOL",
+        "matched_entities": {
+          "drug": "이부프로펜",
+          "target": "소주"
+        },
+        "secondary_rules": [],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "NSAID_ALL_ALCOHOL"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "소주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB",
+              "match_type": "exact"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_ALCOHOL_BLEEDING"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_NSAID_ALCOHOL_BLEEDING",
+            "evidence_source_label": "FDA ibuprofen facts",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "진통제와 술은 모두 위 점막을 강하게 자극합니다. 함께 먹으면 위장에 피가 나거나 천공이 생길 위험이 크게 높아지므로 절대 같이 드시지 마세요.",
+            "evidence_tags": [
+              "NSAID",
+              "alcohol",
+              "bleeding"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "관절염"
+        ],
+        "input_text": "주정,종류식소주(보리,쌀국산 ·품목보고번호:201100 즐길거·제조여 그때 이마 도감릉 주점판매불가 충 니용량 360m 음식점 · BOLIN lica 300mlg90 000% 1399 있다. 영양정보 中,2000.00 060 * 탄수화물 트랜스지방 0g 0% Grand 나트륨0mg 08 판매금지 ROBORT 6m -100원 0 美BVB 미만 HY6L"
+      },
+      "explanation": "■ **[결론]**: 위험합니다, 절대 금지입니다.  \n■ **[이유]**: 이부프로펜과 소주를 함께 섭취하면 위장에 심각한 손상을 줄 수 있습니다. 고령자이시기 때문에 위험성이 더욱 높습니다.  \n■ **[대안]**: 물이나 허브차를 대신 드시는 것이 안전합니다.  \n■ **[대처]**: 즉시 소주를 중단하고 안전한 음료로 대체하세요.  \n■ **[출처]**: FDA ibuprofen facts",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "소주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB",
+              "match_type": "exact"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "나트륨",
+              "entity_id": "NUTRITION_SODIUM",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

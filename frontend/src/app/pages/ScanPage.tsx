@@ -2,11 +2,13 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { BottomNav } from "../components/BottomNav";
 import { IngredientChip } from "../components/IngredientChip";
-import { Camera, Maximize2, Search, Barcode, ChevronRight, RefreshCw } from "lucide-react";
+import { Camera, Maximize2, Search, Barcode, ChevronRight, RefreshCw, Sparkles, Check, X } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import Webcam from "react-webcam";
+import { AILoadingSequence } from "../components/AILoadingSequence";
+import { toast } from "sonner";
 
 const commonConditions = [
   { id: "elderly", label: "고령" },
@@ -15,6 +17,15 @@ const commonConditions = [
   { id: "hyperlipidemia", label: "고지혈증" },
   { id: "arthritis", label: "관절염" },
   { id: "asthma", label: "천식" },
+];
+
+const quickSituations = [
+  { id: "SITUATION_FASTING", label: "공복" },
+  { id: "SITUATION_EXERCISE", label: "격한 운동" },
+  { id: "SITUATION_DEHYDRATION", label: "사우나/찜질방" },
+  { id: "SITUATION_ALCOHOL", label: "음주(예정)" },
+  { id: "SITUATION_DEHYDRATION_FAST", label: "탈수" },
+  { id: "FOOD_CAFFEINE", label: "카페인 과다" },
 ];
 
 interface BoundingBox {
@@ -26,15 +37,6 @@ interface BoundingBox {
   text: string;
   riskLevel?: "safe" | "warning" | "danger";
 }
-
-const quickSituations = [
-  { id: "SITUATION_FASTING", label: "공복" },
-  { id: "SITUATION_EXERCISE", label: "격한 운동" },
-  { id: "SITUATION_DEHYDRATION", label: "사우나/찜질방" },
-  { id: "SITUATION_ALCOHOL", label: "음주(예정)" },
-  { id: "SITUATION_DEHYDRATION_FAST", label: "탈수" },
-  { id: "FOOD_CAFFEINE", label: "카페인 과다" },
-];
 
 export function ScanPage() {
   const navigate = useNavigate();
@@ -49,7 +51,12 @@ export function ScanPage() {
   const [manualSearch, setManualSearch] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [lastAnalysisResult, setLastAnalysisResult] = useState<any>(null);
+  const [scanImageUrl, setScanImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // [NEW] 후보군 보정 상태
+  const [apiCandidates, setApiCandidates] = useState<any[]>([]);
+  const [isCandidateModalOpen, setIsCandidateModalOpen] = useState(false);
 
   const startScanning = () => {
     fileInputRef.current?.click();
@@ -71,6 +78,7 @@ export function ScanPage() {
     const imageSrc = webcamRef.current?.getScreenshot();
     if (imageSrc) {
       setCameraEnabled(false);
+      setScanImageUrl(imageSrc);
       const file = base64ToFile(imageSrc, "scan.jpg");
       processFile(file);
     }
@@ -78,7 +86,12 @@ export function ScanPage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) processFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setScanImageUrl(reader.result as string);
+      reader.readAsDataURL(file);
+      processFile(file);
+    }
   };
 
   const toggleSituation = (label: string) => {
@@ -121,7 +134,7 @@ export function ScanPage() {
 
     try {
       // @ts-ignore
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const API_URL = import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:8000`;
       const response = await fetch(`${API_URL}/api/analyze/image`, {
         method: "POST",
         body: formData,
@@ -132,12 +145,20 @@ export function ScanPage() {
       const entities = result.debug_info?.entities || {};
       const rawText: string = result.input_text || "";
 
+      // [NEW] 후보군 감지 시 모달 띄우기
+      if (result.candidates && result.candidates.length > 0) {
+        setApiCandidates(result.candidates);
+        setIsCandidateModalOpen(true);
+      }
+
       const extractAmount = (name: string): string => {
         const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const pattern = new RegExp(escaped + `[\\s:]*([\\d,.]+\\s*(?:mg|g|ml|kcal|%|\u03bcg|mcg|IU))`, 'i');
         const match = rawText.match(pattern);
         return match ? match[1].trim() : "";
       };
+
+      const medNames = savedMeds ? JSON.parse(savedMeds).map((m: any) => m.name) : [];
 
       const allIngredients = [
         ...(entities.drugs?.map((d: any) => {
@@ -148,9 +169,13 @@ export function ScanPage() {
           const amt = extractAmount(f.raw);
           return amt ? `${f.raw} ${amt}` : f.raw;
         }) || [])
-      ];
+      ].filter(ing => {
+        const baseName = ing.split(' ')[0];
+        return !medNames.some((m: string) => m.includes(baseName) || baseName.includes(m));
+      });
 
-      if (allIngredients.length === 0 && selectedSituations.length === 0) {
+
+      if (allIngredients.length === 0 && selectedSituations.length === 0 && (!result.candidates || result.candidates.length === 0)) {
         alert("인식된 항목이나 선택된 상황이 없습니다.");
         setCameraEnabled(true);
         return;
@@ -185,7 +210,6 @@ export function ScanPage() {
     setIsLoading(true);
     let resultToPass = lastAnalysisResult;
 
-    // 만약 수동 모드이거나, 새로운 상황이 추가된 경우 재분석 시도
     if (scanMode === "manual" || !resultToPass) {
       try {
         const savedMeds = localStorage.getItem("medications");
@@ -199,9 +223,8 @@ export function ScanPage() {
           : [];
 
         // @ts-ignore
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+        const API_URL = import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:8000`;
 
-        // 칩에 등록된 성분 + 수동 입력창 성분 + 선택된 상황 모두 통합
         const combinedText = [
           ...detectedIngredients,
           manualSearch,
@@ -217,7 +240,15 @@ export function ScanPage() {
             conditions: conditionLabels
           }),
         });
-        if (response.ok) resultToPass = await response.json();
+        if (response.ok) {
+          const res = await response.json();
+          resultToPass = res;
+          // 분석 중 후보군이 나오면 모달 띄우기 (수동 입력 시 오타 보정)
+          if (res.candidates && res.candidates.length > 0) {
+            setApiCandidates(res.candidates);
+            setIsCandidateModalOpen(true);
+          }
+        }
       } catch (error) {
         console.error("Manual analysis failed", error);
       }
@@ -241,6 +272,7 @@ export function ScanPage() {
         scanData,
         boundingBoxes,
         backendResult: resultToPass,
+        scanImageUrl: scanImageUrl,
         fromScan: true
       }
     });
@@ -294,10 +326,11 @@ export function ScanPage() {
                 key={sit.id}
                 onClick={() => toggleSituation(sit.label)}
                 className={`px-4 py-2.5 rounded-full text-sm font-semibold border transition-all ${selectedSituations.includes(sit.label)
-                  ? "bg-[#009688] text-white border-[#009688] shadow-md"
+                  ? "bg-[#009688] text-white border-[#009688] shadow-md scale-105"
                   : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                   }`}
               >
+                {selectedSituations.includes(sit.label) && <Check className="w-3 h-3 inline-block mr-1" />}
                 {sit.label}
               </button>
             ))}
@@ -320,13 +353,11 @@ export function ScanPage() {
                   className="w-full h-full object-cover"
                 />
               ) : isScanning ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
-                  <div className="text-white text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-3"></div>
-                    <p className="font-medium">분석 중...</p>
-                  </div>
+                <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-50">
+                  <AILoadingSequence />
                 </div>
               ) : (
+
                 <div className="text-center text-white p-6">
                   <Camera className="w-12 h-12 mx-auto mb-3 opacity-50" />
                   <p className="text-base mb-1">카메라가 꺼져있습니다</p>
@@ -404,6 +435,7 @@ export function ScanPage() {
                       setBoundingBoxes([]);
                       setDetectedIngredients([]);
                       setSelectedSituations([]);
+                      setApiCandidates([]);
                     }}
                     className="flex-1"
                   >
@@ -414,7 +446,7 @@ export function ScanPage() {
                     onClick={() => setScanMode("manual")}
                     className="flex-1 bg-[#009688] hover:bg-[#00796B] text-white"
                   >
-                    수정하기
+                    직접 수정
                   </Button>
                 </div>
               )}
@@ -435,19 +467,17 @@ export function ScanPage() {
               <Button
                 onClick={() => {
                   if (manualSearch.trim()) {
-                    // 공백이나 쉼표로 성분 분리
                     const newIngredients = manualSearch
                       .split(/[\s,]+/)
                       .map(s => s.trim())
                       .filter(s => s.length > 0);
 
-                    // 기존 목록 유지하며 중복 제외하고 추가
                     setDetectedIngredients(prev => {
                       const combined = [...prev, ...newIngredients];
                       return Array.from(new Set(combined));
                     });
 
-                    setManualSearch(""); // 입력창 초기화
+                    setManualSearch("");
                   }
                 }}
                 className="bg-[#009688] hover:bg-[#00796B] h-auto px-6"
@@ -511,6 +541,77 @@ export function ScanPage() {
           </ul>
         </div>
       </div>
+
+      {/* 후보군 보정 모달 */}
+      <AnimatePresence>
+        {isCandidateModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-end sm:items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              className="bg-white w-full max-w-md rounded-t-2xl sm:rounded-2xl p-6 shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-lg text-[#263238]">약물 인식 확인</h3>
+                <button onClick={() => setIsCandidateModalOpen(false)}>
+                  <X className="w-6 h-6 text-gray-400" />
+                </button>
+              </div>
+              <p className="text-gray-600 mb-6 text-sm">
+                정확하게 인식되지 않은 약물이 있습니다. 아래 목록에서 맞는 약이 있다면 선택해 주세요.
+              </p>
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+                {apiCandidates.map((cand, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setManualSearch(cand.name);
+                      setApiCandidates([]);
+                      setIsCandidateModalOpen(false);
+                      toast.success(`${cand.name} 성분으로 보정되었습니다.`);
+                    }}
+                    className="w-full flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-[#009688] hover:bg-[#E0F2F1] transition-all group text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-[#E0F2F1] flex items-center justify-center text-[#009688] font-bold text-xs">
+                        {idx + 1}
+                      </div>
+                      <span className="font-semibold text-gray-700 group-hover:text-[#009688]">{cand.name}</span>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#009688]" />
+                  </button>
+                ))}
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => setIsCandidateModalOpen(false)}
+                className="w-full mt-6 py-6 text-gray-400 border-dashed"
+              >
+                목록에 없음 (직접 입력하겠습니다)
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-white/95 backdrop-blur-sm z-[100] flex items-center justify-center"
+          >
+            <AILoadingSequence />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <input
         type="file"

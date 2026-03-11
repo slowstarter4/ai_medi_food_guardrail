@@ -117,9 +117,10 @@ def normalize_entities(
                 original_best_match = jamo_to_original[best_match_jamo]
                 matched_id = lookup[original_best_match]
                 
+                # 고위험 식품군/영양소 임계값 예외 처리
                 if entity_type == "foods":
                     if matched_id in HIGH_RISK_FOOD_IDS:
-                        current_threshold = 90
+                        current_threshold = 75 # 더 공격적으로 탐지 (FN 방지)
                     elif "NUTRITION_" in matched_id:
                         current_threshold = 80
                 
@@ -139,6 +140,27 @@ def normalize_entities(
                             "entity_id": matched_id,
                             "match_type": "fuzzy",
                             "score": round(score, 1)
+                        })
+                elif entity_type == "drugs" and score >= 75:
+                    # [NEW] 후보군 제안 로직 (80~88점 사이 또는 보수적 하한선 75점)
+                    # 확정은 아니지만 사용자에게 물어볼 가치가 있는 목록
+                    candidates = []
+                    for m_jamo, m_score, m_idx in results:
+                        if m_score >= 75:
+                            m_original = jamo_to_original[m_jamo]
+                            candidates.append({
+                                "name": m_original,
+                                "entity_id": lookup[m_original],
+                                "score": round(m_score, 1)
+                            })
+                    
+                    if candidates:
+                        print(f"DEBUG: Candidate drug found [{surface}]: {candidates}")
+                        normalized[entity_type].append({
+                            "raw": raw,
+                            "entity_id": "UNKNOWN",
+                            "match_type": "candidate",
+                            "candidates": candidates
                         })
 
     return normalized

@@ -1,0 +1,249 @@
+{
+  "timestamp": "2026-03-11T13:33:24.542155",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "술.jpg",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "고령",
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 위험합니다, 절대 금지입니다.  \n■ **[이유]**: 이부프로펜과 소주를 함께 섭취하면 위장에 큰 손상을 줄 수 있습니다. 고령자의 경우 이러한 위험이 더욱 높아집니다.  \n■ **[대안]**: 물이나 허브차를 드시는 것을 추천합니다.  \n■ **[대처]**: 즉시 음주를 중단하고, 이부프로펜 복용 시 주의사항을 꼭 지켜주세요.  \n...",
+    "full_result": {
+      "input_text": "98.10.1%(자료가,정제수,주정,종류식소주)보리국산 더불어 애리스리틀 스테비올배당체·품목보고번호:2011001 소재지,롯데칠성음료(주)강원도 강릉시 관슬길 7 · 제조연월일 용기·유리무형내면·폴리에틸렌· 병 파손 위험 있으니 결봉 직후 주리할 것. 직사공선을 피하고 서늘한 곳에 보관 소비자상 333-2323 부정불량 신고는 국번없이 1399 음식점·주점 판매불가 영양정보 출내89360m2 100ml당 90 kcal 0% 탄수화물 0g 0 % 당류 0 ou % s 지방0g0% 트랜스지방 0 g 포화지방 : 0% 10 콜레스테롤 36 0 mg 0 % 단백질 0 9 0 % 138217111 중고 지나친음주는 뇌졸중, 기억력손상이나 자리를 합니다. 임신 중 음주는 기형아 출생 위한을 입입니다. 80 19세 미만 판매금지",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "primary_rule": "NSAID_003",
+        "secondary_rules": [
+          {
+            "rule_id": "NSAID_ALL_ALCOHOL",
+            "risk_level": "RED",
+            "description": "알코올 병용 시 위장 출혈 위험 증가",
+            "risk_type": "위장 출혈"
+          },
+          {
+            "rule_id": "HTN_005",
+            "risk_level": "YELLOW",
+            "description": "혈압약 효과 저하 및 혈압 조절 실패 가능",
+            "risk_type": "효과 감소"
+          }
+        ],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "NSAID_003",
+            "NSAID_ALL_ALCOHOL",
+            "HTN_005"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "소주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB",
+              "match_type": "exact"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY",
+              "match_type": "exact"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN",
+              "match_type": "exact"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_ALCOHOL_BLEEDING",
+          "EVD_HTN_NSAID_BP",
+          "EVD_NSAID_DUPLICATION"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_NSAID_ALCOHOL_BLEEDING",
+            "evidence_source_label": "FDA ibuprofen facts",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "진통제와 술은 모두 위 점막을 강하게 자극합니다. 함께 먹으면 위장에 피가 나거나 천공이 생길 위험이 크게 높아지므로 절대 같이 드시지 마세요.",
+            "evidence_tags": [
+              "NSAID",
+              "alcohol",
+              "bleeding"
+            ]
+          },
+          {
+            "evidence_id": "EVD_HTN_NSAID_BP",
+            "evidence_source_label": "Clinical pharmacology review",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "이부프로펜 같은 진통소염제는 체내 수분과 나트륨을 잡아둡니다. 이 때문에 혈압약의 효과가 떨어지고 혈압이 오를 수 있으니 장기 복용을 피하세요.",
+            "evidence_tags": [
+              "NSAID",
+              "blood_pressure",
+              "interaction"
+            ]
+          },
+          {
+            "evidence_id": "EVD_NSAID_DUPLICATION",
+            "evidence_source_label": "FDA safety warning",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "비슷한 진통소염제 여러 개가 몸에 한꺼번에 들어오면 위와 신장에 큰 무리를 줍니다. 부작용 위험이 기하급수적으로 커지니 한 번에 한 가지 약만 드세요.",
+            "evidence_tags": [
+              "NSAID",
+              "duplication",
+              "bleeding"
+            ]
+          }
+        ],
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "관절염"
+        ],
+        "input_text": "98.10.1%(자료가,정제수,주정,종류식소주)보리국산 더불어 애리스리틀 스테비올배당체·품목보고번호:2011001 소재지,롯데칠성음료(주)강원도 강릉시 관슬길 7 · 제조연월일 용기·유리무형내면·폴리에틸렌· 병 파손 위험 있으니 결봉 직후 주리할 것. 직사공선을 피하고 서늘한 곳에 보관 소비자상 333-2323 부정불량 신고는 국번없이 1399 음식점·주점 판매불가 영양정보 출내89360m2 100ml당 90 kcal 0% 탄수화물 0g 0 % 당류 0 ou % s 지방0g0% 트랜스지방 0 g 포화지방 : 0% 10 콜레스테롤 36 0 mg 0 % 단백질 0 9 0 % 138217111 중고 지나친음주는 뇌졸중, 기억력손상이나 자리를 합니다. 임신 중 음주는 기형아 출생 위한을 입입니다. 80 19세 미만 판매금지"
+      },
+      "explanation": "■ **[결론]**: 위험합니다, 절대 금지입니다.  \n■ **[이유]**: 이부프로펜과 소주를 함께 섭취하면 위장에 큰 손상을 줄 수 있습니다. 고령자의 경우 이러한 위험이 더욱 높아집니다.  \n■ **[대안]**: 물이나 허브차를 드시는 것을 추천합니다.  \n■ **[대처]**: 즉시 음주를 중단하고, 이부프로펜 복용 시 주의사항을 꼭 지켜주세요.  \n■ **[출처]**: FDA ibuprofen facts, Clinical pharmacology review, FDA safety warning.",
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "소주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "탄수화물",
+              "entity_id": "NUTRITION_CARB",
+              "match_type": "exact"
+            },
+            {
+              "raw": "당류",
+              "entity_id": "FOOD_CANDY",
+              "match_type": "exact"
+            },
+            {
+              "raw": "단백질",
+              "entity_id": "NUTRITION_PROTEIN",
+              "match_type": "exact"
+            },
+            {
+              "raw": "지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "포화지방",
+              "entity_id": "NUTRITION_FAT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "콜레스테롤",
+              "entity_id": "NUTRITION_CHOLESTEROL",
+              "match_type": "exact"
+            },
+            {
+              "raw": "kcl",
+              "entity_id": "POTASSIUM_SUPPLEMENT",
+              "match_type": "exact"
+            },
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

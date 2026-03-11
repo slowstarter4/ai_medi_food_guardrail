@@ -64,11 +64,17 @@
 
 - **AI 기반 정밀 분석 (Hybrid RAG)**
   - **Rule-based Guardrail**: 사전에 정의된 안전 규칙(`ruleset.json`)을 통한 즉각적인 위험 탐지.
-  - **External API Fallback**: 내부 규칙에 없는 약물은 **식약처 'e약은요' API**를 통해 실시간 데이터 조회.
+  - **Entity Normalization**: `rapidfuzz` 기반의 **퍼지 매칭(Fuzzy Matching)**을 통해 OCR 오타 및 약물/식품 동의어 완벽 대응.
+  - **External API Fallback**: 내부 규칙에 없는 약물은 **식약처 'e약은요' API** 및 **DUR 정보**를 통한 실시간 데이터 조회.
   - **LLM Explanation**: OpenAI `gpt-4o-mini`를 사용하여 의학적 근거 기반의 쉽고 강력한 경고 메시지 생성.
-- **다국어 및 상황 대응**: 한국어 기반의 친절하고 전문적인 설명 제공.
+- **신뢰 중심 UX/UI**
+  - **OCR Visual Overlay**: 스캔한 이미지 위에 탐지된 성분을 위험도(RED/YELLOW/GREEN)별로 하이라이트하여 시각적 신뢰도 제공.
+  - **사용자 보정 루프**: AI 판단이 불확실한 경우(후보군 매칭) 사용자가 직접 확정할 수 있는 인터랙티브 모달 지원.
+  - **상황 Quick Chips**: 공복, 탈수, 음주 등 약물 상호작용에 치명적인 상황을 원클릭으로 입력받아 분석 정합성 제고.
+- **데이터 분석 및 리포트**
+  - **주간 안심 리포트**: 통계 기반의 안전 지수(Safety Score) 및 페르소나별 맞춤 건강 메시지 제공.
 - **Persona 기반 테스트**: 고혈압, 당뇨, 관절염 등 실제 사용자 페르소나를 반영한 **50가지 MVP 시나리오 검증 완료 (Pass Rate 100%)**.
-  - 범용 카테고리(혈압약, 당뇨약 등) 및 페르소나 맞춤형 상황 매칭 로직 적용.
+  - 상세 테스트 케이스는 [test_scenarios.md](test_scenarios.md)를 참고하세요.
 
 ---
 
@@ -77,13 +83,16 @@
 본 프로젝트를 실행하기 위해서는 다음의 API 키가 필요합니다.
 
 1.  **OpenAI API Key**: LLM 설명 생성용
-2.  **공공데이터포털 API Key**: 식약처 'e약은요' 의약품 정보 조회용
+2.  **Naver CLOVA OCR API**: 고정밀 이미지 텍스트 추출용
+3.  **공공데이터포털 API Key**: 식약처 'e약은요' 및 DUR 정보 조회용
 
 ### 환경 변수 설정
 `backend/` 디렉토리에 `.env` 파일을 생성하고 다음과 같이 설정합니다.
 
 ```env
 OPENAI_API_KEY=your_openai_api_key_here
+CLOVA_OCR_API_URL=your_clova_ocr_url_here
+CLOVA_OCR_SECRET=your_clova_ocr_secret_here
 DATA_GO_KR_API_KEY=your_public_data_api_key_here
 ```
 
@@ -118,10 +127,10 @@ npm install
 
 ## 기술 스택
 
-- **Frontend**: React, Vite, Tailwind CSS, Lucide React, Framer Motion
-- **Backend**: Python 3.11+, FastAPI, Uvicorn, LangChain, LangGraph
-- **LLM**: OpenAI GPT-4o-mini
-- **External API**: 식약처 의약품개요정보(e약은요) 서비스
+- **Frontend**: React, Vite, Tailwind CSS, Lucide React, Framer Motion, Recharts, Sonner
+- **Backend**: Python 3.11+, FastAPI, Uvicorn, LangChain, LangGraph, RapidFuzz
+- **AI/LLM**: OpenAI GPT-4o-mini, Naver CLOVA OCR
+- **Data Source**: 식약처 의약품개요정보(e약은요), DUR 상호작용 정보
 
 ---
 
@@ -143,12 +152,23 @@ npm run dev
 
 ---
 
-## 로드맵 (Roadmap)
+## 프로젝트 로드맵 (Roadmap)
 
-### [Phase 2] OCR 및 분석 고도화
-- **정밀 OCR 연동**: Google Vision API 또는 CLOVA OCR 연동을 통한 실시간 스캔 정확도 제고.
-- **분석 결과 시각화**: 바운딩 박스를 활용한 성분별 위험도 하이라이팅 기능 강화.
-- **다양한 약물 검색**: 'e약은요' API 외에 전문의약품용 DUR API 추가 연동.
+### ✅ Phase 1: MVP 기초 구축 (완료)
+- [x] 약물/식품 엔터티 추출 엔진 개발
+- [x] 룰 기반 위험도 평가 로직 구현
+- [x] 모바일 친화적인 결과 페이지 UI 제작
+
+### ✅ Phase 2: 신뢰도 및 비주얼 고도화 (완료 🔥)
+- [x] **고정밀 OCR 통합**: CLOVA OCR 연동 및 이미지 리사이징 최적화
+- [x] **OCR Visual Overlay**: 이미지 내 성분 바운딩 박스 시각화
+- [x] **안정망(Safety Net) 구축**: 퍼지 매칭 및 약물 계열(Category) 매칭 로직 보강
+- [x] **주간 안심 리포트**: 통계 기반 보호자 보고 시스템 및 유저 메시징
+
+### 🚀 Phase 3: 운영 안정화 및 확장 (진행 중)
+- [ ] **분석 결과 공유**: 결과 페이지 이미지/PDF 파일 저장 및 전송 기능
+- [ ] **PWA 서비스**: 설치형 웹 앱 지원 및 오프라인 접근성 향상
+- [ ] **식단 연동**: 일일 영양 섭취 정보와 복합 분석 기능 확장
 
 ---
 

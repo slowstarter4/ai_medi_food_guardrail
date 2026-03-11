@@ -2,13 +2,17 @@ import { useLocation, useNavigate } from "react-router";
 import { BottomNav } from "../components/BottomNav";
 import { SafetyCard } from "../components/SafetyCard";
 import { IngredientChip } from "../components/IngredientChip";
-import { ArrowLeft, Share2, Heart, ExternalLink, ShieldCheck, Sparkles, AlertCircle, Info } from "lucide-react";
+import { ArrowLeft, Share2, Heart, ExternalLink, ShieldCheck, Sparkles, AlertCircle, Info, Maximize2, ShieldCheck as ShieldCheckIcon } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { CounselingOverlay } from "../components/CounselingOverlay";
 import { PinpointFAQ } from "../components/PinpointFAQ";
+import { InteractionGraph } from "../components/InteractionGraph";
+import { ShareReportCard } from "../components/ShareReportCard";
+import { useRef } from "react";
+import html2canvas from "html2canvas";
 
 interface AlternativeFood {
   name: string;
@@ -19,9 +23,38 @@ interface AlternativeFood {
 export function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { scanData, boundingBoxes, backendResult } = location.state || {};
+  const { scanData, boundingBoxes, backendResult, scanImageUrl } = location.state || {};
   const [showAlternatives, setShowAlternatives] = useState(false);
+  const [showOCR, setShowOCR] = useState(true);
   const [isCounselingOpen, setIsCounselingOpen] = useState(true);
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  const handleShare = async () => {
+    if (!reportRef.current) return;
+
+    try {
+      toast.loading("안심 리포트 생성 중...");
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        logging: false,
+        useCORS: true,
+      });
+
+      const image = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = image;
+      link.download = `SafeEat_Report_${data.foodName}_${new Date().getTime()}.png`;
+      link.click();
+      
+      toast.dismiss();
+      toast.success("리포트가 이미지로 저장되었습니다.");
+    } catch (error) {
+      console.error("Share failed:", error);
+      toast.dismiss();
+      toast.error("리포트 생성에 실패했습니다.");
+    }
+  };
 
   // Helper for Object.entries-like mapping in TS if needed, or just use plain objects
   function items<T>(obj: T): [keyof T, T[keyof T]][] {
@@ -100,8 +133,6 @@ export function ResultPage() {
   // Get matched rule's evidence info
   const matchedRule = backendResult?.risk_result?.matched_rule;
   const evidenceKey = matchedRule?.evidence_key;
-  // Note: Backend might need to send evidence details, or we pull from a local map if needed.
-  // Assuming backend already includes processed evidence in risk_result from evaluator/assessor.
   const evidenceInfo = backendResult?.risk_result?.evidence_details;
 
   const getRiskInfo = () => {
@@ -109,13 +140,12 @@ export function ResultPage() {
       return {
         title: explanationSections.conclusion || (riskLevel === "danger" ? "섭취 중단 권고" : "주의 필요"),
         message: explanationSections.reason || "상세 이유를 불러오고 있습니다.",
-        evidence: evidenceInfo?.evidence_summary_user || explanationSections.action || "권장 대처 방안을 확인하세요.",
-        evidenceSource: evidenceInfo?.evidence_source_label || explanationSections.source || "SafeEat AI 분석 결과",
+        evidence: explanationSections.action || "권장 대처 방안을 확인하세요.",
+        evidenceSource: explanationSections.source || "SafeEat AI 분석 결과",
         evidenceStrength: evidenceInfo?.evidence_strength,
       };
     }
 
-    // 기본값 (백엔드 결과가 없을 때)
     if (riskLevel === "danger") {
       return {
         title: "섭취 중단 권고",
@@ -162,7 +192,6 @@ export function ResultPage() {
       boundingBoxes: boundingBoxes,
     };
 
-    // 최근 10개만 유지
     const updatedHistory = [newEntry, ...history].slice(0, 10);
     localStorage.setItem("scan_history", JSON.stringify(updatedHistory));
     setIsSaved(true);
@@ -191,6 +220,16 @@ export function ResultPage() {
           <span className="text-xs font-bold text-[#009688]">SafeEat AI 맞춤 분석 가이드</span>
         </div>
 
+        {/* Interaction Graph Section */}
+        {(backendResult?.risk_result?.entities_involved?.drugs?.length > 0 || data.ingredients?.length > 0) && (
+          <InteractionGraph 
+            drugs={backendResult?.risk_result?.entities_involved?.drugs?.map((d: any) => d.raw) || []}
+            foods={data.ingredients || []}
+            riskLevel={riskLevel}
+            matchedEntities={backendResult?.risk_result?.matched_entities}
+          />
+        )}
+
         {/* Main Safety Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -206,6 +245,66 @@ export function ResultPage() {
             secondaryRules={backendResult?.risk_result?.secondary_rules}
           />
         </motion.div>
+
+        {/* OCR Visual Overlay Section */}
+        {scanImageUrl && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4 mt-4 overflow-hidden">
+            <h2 className="text-sm font-bold text-gray-800 mb-3 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Maximize2 className="w-4 h-4 text-[#009688]" />
+                분석 원본 시각화
+              </span>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-[10px] h-6 px-2 text-[#009688]"
+                onClick={() => setShowOCR(!showOCR)}
+              >
+                {showOCR ? "오버레이 숨기기" : "오버레이 표시"}
+              </Button>
+            </h2>
+            
+            <div className="relative rounded-lg overflow-hidden bg-gray-900 aspect-video">
+              <img 
+                src={scanImageUrl} 
+                alt="Scanned product" 
+                className="w-full h-full object-contain"
+              />
+              
+              <AnimatePresence>
+                {showOCR && boundingBoxes?.map((box: any, i: number) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute pointer-events-none"
+                    style={{
+                      left: `${box.x}%`,
+                      top: `${box.y}%`,
+                      width: `${box.width}%`,
+                      height: `${box.height}%`,
+                    }}
+                  >
+                    <div className={`w-full h-full border-2 rounded ${
+                      box.riskLevel === "danger" 
+                        ? "border-red-500 bg-red-500/20" 
+                        : box.riskLevel === "warning" 
+                          ? "border-amber-500 bg-amber-500/20" 
+                          : "border-green-500 bg-green-500/20"
+                    }`} />
+                    <div className="absolute top-0 left-0 -translate-y-full bg-black/60 text-[8px] text-white px-1 rounded whitespace-nowrap">
+                      {box.text}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+            <p className="text-[10px] text-gray-400 mt-2 italic text-center">
+              * AI가 이미지에서 직접 추출하여 분석한 영역입니다.
+            </p>
+          </div>
+        )}
 
         {/* Analysis Context (Personalized) */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4 mt-4">
@@ -242,7 +341,7 @@ export function ResultPage() {
                       return (
                         <span key={i} className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border ${isVerified ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-gray-50 border-gray-200 text-gray-600'}`}>
                           {d.raw}
-                          {isVerified && <ShieldCheck className="w-3 h-3 text-blue-500" />}
+                          {isVerified && <ShieldCheckIcon className="w-3 h-3 text-blue-500" />}
                         </span>
                       );
                     })
@@ -280,7 +379,7 @@ export function ResultPage() {
         )}
 
         {/* Detected Ingredients */}
-        <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
+        <div className="bg-white rounded-xl shadow-sm p-5 mb-4 border border-gray-100">
           <h2 className="font-bold text-[#263238] mb-3 flex items-center gap-1.5 text-sm">
             <div className="w-1.5 h-1.5 rounded-full bg-[#009688]"></div>
             인식된 성분
@@ -324,10 +423,10 @@ export function ResultPage() {
           <Button
             variant="outline"
             className="flex flex-col h-auto py-3 gap-1 bg-white border-gray-200 text-gray-700 shadow-sm"
-            onClick={() => toast("공유 기능은 준비 중입니다.")}
+            onClick={handleShare}
           >
-            <Share2 className="w-5 h-5 text-gray-500" />
-            <span className="text-[11px] font-bold">공유하기</span>
+            <Share2 className="w-5 h-5 text-[#009688]" />
+            <span className="text-[11px] font-bold">리포트 공유</span>
           </Button>
           <Button
             variant="outline"
@@ -405,33 +504,22 @@ export function ResultPage() {
           )}
         </AnimatePresence>
 
-        {/* AI Disclaimer & Info */}
-        <div className="mt-8 mb-6 bg-gray-100 rounded-xl p-5 border border-gray-200">
-          <div className="flex gap-3 mb-4">
-            <div className="shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-200">
-              <Sparkles className="w-4 h-4 text-[#009688]" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-xs font-bold text-gray-700">SafeEat 분석의 두 가지 위계</h3>
-              <p className="text-[10px] text-gray-500 leading-relaxed">
-                1. **자체 룰 가드레일 (Tier 1)**: 식약처 및 의학 전문가 가이드 기반의 확정적 위험 감지 시스템입니다.<br />
-                2. **AI 보조 분석 (Tier 2)**: 공공 API 데이터와 LLM 추론을 결합하여 개인별 정황(오타, 상황)을 보조적으로 분석합니다.
-              </p>
-            </div>
-          </div>
-          <p className="text-[10px] text-gray-400 leading-relaxed border-t border-gray-200 pt-4 text-center">
+        {/* Footnote */}
+        <div className="mt-8 mb-6 py-6 border-t border-gray-200 text-center">
+          <p className="text-[10px] text-gray-400 leading-relaxed">
             본 결과는 AI의 보조 정보이며 의학적 확진이 아닙니다.<br />
-            기저질환자의 최종 판단은 반드시 담당 의사 및 약사와 상담하시기 바랍니다.
+            기저질환자의 최종 판단은 전문가와 상담하시기 바랍니다.
           </p>
         </div>
 
+        {/* Actions */}
         <div className="flex gap-3 mb-4">
           <Button
             onClick={() => recordIntake()}
             disabled={isSaved || !!(location.state?.scanData?.id && !location.state?.fromScan)}
             className={`flex-1 h-12 font-bold shadow-sm border ${isSaved || !!(location.state?.scanData?.id && !location.state?.fromScan)
-                ? "bg-gray-100 border-gray-200 text-gray-400"
-                : "bg-white border-[#009688] text-[#009688] hover:bg-[#E0F2F1]"
+              ? "bg-gray-100 border-gray-200 text-gray-400"
+              : "bg-white border-[#009688] text-[#009688] hover:bg-[#E0F2F1]"
               }`}
           >
             {isSaved || !!(location.state?.scanData?.id && !location.state?.fromScan) ? "기록 완료" : "기록으로 남기기"}
@@ -453,6 +541,18 @@ export function ResultPage() {
         isOpen={isCounselingOpen}
         onClose={() => setIsCounselingOpen(false)}
       />
+
+      {/* Hidden Report Card for Capturing */}
+      <div className="fixed -left-[9999px] top-0">
+        <ShareReportCard
+          ref={reportRef}
+          foodName={data.foodName}
+          riskLevel={riskLevel}
+          summary={riskInfo.message}
+          matchedEntities={backendResult?.risk_result?.matched_entities}
+          date={new Date().toLocaleDateString()}
+        />
+      </div>
     </div>
   );
 }

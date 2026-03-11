@@ -131,7 +131,15 @@ export function MainPage() {
 
         {/* Recent Scans */}
         <div className="bg-white rounded-xl shadow-sm p-5 mb-4">
-          <h2 className="font-bold text-[#263238] mb-4">최근 스캔 결과</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-bold text-[#263238]">최근 스캔 결과</h2>
+            <button
+              onClick={() => navigate("/history")}
+              className="text-sm text-[#009688] hover:underline"
+            >
+              모두 보기
+            </button>
+          </div>
           {recentScans.length === 0 ? (
             <p className="text-gray-500 text-sm">스캔 기록이 없습니다.</p>
           ) : (

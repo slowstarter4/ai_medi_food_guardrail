@@ -28,7 +28,7 @@ export function ReportPage() {
     useEffect(() => {
         const fetchReport = async () => {
             try {
-                const API_URL = (import.meta as any).env.VITE_API_URL || "http://localhost:8000";
+                const API_URL = (import.meta as any).env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:8000`;
                 const response = await fetch(`${API_URL}/api/report/weekly`);
                 if (response.ok) {
                     const data = await response.json();

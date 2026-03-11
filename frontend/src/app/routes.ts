@@ -6,6 +6,7 @@ import { ResultPage } from "./pages/ResultPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { ReportPage } from "./pages/ReportPage";
 import { InfoPage } from "./pages/InfoPage";
+import { HistoryPage } from "./pages/HistoryPage";
 
 export const router = createBrowserRouter([
   {

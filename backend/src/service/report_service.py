@@ -49,17 +49,26 @@ def calculate_stats(logs: List[Dict[str, Any]]) -> Dict[str, Any]:
         risk_counts[risk] = risk_counts.get(risk, 0) + 1
         
         # 성분 집계 (위험 성분 중심)
-        entities = log.get("result", {}).get("full_result", {}).get("risk_result", {}).get("entities_involved", {})
+        # result -> full_result -> risk_result -> entities_involved 경로 확인
+        full_res = log.get("result", {}).get("full_result", {})
+        risk_res = full_res.get("risk_result", {})
+        entities = risk_res.get("entities_involved", {})
+        
         for food in entities.get("foods", []):
             name = food.get("raw")
-            top_ingredients[name] = top_ingredients.get(name, 0) + 1
+            if name:
+                top_ingredients[name] = top_ingredients.get(name, 0) + 1
             
     # 정렬하여 Top 3 추출
     sorted_ingredients = sorted(top_ingredients.items(), key=lambda x: x[1], reverse=True)[:3]
     
-    # 안전 지수 계산 (임의 산식)
-    # 초기 100점, RED -10, YELLOW -5
-    safety_score = max(0, 100 - (risk_counts["RED"] * 10) - (risk_counts["YELLOW"] * 5))
+    # 안전 지수 계산 (비율 기반 가중 평균)
+    # GREEN: 100점, YELLOW: 50점, RED: 0점
+    if total_count > 0:
+        score_sum = (risk_counts["GREEN"] * 100) + (risk_counts["YELLOW"] * 50) + (risk_counts["RED"] * 0)
+        safety_score = round(score_sum / total_count)
+    else:
+        safety_score = 100 # 분석 데이터가 없으면 만점
     
     return {
         "total_count": total_count,
