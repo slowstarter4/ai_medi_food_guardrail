@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-03-18T14:03:03.731175",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "바나나.jpg",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고령"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "GREEN",
+    "representative_rule": null,
+    "explanation_summary": "이미지에서 텍스트를 인식하지 못했습니다. 다시 촬영해주세요....",
+    "full_result": {
+      "input_text": "",
+      "risk_result": {
+        "risk_level": "GREEN",
+        "risk_code": "GREEN",
+        "representative_rule": null,
+        "entities_involved": {},
+        "evidence_keys": [],
+        "evidence_info": [],
+        "user_conditions": [
+          "고령"
+        ]
+      },
+      "explanation": "이미지에서 텍스트를 인식하지 못했습니다. 다시 촬영해주세요.",
+      "debug_info": {
+        "entities": {}
+      }
+    }
+  }
+}

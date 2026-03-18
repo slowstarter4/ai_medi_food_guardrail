@@ -30,29 +30,27 @@ def _load_entity_index() -> Dict:
 
 def _extract_entities_via_llm(raw_text: str) -> Dict:
     """
-    [Step 1] LLM으로 텍스트에서 엔티티와 약물 계열(Class)을 함께 추출합니다.
+    [Step 1] LLM으로 텍스트에서 엔티티를 추출하고, 오타 교정 및 계열(Class) 추론을 수행합니다.
     """
     system_prompt = """
     당신은 의료·식품 상호작용 검사를 위한 엔티티 추출 전문가입니다.
-    사용자가 제공하는 텍스트에서 다음 카테고리에 해당하는 항목을 분석하고 추출하세요.
+    사용자가 제공하는 텍스트(OCR 결과 포함)에서 약물, 식품, 상황 정보를 추출하세요.
     
-    [추출 카테고리]
-    1. drugs: 약물명(성분명/상품명)
-       - 각 약물별로 'name'(원본명)과 'inferred_class'(추론된 계열)를 JSON 객체로 추출하세요.
-       - 'inferred_class'는 다음 중 하나로 분류하세요: [DECONGESTANT, NSAID, ANTIHISTAMINE, ANTIBIOTIC, HTN_MED, DIABETES_MED, STATIN, PAINKILLER, DIGESTIVE, UNKNOWN]
-    2. foods: 식품, 음료, 영양 성분
-       - 예: 자몽, 바나나, 술, 알코올(음주), 카페인(커피/에너지음료), 고염식(국물/젓갈/김치), 단 음식(케이크/당류) 등
-    3. situations: 복용 상황/사용자 행태/신체 상태
-       - 예: 공복(식사거름), 식전/식후, 사우나(찜질방), 격한 운동, 탈수, 장기 복용(매일 복용), 불규칙한 식사 등
+    [drugs 스키마]
+    - raw: 텍스트에서 발견된 원본 문자열
+    - corrected_name: 교정된 표준 성분명 (오타·상품명 → 일반명. 예: '바이코자정' → '로사르탄', '타이레놀' → '아세트아미노펜')
+    - inferred_class: 아래 분류 중 **가장 구체적인** 것으로 분류하세요.
+        고혈압약 계열: HTN_ARB (로사르탄/발사르탄/텔미사르탄 등 ARB), HTN_ACE (에날라프릴/리시노프릴 등 ACE억제제), HTN_CCB (암로디핀/니페디핀 등 칼슘채널차단제), HTN_DIURETIC (이뇨제)
+        당뇨약 계열: DM_METFORMIN, DM_SULFONYLUREA, DM_SGLT2, DM_DPP4
+        진통/소염: NSAID (이부프로펜/나프록센/디클로페낙), PAINKILLER (아세트아미노펜/코데인)
+        기타: STATIN, ANTIHISTAMINE, ANTIBIOTIC, DECONGESTANT, ANTICOAGULANT, DIGESTIVE, UNKNOWN
+    - confidence: 확신도 (0.0~1.0)
+    - reasoning: 판단 근거 (한 줄)
     
     [주의사항]
-    - 일상적인 말투(예: "운동하고 왔어", "사우나 갈 거야", "아침 걸렀어")에서 핵심 상황 키워드를 정확히 추출하세요.
-    - 결과는 JSON 형식으로만 응답하세요. 예시:
-      {
-        "drugs": [{"name": "슈다페드", "inferred_class": "DECONGESTANT"}],
-        "foods": ["커피", "고염식"],
-        "situations": ["격한 운동", "공복"]
-      }
+    - 상품명·오타를 성분 일반명으로 반드시 교정하세요. (corrected_name 필드)
+    - foods, situations는 문자열 리스트로 반환하세요.
+    - 반드시 JSON만 반환하세요.
     """
 
     try:
@@ -60,7 +58,7 @@ def _extract_entities_via_llm(raw_text: str) -> Dict:
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": raw_text}
+                {"role": "user", "content": f"입력 텍스트: {raw_text}"}
             ],
             response_format={"type": "json_object"},
             temperature=0,
@@ -80,52 +78,77 @@ def _extract_entities_via_llm(raw_text: str) -> Dict:
 def _normalize_to_ids(extracted: Dict) -> Dict[str, List[Dict]]:
     """
     [Step 2] 추출된 항목을 entity_index.json 기반 표준 ID로 매핑합니다.
-    색인에 없어도 LLM이 추론한 계열 정보(inferred_class)를 활용합니다.
+    LLM의 교정된 이름(corrected_name)과 계열 정보(inferred_class)를 순차적으로 활용합니다.
     """
     index = _load_entity_index()
     normalized = {"foods": [], "drugs": [], "situations": []}
 
-    # 1. 약물 정규화 (이름 매핑 우선, 실패 시 계열 매핑)
+    # 1. 약물 정규화
     lookup_drugs = index.get("drugs", {})
     for drug_info in extracted.get("drugs", []):
-        name = drug_info.get("name", "")
+        raw_name = drug_info.get("raw", "")
+        # 교정된 이름이 있으면 우선 사용
+        corrected_name = drug_info.get("corrected_name", raw_name)
         inferred_class = drug_info.get("inferred_class", "UNKNOWN")
-        name_clean = name.strip().lower().replace(" ", "")
-
+        
+        # 1-1. 교정된 이름 기반 매핑 시도
         matched_id = None
-        # 이름 기반 완전/부분 매칭
+        search_name = corrected_name.strip().lower().replace(" ", "")
+        
         for key, eid in lookup_drugs.items():
             key_norm = key.lower().replace(" ", "")
-            if key_norm == name_clean or key_norm in name_clean or name_clean in key_norm:
+            if key_norm == search_name or key_norm in search_name or search_name in key_norm:
                 matched_id = eid
                 break
         
-        # 이름 매칭 실패 시 계열 기반 매칭
+        # 1-2. 매칭 실패 시 계열 기반 폴백
         if not matched_id and inferred_class != "UNKNOWN":
             class_to_id_map = {
-                "DECONGESTANT": "DRUG_DECONGESTANT",
+                # 고혈압약 세분화 (기존 HTN_MED→DRUG_AMLODIPINE 버그 제거)
+                "HTN_ARB": "DRUG_ACE_ARB",       # 로사르탄, 발사르탄 등 ARB
+                "HTN_ACE": "DRUG_ACE_ARB",        # 에날라프릴 등 ACE억제제
+                "HTN_CCB": "DRUG_CCB",            # 암로디핀 등 칼슘채널차단제
+                "HTN_DIURETIC": "DRUG_DIURETIC_GENERIC",
+                # 구버전 HTN_MED도 generic ID로 폴백 (하위 호환)
+                "HTN_MED": "DRUG_HYPERTENSION_GENERIC",
+                # 당뇨약 세분화
+                "DM_METFORMIN": "DRUG_METFORMIN",
+                "DM_SULFONYLUREA": "DRUG_SULFONYLUREA",
+                "DM_SGLT2": "DRUG_SGLT2",
+                "DM_DPP4": "DRUG_SITAGLIPTIN",
+                "DIABETES_MED": "DRUG_DIABETES_GENERIC",
+                # 기타
                 "NSAID": "DRUG_NSAID",
+                "PAINKILLER": "DRUG_PAINKILLER_GENERAL",
+                "STATIN": "DRUG_STATIN",
                 "ANTIHISTAMINE": "DRUG_ANTIHISTAMINE",
                 "ANTIBIOTIC": "DRUG_ANTIBIOTIC",
-                "PAINKILLER": "DRUG_PAINKILLER_GENERAL",
+                "DECONGESTANT": "DRUG_DECONGESTANT",
+                "ANTICOAGULANT": "DRUG_ANTICOAGULANT",
                 "DIGESTIVE": "DRUG_DIGESTIVE_GENERAL",
-                "HTN_MED": "DRUG_AMLODIPINE",  # 기본 대표 ID
-                "DIABETES_MED": "DRUG_METFORMIN",
-                "STATIN": "DRUG_STATIN"
             }
             matched_id = class_to_id_map.get(inferred_class)
 
         normalized["drugs"].append({
-            "raw": name,
+            "raw": raw_name,
+            "corrected_name": corrected_name,
             "entity_id": matched_id if matched_id else "UNKNOWN",
-            "inferred_class": inferred_class
+            "inferred_class": inferred_class,
+            "confidence": drug_info.get("confidence", 0.0),
+            "reasoning": drug_info.get("reasoning", "")
         })
 
-    # 2. 식품 및 상황 정규화
+    # 2. 식품 및 상황 정규화 (LLM이 string 혹은 dict 형태로 반환할 수 있으므로 방어 처리)
     for etype in ["foods", "situations"]:
         lookup = index.get(etype, {})
         for raw in extracted.get(etype, []):
-            raw_clean = raw.strip().lower().replace(" ", "")
+            # LLM이 {"name": "자몽"} 형태의 dict를 반환할 수 있으므로 string으로 변환
+            if isinstance(raw, dict):
+                raw_str = raw.get("name", raw.get("raw", raw.get("value", str(raw))))
+            else:
+                raw_str = str(raw)
+            
+            raw_clean = raw_str.strip().lower().replace(" ", "")
             matched_id = None
             for key, eid in lookup.items():
                 key_norm = key.lower().replace(" ", "")
@@ -134,7 +157,7 @@ def _normalize_to_ids(extracted: Dict) -> Dict[str, List[Dict]]:
                     break
             
             normalized[etype].append({
-                "raw": raw,
+                "raw": raw_str,
                 "entity_id": matched_id if matched_id else "UNKNOWN"
             })
 

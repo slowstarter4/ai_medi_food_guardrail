@@ -1,0 +1,130 @@
+{
+  "timestamp": "2026-03-18T16:22:55.402725",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "고령"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 섭취 시 주의가 필요합니다.  \n■ **[이유]**: 이부프로펜은 위벽 보호 물질 생성을 방해하여 빈속에 복용하면 속쓰림이나 위염을 유발할 수 있습니다. 고령자는 이러한 부작용에 더 취약합니다.  \n■ **[대안]**: 식사와 함께 섭취할 수 있는 부드러운 음식인 요거트나 스프를 추천합니다.  \n■ **[대처]**: 즉시 식사 후 이부...",
+    "full_result": {
+      "input_text": "공복",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "primary_rule": "NSAID_002",
+        "matched_entities": null,
+        "secondary_rules": [],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "NSAID_002"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_FASTING"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_NSAID_FASTING",
+            "evidence_source_label": "NSAID safety guidance",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "진통제 성분이 위벽을 보호하는 물질의 생성을 막습니다. 빈속에 약을 드시면 심한 속쓰림이나 위염이 올 수 있으니 꼭 식후에 복용하세요.",
+            "evidence_tags": [
+              "NSAID",
+              "gastric_irritation"
+            ]
+          }
+        ],
+        "confidence_score": 100,
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령"
+        ],
+        "input_text": "공복"
+      },
+      "explanation": "■ **[결론]**: 섭취 시 주의가 필요합니다.  \n■ **[이유]**: 이부프로펜은 위벽 보호 물질 생성을 방해하여 빈속에 복용하면 속쓰림이나 위염을 유발할 수 있습니다. 고령자는 이러한 부작용에 더 취약합니다.  \n■ **[대안]**: 식사와 함께 섭취할 수 있는 부드러운 음식인 요거트나 스프를 추천합니다.  \n■ **[대처]**: 즉시 식사 후 이부프로펜을 복용하고, 빈속에 복용하지 않도록 하세요.  \n■ **[출처]**: NSAID safety guidance.",
+      "candidates": [],
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

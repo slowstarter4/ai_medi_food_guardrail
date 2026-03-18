@@ -91,21 +91,39 @@ def _lookup_entity_id(drug_name_norm: str, entity_index: Dict) -> Optional[str]:
     return None
 
 
-def _is_drug_token(token: str) -> bool:
-    """토큰이 약품명인지 판별 (제형 접미사 포함 한글 2자 이상)"""
-    # 콜론으로 끝나는 토큰은 즉시 거부 (예: "당연정보:")
+def _is_drug_token(token: str, entity_index: Dict = None) -> bool:
+    """토큰이 약품명인지 판별.
+    1순위: entity_index 직접 매칭 (브랜드명/성분명, 제형 없이도 OK)
+    2순위: 제형 접미사(정/캡슐 등) 포함 한글 2자 이상
+    3순위: 한글 3자 이상 단독 토큰 (봉투/라벨에 브랜드명만 적힌 경우)
+    """
     if re.search(r"[:：]\s*$", token):
         return False
     cleaned = ROUTE_PATTERN.sub("", token)
-    # OCR 노이즈 제거 후 판별
     cleaned = re.sub(r"···|\.\.\.|\[.*|_+", "", cleaned)
     cleaned = DOSE_IN_NAME_PATTERN.sub("", cleaned).strip()
     if len(cleaned) < 2:
         return False
     if cleaned in FORM_ONLY_BLACKLIST:
         return False
+
+    # 1. entity_index 키와 완전 일치 (카나브, 피마사르탄 등 등록된 브랜드명)
+    if entity_index:
+        cleaned_norm = cleaned.lower().replace(" ", "")
+        for key in entity_index.get("drugs", {}):
+            if key.lower().replace(" ", "") == cleaned_norm:
+                return True
+
+    # 2. 한글 + 제형 접미사 패턴 (기존 처방전 형식)
     suffix_pattern = "|".join(re.escape(s) for s in DRUG_FORM_SUFFIXES)
-    return bool(re.search(r"[가-힣]{2,}(" + suffix_pattern + r")", cleaned))
+    if re.search(r"[가-힣]{2,}(" + suffix_pattern + r")", cleaned):
+        return True
+
+    # 3. 한글 3자 이상 단독 브랜드명 (제형 없이 라벨에만 표기된 경우)
+    if re.fullmatch(r"[가-힣]{3,}", cleaned):
+        return True
+
+    return False
 
 
 def _parse_table_format(tokens: List[str], entity_index: Dict) -> List[Dict]:
@@ -128,7 +146,7 @@ def _parse_table_format(tokens: List[str], entity_index: Dict) -> List[Dict]:
             continue
 
         # 약품명 토큰 감지
-        if _is_drug_token(token):
+        if _is_drug_token(token, entity_index):
             raw_name = token
             cleaned = _clean_drug_token(raw_name)
 
@@ -144,7 +162,7 @@ def _parse_table_format(tokens: List[str], entity_index: Dict) -> List[Dict]:
             while j < len(tokens):
                 t = tokens[j]
                 # 다음 약품명이 나오면 중단
-                if _is_drug_token(t) or DRUG_CODE_PATTERN.match(t):
+                if _is_drug_token(t, entity_index) or DRUG_CODE_PATTERN.match(t):
                     break
                 # 숫자(정수 또는 소수) 수집 — 최대 3개
                 if re.match(r"^\d+\.?\d*$", t) and len(nums) < 3:
@@ -200,7 +218,7 @@ def _parse_inline_format(ocr_text: str, entity_index: Dict) -> List[Dict]:
     already = set()
 
     for token in tokens:
-        if not _is_drug_token(token):
+        if not _is_drug_token(token, entity_index):
             continue
         cleaned = _clean_drug_token(token)
         if cleaned in already or cleaned in FORM_ONLY_BLACKLIST:

@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-03-18T13:49:39.445106",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "바나나",
+    "medications": [
+      "로사르탄"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 바나나 섭취 시 주의가 필요합니다.  \n■ **[이유]**: 로사르탄은 칼륨 배출을 억제하므로, 고칼륨 식품인 바나나를 많이 섭취하면 부정맥 위험이 있습니다. 고령자에게는 더욱 위험할 수 있습니다.  \n■ **[대안]**: 사과나 배와 같은 저칼륨 과일을 추천합니다.  \n■ **[대처]**: 바나나 섭취량을 줄이고, 필요시 의사와 상담...",
+    "full_result": {
+      "input_text": "바나나",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "primary_rule": "HTN_001",
+        "matched_entities": null,
+        "secondary_rules": [],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_001"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_POTASSIUM_HIGH",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_HTN_POTASSIUM_FOOD"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_HTN_POTASSIUM_FOOD",
+            "evidence_source_label": "FDA drug label (losartan)",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "혈압약(ACE/ARB) 복용 시 칼륨 배출이 억제됩니다. 바나나나 토마토 등 고칼륨 식품을 많이 드시면 위험한 부정맥이 올 수 있으니 섭취량을 조절하세요.",
+            "evidence_tags": [
+              "ACE_ARB",
+              "potassium",
+              "hyperkalemia"
+            ]
+          }
+        ],
+        "confidence_score": 100,
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "바나나"
+      },
+      "explanation": "■ **[결론]**: 바나나 섭취 시 주의가 필요합니다.  \n■ **[이유]**: 로사르탄은 칼륨 배출을 억제하므로, 고칼륨 식품인 바나나를 많이 섭취하면 부정맥 위험이 있습니다. 고령자에게는 더욱 위험할 수 있습니다.  \n■ **[대안]**: 사과나 배와 같은 저칼륨 과일을 추천합니다.  \n■ **[대처]**: 바나나 섭취량을 줄이고, 필요시 의사와 상담하세요.  \n■ **[출처]**: FDA drug label (losartan)",
+      "candidates": [],
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_POTASSIUM_HIGH",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "로사르탄",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

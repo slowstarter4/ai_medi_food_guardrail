@@ -1,0 +1,172 @@
+{
+  "timestamp": "2026-03-18T15:24:37.948722",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "음주(예정), 공복",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 절대 금지합니다. 음주와 이부프로펜을 함께 복용하면 위험합니다.  \n■ **[이유]**: 음주와 이부프로펜은 모두 위를 자극하여 위장 출혈이나 천공의 위험을 높입니다. 특히 관절염으로 이부프로펜을 복용 중이라면 더욱 주의해야 합니다.  \n■ **[대안]**: 수분 공급을 위해 물이나 허브차를 추천합니다.  \n■ **[대처]**: 즉시 ...",
+    "full_result": {
+      "input_text": "음주(예정), 공복",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "primary_rule": "NSAID_001",
+        "matched_entities": null,
+        "secondary_rules": [
+          {
+            "rule_id": "NSAID_002",
+            "risk_level": "YELLOW",
+            "description": "위 점막 자극 및 통증 가능",
+            "risk_type": "위 점막 손상"
+          }
+        ],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "NSAID_001",
+            "NSAID_002"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_ALCOHOL_BLEEDING",
+          "EVD_NSAID_FASTING"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_NSAID_ALCOHOL_BLEEDING",
+            "evidence_source_label": "FDA ibuprofen facts",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "진통제와 술은 모두 위 점막을 강하게 자극합니다. 함께 먹으면 위장에 피가 나거나 천공이 생길 위험이 크게 높아지므로 절대 같이 드시지 마세요.",
+            "evidence_tags": [
+              "NSAID",
+              "alcohol",
+              "bleeding"
+            ]
+          },
+          {
+            "evidence_id": "EVD_NSAID_FASTING",
+            "evidence_source_label": "NSAID safety guidance",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "진통제 성분이 위벽을 보호하는 물질의 생성을 막습니다. 빈속에 약을 드시면 심한 속쓰림이나 위염이 올 수 있으니 꼭 식후에 복용하세요.",
+            "evidence_tags": [
+              "NSAID",
+              "gastric_irritation"
+            ]
+          }
+        ],
+        "confidence_score": 100,
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "관절염"
+        ],
+        "input_text": "음주(예정), 공복"
+      },
+      "explanation": "■ **[결론]**: 절대 금지합니다. 음주와 이부프로펜을 함께 복용하면 위험합니다.  \n■ **[이유]**: 음주와 이부프로펜은 모두 위를 자극하여 위장 출혈이나 천공의 위험을 높입니다. 특히 관절염으로 이부프로펜을 복용 중이라면 더욱 주의해야 합니다.  \n■ **[대안]**: 수분 공급을 위해 물이나 허브차를 추천합니다.  \n■ **[대처]**: 즉시 음주를 중단하고, 이부프로펜 복용 후에는 충분한 시간을 두고 음식을 섭취하세요.  \n■ **[출처]**: FDA ibuprofen facts, NSAID safety guidance",
+      "candidates": [],
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "공복 음주",
+              "canonical": "공복 음주",
+              "entity_id": "SITUATION_FASTING_ALCOHOL"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

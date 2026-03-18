@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-03-18T16:42:53.349841",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "음주(예정)",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "고령",
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "RED",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 위험합니다! 절대 금지입니다.  \n■ **[이유]**: 이부프로펜과 음주는 위장에 큰 자극을 주어 출혈이나 천공 위험이 높아집니다. 고령자이신 만큼 그 위험이 더욱 큽니다.  \n■ **[대안]**: 물이나 허브차와 같은 안전한 음료를 추천합니다.  \n■ **[대처]**: 즉시 음주를 중단하고, 이부프로펜 복용도 주의하시기 바랍니다.  ...",
+    "full_result": {
+      "input_text": "음주(예정)",
+      "risk_result": {
+        "risk_level": "RED",
+        "risk_code": "RED",
+        "primary_rule": "NSAID_001",
+        "matched_entities": null,
+        "secondary_rules": [],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "NSAID_001"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_ALCOHOL_BLEEDING"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_NSAID_ALCOHOL_BLEEDING",
+            "evidence_source_label": "FDA ibuprofen facts",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "진통제와 술은 모두 위 점막을 강하게 자극합니다. 함께 먹으면 위장에 피가 나거나 천공이 생길 위험이 크게 높아지므로 절대 같이 드시지 마세요.",
+            "evidence_tags": [
+              "NSAID",
+              "alcohol",
+              "bleeding"
+            ]
+          }
+        ],
+        "confidence_score": 100,
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "관절염"
+        ],
+        "input_text": "음주(예정)"
+      },
+      "explanation": "■ **[결론]**: 위험합니다! 절대 금지입니다.  \n■ **[이유]**: 이부프로펜과 음주는 위장에 큰 자극을 주어 출혈이나 천공 위험이 높아집니다. 고령자이신 만큼 그 위험이 더욱 큽니다.  \n■ **[대안]**: 물이나 허브차와 같은 안전한 음료를 추천합니다.  \n■ **[대처]**: 즉시 음주를 중단하고, 이부프로펜 복용도 주의하시기 바랍니다.  \n■ **[출처]**: FDA ibuprofen facts",
+      "candidates": [],
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "음주",
+              "entity_id": "FOOD_ALCOHOL",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

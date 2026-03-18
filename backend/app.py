@@ -71,24 +71,34 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
             existing_ids = [d["entity_id"] for d in normalized.get("drugs", [])]
             if ai_item["entity_id"] != "UNKNOWN" and ai_item["entity_id"] not in existing_ids:
                 
-                # API 교차 확인 로직
-                drug_name = ai_item["raw"]
+                # API 교차 확인 로직 (교정된 이름 우선)
+                search_name = ai_item.get("corrected_name") or ai_item["raw"]
                 inferred_class = ai_item.get("inferred_class", "UNKNOWN")
                 
-                api_data = fetch_drug_info_from_api(drug_name)
+                api_data = fetch_drug_info_from_api(search_name)
+                # 교정된 이름으로 실패 시 원본으로 재시도
+                if not api_data and search_name != ai_item["raw"]:
+                    api_data = fetch_drug_info_from_api(ai_item["raw"])
+
                 is_verified = False
                 if api_data and "summary" in api_data:
-                    # 계열별 키워드 매칭 (간단 버전)
+                    # 계열별 키워드 매칭 고도화
                     check_map = {
-                        "DECONGESTANT": ["코막힘", "비충혈", "비염", "감기"],
-                        "NSAID": ["해열", "진통", "소염", "염증"],
-                        "PAINKILLER": ["해열", "진통"],
-                        "HTN_MED": ["혈압", "고혈압"],
-                        "DIABETES_MED": ["당뇨", "혈당"]
+                        "DECONGESTANT": ["코막힘", "비충혈", "비염", "감기", "교감신경"],
+                        "NSAID": ["해열", "진통", "소염", "염증", "비스테로이드"],
+                        "PAINKILLER": ["해열", "진통", "통증"],
+                        "HTN_MED": ["혈압", "고혈압", "채널차단"],
+                        "DIABETES_MED": ["당뇨", "혈당", "메트포르민"],
+                        "STATIN": ["고지혈증", "콜레스테롤", "이상지질혈증"],
+                        "ANTIHISTAMINE": ["알레르기", "비염", "가려움", "두드러기", "항히스타민"],
+                        "DIGESTIVE": ["소화", "위장", "위염", "속쓰림", "제산"]
                     }
                     keywords = check_map.get(inferred_class, [])
                     summary = api_data["summary"]
                     if any(kw in summary for kw in keywords):
+                        is_verified = True
+                    # LLM 확신도가 매우 높고 API에서 데이터가 검색된 경우 (이름 일치율 높음) 검증 성공 간주
+                    elif ai_item.get("confidence", 0) >= 0.95:
                         is_verified = True
                 
                 ai_item["verification_status"] = "VERIFIED" if is_verified else "INFERRED"

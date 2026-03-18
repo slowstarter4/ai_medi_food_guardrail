@@ -1,0 +1,130 @@
+{
+  "timestamp": "2026-03-18T15:22:18.315705",
+  "session_id": null,
+  "request": {
+    "type": "text",
+    "text": "공복",
+    "medications": [
+      "이부프로펜"
+    ],
+    "conditions": [
+      "관절염"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 이부프로펜과 함께 빈속에 식품을 섭취하는 것은 위험합니다.  \n■ **[이유]**: 이부프로펜은 위벽을 보호하는 물질을 방해하여 속쓰림이나 위염을 유발할 수 있습니다. 빈속에 복용하면 이러한 위험이 더욱 커집니다.  \n■ **[대안]**: 식사 후에 섭취할 수 있는 부드러운 요거트나 과일을 추천합니다.  \n■ **[대처]**: 즉시 식...",
+    "full_result": {
+      "input_text": "공복",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "primary_rule": "NSAID_002",
+        "matched_entities": null,
+        "secondary_rules": [],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "NSAID_002"
+          ]
+        },
+        "entities_involved": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_NSAID_FASTING"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_NSAID_FASTING",
+            "evidence_source_label": "NSAID safety guidance",
+            "evidence_strength": "MODERATE",
+            "evidence_summary_user": "진통제 성분이 위벽을 보호하는 물질의 생성을 막습니다. 빈속에 약을 드시면 심한 속쓰림이나 위염이 올 수 있으니 꼭 식후에 복용하세요.",
+            "evidence_tags": [
+              "NSAID",
+              "gastric_irritation"
+            ]
+          }
+        ],
+        "confidence_score": 100,
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "관절염"
+        ],
+        "input_text": "공복"
+      },
+      "explanation": "■ **[결론]**: 이부프로펜과 함께 빈속에 식품을 섭취하는 것은 위험합니다.  \n■ **[이유]**: 이부프로펜은 위벽을 보호하는 물질을 방해하여 속쓰림이나 위염을 유발할 수 있습니다. 빈속에 복용하면 이러한 위험이 더욱 커집니다.  \n■ **[대안]**: 식사 후에 섭취할 수 있는 부드러운 요거트나 과일을 추천합니다.  \n■ **[대처]**: 즉시 식사 후에 이부프로펜을 복용하세요.  \n■ **[출처]**: NSAID safety guidance.",
+      "candidates": [],
+      "debug_info": {
+        "entities": {
+          "foods": [],
+          "drugs": [
+            {
+              "raw": "이부프로펜",
+              "entity_id": "DRUG_IBUPROFEN",
+              "match_type": "exact",
+              "drug_category": "NSAIDs"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "공복",
+              "entity_id": "SITUATION_FASTING",
+              "match_type": "exact"
+            },
+            {
+              "raw": "공복",
+              "canonical": "공복 복용",
+              "entity_id": "SITUATION_FASTING"
+            },
+            {
+              "raw": "관절염",
+              "canonical": "관절염",
+              "entity_id": "CONDITION_arthritis"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

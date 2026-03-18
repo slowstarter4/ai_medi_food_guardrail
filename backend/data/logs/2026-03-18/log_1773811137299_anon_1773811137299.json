@@ -1,0 +1,203 @@
+{
+  "timestamp": "2026-03-18T14:18:57.299101",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "gv10001552648_2.jpg",
+    "medications": [
+      "바이코자정"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 바나나는 조심해야 합니다.  \n■ **[이유]**: 고혈압 약물인 바이코자, 코자 복용 시 칼륨 배출이 억제되어 부정맥 위험이 있습니다. 바나나는 칼륨이 많아 섭취 시 주의가 필요합니다.  \n■ **[대안]**: 사과나 배와 같은 저칼륨 과일을 추천합니다.  \n■ **[대처]**: 바나나 섭취를 줄이고, 필요시 의사와 상담하세요.  \n...",
+    "full_result": {
+      "input_text": "6.5cm 6.5cm ORANIIO D 500ml 유기농 355ml 16.5cm ORGANIC BANANA 12cm 4G ### 015 있음 R 연기 매우 ### 인증품의 표시사항 품목 바나나 무게 500~600g 생산지 페루 수입자 (유)돌코리아 / 서울특별시 강남구 영동대로 511, 1204호 (삼성동) 포장장소 경기도 평택시 포승읍 평택항만길 305 외 1필지 전화번호 080-204-3888 인증기관명 취급자 인증번호 생산자 인증번호 . 부정, 불량식품 신고는 국번없이 1399 DOLE 유기농 바나나",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "primary_rule": "HTN_001",
+        "matched_entities": null,
+        "secondary_rules": [
+          {
+            "rule_id": "HTN_001",
+            "risk_level": "YELLOW",
+            "description": "고칼륨 식품으로 혈중 칼륨 상승 가능",
+            "risk_type": "전해질 이상"
+          },
+          {
+            "rule_id": "HTN_001",
+            "risk_level": "YELLOW",
+            "description": "고칼륨 식품으로 혈중 칼륨 상승 가능",
+            "risk_type": "전해질 이상"
+          },
+          {
+            "rule_id": "HTN_001",
+            "risk_level": "YELLOW",
+            "description": "고칼륨 식품으로 혈중 칼륨 상승 가능",
+            "risk_type": "전해질 이상"
+          }
+        ],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_001",
+            "HTN_001",
+            "HTN_001",
+            "HTN_001"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_POTASSIUM_HIGH",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "바이코자",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "바이코자정",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "코자",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "코자정",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_HTN_POTASSIUM_FOOD"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_HTN_POTASSIUM_FOOD",
+            "evidence_source_label": "FDA drug label (losartan)",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "혈압약(ACE/ARB) 복용 시 칼륨 배출이 억제됩니다. 바나나나 토마토 등 고칼륨 식품을 많이 드시면 위험한 부정맥이 올 수 있으니 섭취량을 조절하세요.",
+            "evidence_tags": [
+              "ACE_ARB",
+              "potassium",
+              "hyperkalemia"
+            ]
+          }
+        ],
+        "confidence_score": 100,
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "6.5cm 6.5cm ORANIIO D 500ml 유기농 355ml 16.5cm ORGANIC BANANA 12cm 4G ### 015 있음 R 연기 매우 ### 인증품의 표시사항 품목 바나나 무게 500~600g 생산지 페루 수입자 (유)돌코리아 / 서울특별시 강남구 영동대로 511, 1204호 (삼성동) 포장장소 경기도 평택시 포승읍 평택항만길 305 외 1필지 전화번호 080-204-3888 인증기관명 취급자 인증번호 생산자 인증번호 . 부정, 불량식품 신고는 국번없이 1399 DOLE 유기농 바나나"
+      },
+      "explanation": "■ **[결론]**: 바나나는 조심해야 합니다.  \n■ **[이유]**: 고혈압 약물인 바이코자, 코자 복용 시 칼륨 배출이 억제되어 부정맥 위험이 있습니다. 바나나는 칼륨이 많아 섭취 시 주의가 필요합니다.  \n■ **[대안]**: 사과나 배와 같은 저칼륨 과일을 추천합니다.  \n■ **[대처]**: 바나나 섭취를 줄이고, 필요시 의사와 상담하세요.  \n■ **[출처]**: FDA drug label (losartan)",
+      "candidates": [],
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_POTASSIUM_HIGH",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "바이코자",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "바이코자정",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "코자",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "코자정",
+              "entity_id": "DRUG_LOSARTAN",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

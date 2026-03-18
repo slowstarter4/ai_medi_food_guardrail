@@ -1,0 +1,165 @@
+{
+  "timestamp": "2026-03-18T14:34:25.186872",
+  "session_id": null,
+  "request": {
+    "type": "image",
+    "filename": "2-20180403342262352.jpg",
+    "medications": [
+      "카나브"
+    ],
+    "conditions": [
+      "고령",
+      "고혈압"
+    ],
+    "situations": []
+  },
+  "result": {
+    "risk_level": "YELLOW",
+    "representative_rule": null,
+    "explanation_summary": "■ **[결론]**: 바나나 섭취에 주의가 필요합니다.  \n■ **[이유]**: 카나브와 카나브정은 칼륨 배출을 억제하여 혈중 칼륨 수치를 높일 수 있습니다. 바나나는 고칼륨 식품으로, 과다 섭취 시 부정맥 위험이 있습니다.  \n■ **[대안]**: 사과나 배와 같은 저칼륨 과일을 추천드립니다.  \n■ **[대처]**: 바나나 섭취량을 조절하고, 필요 시 ...",
+    "full_result": {
+      "input_text": "영양성분 바나나 1회 제공량당 함량 100g 열량(kcal) 88 지방 0.3 g 포화지방 0.1g 다불포화지방 0.1g 단일불포화지방 0g 콜레스테롤 0 mg 나트륨1 mg 칼륨 358 mg 탄수화물23 g 식이 섬유 2.6g 당류 12g 단백질 1.1g 비타민 A 64 IU 비타민 C 8.7 mg 칼슘 5 mg 철분 0.3 mg 비타민D 0IU 비타민 B6 0.4 mg 비타민 B12 0 ng 마그네슘 27 mg",
+      "risk_result": {
+        "risk_level": "YELLOW",
+        "risk_code": "YELLOW",
+        "primary_rule": "HTN_001",
+        "matched_entities": null,
+        "secondary_rules": [
+          {
+            "rule_id": "HTN_001",
+            "risk_level": "YELLOW",
+            "description": "고칼륨 식품으로 혈중 칼륨 상승 가능",
+            "risk_type": "전해질 이상"
+          }
+        ],
+        "decision_basis": {
+          "rule_based": true,
+          "matched_rules": [
+            "HTN_001",
+            "HTN_001"
+          ]
+        },
+        "entities_involved": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_POTASSIUM_HIGH",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "카나브",
+              "entity_id": "DRUG_ACE_ARB",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "카나브정",
+              "entity_id": "DRUG_ACE_ARB",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        },
+        "evidence_keys": [
+          "EVD_HTN_POTASSIUM_FOOD"
+        ],
+        "evidence_info": [
+          {
+            "evidence_id": "EVD_HTN_POTASSIUM_FOOD",
+            "evidence_source_label": "FDA drug label (losartan)",
+            "evidence_strength": "HIGH",
+            "evidence_summary_user": "혈압약(ACE/ARB) 복용 시 칼륨 배출이 억제됩니다. 바나나나 토마토 등 고칼륨 식품을 많이 드시면 위험한 부정맥이 올 수 있으니 섭취량을 조절하세요.",
+            "evidence_tags": [
+              "ACE_ARB",
+              "potassium",
+              "hyperkalemia"
+            ]
+          }
+        ],
+        "confidence_score": 100,
+        "supplementary_info": {
+          "dur_alerts": [],
+          "api_verified_drugs": []
+        },
+        "user_conditions": [
+          "고령",
+          "고혈압"
+        ],
+        "input_text": "영양성분 바나나 1회 제공량당 함량 100g 열량(kcal) 88 지방 0.3 g 포화지방 0.1g 다불포화지방 0.1g 단일불포화지방 0g 콜레스테롤 0 mg 나트륨1 mg 칼륨 358 mg 탄수화물23 g 식이 섬유 2.6g 당류 12g 단백질 1.1g 비타민 A 64 IU 비타민 C 8.7 mg 칼슘 5 mg 철분 0.3 mg 비타민D 0IU 비타민 B6 0.4 mg 비타민 B12 0 ng 마그네슘 27 mg"
+      },
+      "explanation": "■ **[결론]**: 바나나 섭취에 주의가 필요합니다.  \n■ **[이유]**: 카나브와 카나브정은 칼륨 배출을 억제하여 혈중 칼륨 수치를 높일 수 있습니다. 바나나는 고칼륨 식품으로, 과다 섭취 시 부정맥 위험이 있습니다.  \n■ **[대안]**: 사과나 배와 같은 저칼륨 과일을 추천드립니다.  \n■ **[대처]**: 바나나 섭취량을 조절하고, 필요 시 의료진과 상담하세요.  \n■ **[출처]**: FDA drug label (losartan)",
+      "candidates": [],
+      "debug_info": {
+        "entities": {
+          "foods": [
+            {
+              "raw": "바나나",
+              "entity_id": "FOOD_POTASSIUM_HIGH",
+              "match_type": "exact"
+            }
+          ],
+          "drugs": [
+            {
+              "raw": "카나브",
+              "entity_id": "DRUG_ACE_ARB",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            },
+            {
+              "raw": "카나브정",
+              "entity_id": "DRUG_ACE_ARB",
+              "match_type": "exact",
+              "drug_category": "ACE/ARB"
+            }
+          ],
+          "situations": [
+            {
+              "raw": "고령",
+              "canonical": "고령",
+              "entity_id": "CONDITION_elderly"
+            },
+            {
+              "raw": "고혈압",
+              "canonical": "고혈압",
+              "entity_id": "CONDITION_hypertension"
+            },
+            {
+              "raw": "병용",
+              "canonical": "병용 섭취",
+              "entity_id": "SITUATION_CONCURRENT"
+            },
+            {
+              "raw": "약물 병용",
+              "canonical": "여러 약물",
+              "entity_id": "SITUATION_DRUG_DUPLICATION"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
