@@ -1,6 +1,7 @@
 from typing import Dict, List
 import re
 import difflib
+import unicodedata
 
 def _normalize(text: str) -> str:
     text = text.lower()
@@ -59,9 +60,11 @@ def parse_entities(
             # 2. 유사도 기반 매칭 (OCR 오류 대응)
             # 단어 길이가 너무 짧으면(3자 미만) 하지 않음 (오탐 방지)
             if len(name_norm) >= 3:
+                name_jamo = unicodedata.normalize('NFKD', name_norm)
                 for token in tokens:
-                    similarity = difflib.SequenceMatcher(None, name_norm, token).ratio()
-                    if similarity >= 0.8:
+                    token_jamo = unicodedata.normalize('NFKD', token)
+                    similarity = difflib.SequenceMatcher(None, name_jamo, token_jamo).ratio()
+                    if similarity >= 0.9: # 0.8은 너무 낮아 오분류 발생 가능 (이부프로펜-이부루펜 등)
                         entities[entity_type].append(name)
                         already_matched.add(name)
                         break

@@ -97,8 +97,14 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
         # 식품 및 상황 병합
         for etype in ["foods", "situations"]:
             existing_ids = [item["entity_id"] for item in normalized.get(etype, [])]
+            existing_raws_clean = [item["raw"].replace(" ", "") for item in normalized.get(etype, [])]
+            
             for ai_item in ai_normalized.get(etype, []):
-                if ai_item["entity_id"] != "UNKNOWN" and ai_item["entity_id"] not in existing_ids:
+                ai_raw_clean = ai_item["raw"].replace(" ", "")
+                # 이미 exact match로 찾은 엔티티와 raw text가 겹치면 LLM의 할루시네이션 방지를 위해 스킵
+                is_overlap = any(ai_raw_clean in er or er in ai_raw_clean for er in existing_raws_clean)
+                
+                if ai_item["entity_id"] != "UNKNOWN" and ai_item["entity_id"] not in existing_ids and not is_overlap:
                     normalized.setdefault(etype, []).append(ai_item)
 
     # 2. 사용자 약물 주입
@@ -106,19 +112,24 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
         for med in user_meds:
             med_norm = normalize_entities(parse_entities(med, known_entities), source="manual")
             if med_norm.get("drugs"):
+                existing_raws = [d["raw"] for d in normalized.get("drugs", [])]
                 existing_ids = [d["entity_id"] for d in normalized.get("drugs", [])]
                 for d in med_norm["drugs"]:
-                    if d["entity_id"] not in existing_ids:
+                    # 동일한 raw 이름이거나 동일한 ID면 추가하지 않음 (중복 방지)
+                    if d["entity_id"] not in existing_ids and d["raw"] not in existing_raws:
                         normalized.setdefault("drugs", []).append(d)
 
     # 3. 상황어 자동 감지 고도화
     input_norm = input_text.replace(" ", "")
-    if any(kw in input_norm for kw in ["공복", "밥안먹", "식사안", "밥못", "식사거름", "아침안"]):
+    if any(kw in input_norm for kw in ["공복", "밥안먹", "식사안", "밥못", "식사거름", "아침안", "금식", "빈속", "굶", "식사못", "밥못드"]):
         normalized.setdefault("situations", []).append(
             {"raw": "공복", "canonical": "공복 복용", "entity_id": "SITUATION_FASTING"})
-    if any(kw in input_norm for kw in ["사우나", "찜질방", "땀많이", "더웠", "땀흘린"]):
+    if any(kw in input_norm for kw in ["사우나", "찜질방", "땀많이", "더웠", "땀흘린", "탈수", "수분부족", "땀나", "목말", "갈증"]):
         normalized.setdefault("situations", []).append(
             {"raw": "탈수", "canonical": "탈수/수분부족", "entity_id": "SITUATION_DEHYDRATION"})
+    if any(kw in input_norm for kw in ["중복", "두개", "두가지", "또먹", "추가로먹", "한번에", "같이먹어", "함께먹어"]):
+        normalized.setdefault("situations", []).append(
+            {"raw": "중복복용", "canonical": "중복 복용", "entity_id": "SITUATION_DUPLICATION"})
     if any(kw in input_norm for kw in ["운동", "격한", "헬스", "달리기"]):
         normalized.setdefault("situations", []).append(
             {"raw": "운동", "canonical": "격한 운동", "entity_id": "SITUATION_EXERCISE"})
@@ -129,6 +140,14 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
         normalized.setdefault("situations", []).append(
             {"raw": "불규칙식사", "canonical": "불규칙한 식사", "entity_id": "SITUATION_MEAL_IRREGULAR"})
 
+    # 질환명(고혈압, 당뇨)이 텍스트에 포함되어 있으면 페르소나 컨텍스트 강제 주입
+    if "고혈압" in input_norm:
+        normalized.setdefault("situations", []).append(
+            {"raw": "고혈압", "canonical": "고혈압", "entity_id": "CONDITION_hypertension"})
+    if "당뇨" in input_norm:
+        normalized.setdefault("situations", []).append(
+            {"raw": "당뇨", "canonical": "당뇨", "entity_id": "CONDITION_diabetes"})
+
     # 4. 사용자 질환 및 상황(칩) 주입
     if user_conditions:
         for cond in user_conditions:
@@ -138,9 +157,15 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
 
     if user_situations:
         for situ in user_situations:
-            # entity_index의 situations에서 ID 조회
+            # entity_index의 situations 및 foods에서 ID 조회
             s_clean = situ.strip()
+            sid = "UNKNOWN"
+            # 1. 상황어 사전에서 먼저 조회
             sid = entity_index.get("situations", {}).get(s_clean, "UNKNOWN")
+            # 2. 식품 사전에서도 조회 (예: '음주' -> FOOD_ALCOHOL)
+            if sid == "UNKNOWN":
+                sid = entity_index.get("foods", {}).get(s_clean, "UNKNOWN")
+            
             print(f"DEBUG: Processing user_situation: '{s_clean}' -> ID: {sid}")
             if sid == "UNKNOWN":
                 # 직접 ID로 왔을 가능성 대비 (예: SITUATION_FASTING)
@@ -151,6 +176,13 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
             if sid not in existing_sids:
                 normalized.setdefault("situations", []).append(
                     {"raw": situ, "canonical": situ, "entity_id": sid})
+            
+            # 만약 식품 관련 ID라면 foods 리스트에도 추가 (상호작용 연동을 위함)
+            if sid.startswith("FOOD_") or sid.startswith("NUTRITION_"):
+                existing_fids = [f["entity_id"] for f in normalized.get("foods", [])]
+                if sid not in existing_fids:
+                    normalized.setdefault("foods", []).append(
+                        {"raw": situ, "entity_id": sid, "match_type": "manual"})
 
     # 5. 병용 상황어 자동 주입
     has_multi = len(normalized.get("drugs", [])) >= 2
@@ -165,9 +197,14 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
     # 공복 음주 복합 상황
     food_ids = [f["entity_id"] for f in normalized.get("foods", [])]
     situ_ids = [s["entity_id"] for s in normalized.get("situations", [])]
-    if "FOOD_ALCOHOL" in food_ids and "SITUATION_FASTING" in situ_ids:
-        normalized["situations"].append(
-            {"raw": "공복 음주", "canonical": "공복 음주", "entity_id": "SITUATION_FASTING_ALCOHOL"})
+    has_fasting = "SITUATION_FASTING" in situ_ids
+    has_alcohol = "FOOD_ALCOHOL" in food_ids # 사용자가 칩으로 입력할 때 음주는 FOOD_ALCOHOL로 맵핑됨
+    
+    if has_fasting and has_alcohol:
+        if "SITUATION_FASTING_ALCOHOL" not in situ_ids:
+            normalized.setdefault("situations", []).append(
+                {"raw": "공복 음주", "canonical": "공복 음주", "entity_id": "SITUATION_FASTING_ALCOHOL"}
+            )
 
     # 6. 규칙 매칭 & 위험도 평가 (Tier 1: 자체 룰셋)
     print(f"DEBUG: Starting evaluate_rules...")

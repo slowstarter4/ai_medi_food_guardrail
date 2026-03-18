@@ -1,0 +1,51 @@
+﻿case_id,input,expected_rule,expected_risk
+N61,이부프로펜 복용 중인데 소주 마셔도 되나요,NSAID_ALL_ALCOHOL,RED
+N62,나프록센 먹었는데 맥주 마셔도 괜찮을까요,NSAID_ALL_ALCOHOL,RED
+N63,로사르탄 복용 중인데 바나나 먹어도 되나요,HTN_001,YELLOW
+N64,엔알라프릴 먹고 토마토 먹어도 괜찮나요,HTN_001,YELLOW
+N65,암로디핀 먹는데 자몽주스 마셔도 되나요,HTN_003,YELLOW
+N66,혈압약 복용 중인데 페닐에프린 들어간 약 먹어도 되나요,HTN_004,YELLOW
+N67,혈압약 먹는데 이부프로펜 같이 먹어도 되나요,HTN_005,YELLOW
+N68,이뇨제 먹고 있는데 감초차 마셔도 괜찮나요,HTN_006,YELLOW
+N69,이뇨제 복용 중인데 사우나 가도 되나요,HTN_007,YELLOW
+N70,당뇨약 먹었는데 식사를 못 했어요 괜찮을까요,DM_ALL_MEAL_SKIP,YELLOW
+N71,당뇨약 먹고 공복 상태인데 문제 없나요,DM_ALL_MEAL_SKIP,YELLOW
+N72,엔알라프릴 먹는데 칼륨 보충제 먹어도 되나요,HTN_002,RED
+N73,혈압약 복용 중인데 자몽 먹어도 되나요,HTN_003,YELLOW
+N74,고혈압인데 슈도에페드린 먹어도 되나요,HTN_004,YELLOW
+N75,혈압약 먹는데 나프록센 같이 먹어도 되나요,HTN_005,YELLOW
+N76,이뇨제 먹는데 감초사탕 먹어도 되나요,HTN_006,YELLOW
+N77,이뇨제 복용 중인데 물 안 마셔도 괜찮나요,HTN_007,YELLOW
+N78,진통제 먹었는데 술 마셔도 괜찮을까요,NSAID_ALL_ALCOHOL,RED
+N79,암로디핀 먹는데 자몽캔디 먹어도 되나요,HTN_003,YELLOW
+N80,로사르탄 먹는데 감자 먹어도 되나요,HTN_001,YELLOW
+M01,이부프로펜 먹었는데 자몽 먹어도 되나요,NONE,GREEN
+M02,나프록센 먹는데 바나나 먹어도 되나요,NONE,GREEN
+M03,혈압약 먹고 물 마셔도 되나요,NONE,GREEN
+M04,암로디핀 먹는데 토마토 먹어도 되나요,NONE,GREEN
+M05,이부프로펜 먹었는데 우유 마셔도 되나요,NONE,GREEN
+M06,로사르탄 먹고 커피 마셔도 되나요,NONE,GREEN
+M07,엔알라프릴 먹고 사과 먹어도 되나요,NONE,GREEN
+M08,혈압약 먹고 운동해도 되나요,NONE,GREEN
+M09,진통제 먹고 밥 먹어도 되나요,NONE,GREEN
+M10,당뇨약 먹고 물 마셔도 되나요,NONE,GREEN
+M11,암로디핀 먹고 감자칩 먹어도 되나요,NONE,GREEN
+M12,혈압약 먹고 비타민 먹어도 되나요,NONE,GREEN
+M13,이부프로펜 먹었는데 과일 먹어도 되나요,NONE,GREEN
+M14,나프록센 먹고 물 많이 마셔도 되나요,NONE,GREEN
+M15,혈압약 먹고 산책해도 되나요,NONE,GREEN
+M16,당뇨약 먹고 커피 마셔도 되나요,NONE,GREEN
+M17,암로디핀 먹고 우유 마셔도 되나요,NONE,GREEN
+M18,진통제 먹고 물 마셔도 되나요,NONE,GREEN
+M19,혈압약 먹고 과일 먹어도 되나요,NONE,GREEN
+M20,약 먹고 물 마셔도 되나요,NONE,GREEN
+W01,이부프로펜 먹고 술 마시고 자몽 먹어도 되나요,NSAID_ALL_ALCOHOL,RED
+W02,혈압약 먹고 자몽 먹고 커피 마셔도 되나요,HTN_003,YELLOW
+W03,이뇨제 먹고 사우나 하고 물 안 마셔도 되나요,HTN_007,YELLOW
+W04,당뇨약 먹고 공복 상태에서 술 마셔도 되나요,DM_ALL_MEAL_SKIP,RED
+W05,혈압약 먹고 진통제 이부프로펜 같이 먹어도 되나요,HTN_005,YELLOW
+W06,엔알라프릴 먹고 바나나 먹고 토마토 먹어도 되나요,HTN_001,YELLOW
+W07,암로디핀 먹고 자몽 먹고 술 마셔도 되나요,HTN_003,YELLOW
+W08,이부프로펜 먹고 물 많이 마시고 과일 먹어도 되나요,NONE,GREEN
+W09,혈압약 먹고 사과 먹고 우유 마셔도 되나요,NONE,GREEN
+W10,진통제 먹고 커피 마시고 밥 먹어도 되나요,NONE,GREEN

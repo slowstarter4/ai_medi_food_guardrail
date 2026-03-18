@@ -26,17 +26,25 @@ def assess_risk(normalized_entities, matched_rules):
             "decision_basis": {"rule_based": True, "matched_rules": []},
             "entities_involved": normalized_entities,
             "evidence_keys": [],
-            "evidence_info": []
+            "evidence_info": [], "confidence_score": 100
         }
 
     # 1. 룰 매칭 결과 정렬 (대표 룰 선정을 위함)
-    # 정밀도(Level: 1 > 2 > 3) -> 위험등급(RED > YELLOW > GREEN) -> rule_id(오름차순)
+    # 정밀도(drug_name > drug_category > ALL) -> 위험등급(RED > YELLOW > GREEN) -> Level(1 > 2 > 3) -> rule_id(안정성)
+    def specificity_score(rule):
+        if rule.get("drug_name", "ALL") != "ALL":
+            return 3  # drug_name specific
+        if rule.get("drug_category", "ALL") != "ALL":
+            return 2  # drug_category specific
+        return 1      # ALL rule
+
     sorted_rules = sorted(
         matched_rules,
         key=lambda r: (
-            r.get("level", 3),                          # 1차: Level (1 > 2 > 3)
+            -specificity_score(r),                      # 1차: 구체성 (높을수록 상위)
             -PRIORITY.get(r.get("risk_level_hint"), 0), # 2차: Risk Level (RED > YELLOW)
-            r.get("rule_id", "")                        # 3차: Rule ID (안정성)
+            r.get("level", 3),                          # 3차: Level (1 > 2 > 3)
+            r.get("rule_id", "")                        # 4차: Rule ID (안정성)
         )
     )
 
@@ -64,6 +72,15 @@ def assess_risk(normalized_entities, matched_rules):
 
     evidence_info = [EVIDENCE_DB[k] for k in evidence_keys if k in EVIDENCE_DB]
 
+    # 신뢰도 점수 계산 (Confidence Score)
+    # 매칭된 엔티티들 중 가장 낮은 점수를 전체 신뢰도로 채택 (보수적 접근)
+    all_scores = []
+    for d in normalized_entities.get("drugs", []):
+        if "score" in d: all_scores.append(d["score"])
+    for f in normalized_entities.get("foods", []):
+        if "score" in f: all_scores.append(f["score"])
+    confidence_score = min(all_scores) if all_scores else 100
+
     return {
         "risk_level": final_risk,
         "risk_code": final_risk,
@@ -76,5 +93,5 @@ def assess_risk(normalized_entities, matched_rules):
         },
         "entities_involved": normalized_entities,
         "evidence_keys": evidence_keys,
-        "evidence_info": evidence_info
+        "evidence_info": evidence_info, "confidence_score": confidence_score
     }

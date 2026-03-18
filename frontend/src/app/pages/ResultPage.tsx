@@ -214,11 +214,31 @@ export function ResultPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 mt-4">
-        {/* AI Analysis Label */}
-        <div className="flex items-center gap-1.5 mb-2 px-1">
-          <Sparkles className="w-4 h-4 text-[#009688]" />
-          <span className="text-xs font-bold text-[#009688]">SafeEat AI 맞춤 분석 가이드</span>
+        {/* AI Analysis Label & Confidence Score */}
+        <div className="flex items-center justify-between mb-2 px-1">
+          <div className="flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-[#009688]" />
+            <span className="text-xs font-bold text-[#009688]">SafeEat AI 맞춤 분석 가이드</span>
+          </div>
+          {backendResult?.risk_result?.confidence_score && (
+            <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+              backendResult.risk_result.confidence_score >= 95 
+                ? "bg-green-50 text-green-700 border-green-200" 
+                : "bg-amber-50 text-amber-700 border-amber-200"
+            }`}>
+              <ShieldCheck className="w-3 h-3" />
+              신뢰도 {backendResult.risk_result.confidence_score}%
+            </div>
+          )}
         </div>
+        {backendResult?.risk_result?.confidence_score && backendResult.risk_result.confidence_score < 95 && (
+          <div className="mx-1 mb-3 p-2 bg-amber-50 border border-amber-100 rounded-lg flex gap-2 items-start">
+            <Info className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+            <p className="text-[10px] text-amber-700 leading-tight">
+              성분명 오타가 보정되었거나 유사 성분으로 매칭되었습니다. 인식된 약물/식품명이 정확한지 한 번 더 확인해 주세요.
+            </p>
+          </div>
+        )}
 
         {/* Interaction Graph Section */}
         {(backendResult?.risk_result?.entities_involved?.drugs?.length > 0 || data.ingredients?.length > 0) && (

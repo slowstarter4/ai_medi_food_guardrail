@@ -19,10 +19,11 @@ ID_TO_CATEGORY = {
     "DRUG_IBUPROFEN": "NSAIDs",
     "DRUG_NAPROXEN": "NSAIDs",
     "DRUG_NSAID": "NSAIDs",
+    # 제네릭 약물 ID → 계열 매핑 (Context Gate 통과를 위해 필수)
     "DRUG_HYPERTENSION_GENERIC": "ACE/ARB|CCB|이뇨제",
     "DRUG_DIABETES_GENERIC": "비구아나이드|설폰요소제|SGLT2",
     "DRUG_DIURETIC_GENERIC": "이뇨제",
-    "DRUG_PAINKILLER_GENERIC": "NSAIDs"
+    "DRUG_PAINKILLER_GENERIC": "NSAIDs",
 }
 
 def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
@@ -43,10 +44,48 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
 
     matched = []
 
+    DM_CATEGORIES = ["설폰요소제", "비구아나이드", "SGLT2"]
+    HTN_CATEGORIES = ["ACE/ARB", "CCB", "이뇨제"]
+    NSAID_CATEGORIES = ["NSAIDs"]
+
+    def check_context(category_list, target_categories):
+        for d in drugs:
+            d_cat = ID_TO_CATEGORY.get(d.get("entity_id", ""), "")
+            if any(c.strip() in target_categories for c in d_cat.split("|") if c.strip()):
+                return True
+        return False
+
+    has_diabetes_context = any(s.get("entity_id") == "CONDITION_diabetes" for s in situations) or \
+                           check_context(drugs, DM_CATEGORIES)
+    has_htn_context = any(s.get("entity_id") == "CONDITION_hypertension" for s in situations) or \
+                      check_context(drugs, HTN_CATEGORIES)
+    has_nsaid_context = any(ID_TO_CATEGORY.get(d.get("entity_id")) in NSAID_CATEGORIES for d in drugs) or \
+                        check_context(drugs, NSAID_CATEGORIES)
+
+    # [핵심 수정] 약물 계열 감지 시 페르소나(질환 컨텍스트) 자동 추론
+    # CSV 테스트나 간단 질의 시 질환 정보(칩)가 없어도 규칙이 매칭되도록 함
+    if has_htn_context and "hypertension" not in user_persona_ids:
+        user_persona_ids.add("hypertension")
+        user_persona_raws.add("고혈압")
+    if has_diabetes_context and "diabetes" not in user_persona_ids:
+        user_persona_ids.add("diabetes")
+        user_persona_raws.add("당뇨")
+
     for rule in rules:
+        rule_id = rule.get("rule_id", "")
+
+        # Context Gate 적용
+        if rule_id.startswith("DM_") and not has_diabetes_context:
+            continue
+        if rule_id.startswith("HTN_") and not has_htn_context:
+            continue
+        if rule_id.startswith("NSAID_") and not has_nsaid_context:
+            continue
+
         # 1. 페르소나 체크
         rule_persona = rule.get("persona", "").strip()
-        if rule_persona and rule_persona != "API_DEFAULT":
+        print(f"DEBUG: Rule {rule.get('rule_id')} persona: {rule_persona}, user raws: {user_persona_raws}, ids: {user_persona_ids}")
+        if rule_persona and rule_persona not in ["API_DEFAULT", "ALL"]:
             persona_parts = set(rule_persona.split("_"))
             is_persona_match = False
             for p in persona_parts:
@@ -56,6 +95,8 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
             
             if not is_persona_match:
                 continue
+        
+        print(f"DEBUG: Rule {rule.get('rule_id')} persona matched")
 
         # 2. 약물 매칭
         rule_cat = rule.get("drug_category", "ALL")
@@ -83,7 +124,10 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                     primary_drugs.append(d)
         
         if not primary_drugs:
+            print(f"DEBUG: Rule {rule.get('rule_id')} drug match failed")
             continue
+        
+        print(f"DEBUG: Rule {rule.get('rule_id')} drug matched: {[d['raw'] for d in primary_drugs]}")
 
         # 3. 타겟 매칭 (food_keyword_match)
         rule_target = rule.get("food_keyword_match", "ALL")
@@ -97,21 +141,40 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                 external_targets.extend([f.get("raw", ""), f.get("entity_id", "")])
             for s in situations:
                 external_targets.extend([s.get("raw", ""), s.get("canonical", ""), s.get("entity_id", "")])
+            # Add other drugs to targets for cross-drug matching
+            for d in drugs:
+                external_targets.extend([d.get("raw", ""), d.get("entity_id", ""), ID_TO_CATEGORY.get(d.get("entity_id", ""), "")])
             
             for target_text in external_targets:
                 if target_text and re.search(rule_target, target_text, re.I):
                     target_match = True
-                    break
+                    # Check if this target is not just the same primary drug itself (unless allowed)
+                    if any(pd.get("entity_id") == target_text for pd in primary_drugs):
+                        situ_ids = [s.get("entity_id") for s in situations]
+                        is_duplication = any(sid in ["SITUATION_DUPLICATION", "SITUATION_DRUG_DUPLICATION"] for sid in situ_ids)
+                        if is_duplication and rule.get("rule_id") == "NSAID_003":
+                            target_match = True # Keep it
+                        elif rule_cat == "ALL":
+                            target_match = True # ALL rules allowed
+                        else:
+                            target_match = False # Reset if it's just itself and no duplication
+                            continue
+                    
+                    if target_match:
+                        break
 
             if not target_match:
+                print(f"DEBUG: Rule {rule.get('rule_id')} target match failed (rule_target: {rule_target})")
                 for d in drugs:
                     d_text = d.get("raw", "") + "|" + d.get("entity_id", "")
                     if re.search(rule_target, d_text, re.I):
                         is_same_instance = any(pd is d for pd in primary_drugs)
-                        if is_same_instance:
-                            if len(primary_drugs) >= 2 or (rule_persona and rule_persona != "API_DEFAULT"):
-                                target_match = True
-                                break
+                        situ_ids = [s.get("entity_id") for s in situations]
+                        has_duplication_situ = any(sid in ["SITUATION_DUPLICATION", "SITUATION_DRUG_DUPLICATION"] for sid in situ_ids)
+                        
+                        if is_same_instance and rule_cat != "ALL" and not (has_duplication_situ and rule.get("rule_id") == "NSAID_003"):
+                            # ALL 카테고리 룰이 아니고, 중복 상황도 아니면 동일 인스턴스 제외
+                            continue
                         else:
                             target_match = True
                             break
@@ -124,28 +187,27 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
         if rule_cond != "ALL":
             cond_match = False
             for s in situations:
-                s_text = s.get("raw", "") + "|" + s.get("canonical", "") + "|" + s.get("entity_id", "")
+                s_id = s.get("entity_id", "")
+                s_text = s.get("raw", "") + "|" + s.get("canonical", "") + "|" + s_id
+                
+                # 1) ID 또는 정규식 일치
                 if re.search(rule_cond, s_text, re.I):
                     cond_match = True
                     break
-            
-            # 특수한 경우: 상호 호환 상황어 매핑
+                
+                # 2) 특수한 경우: 상호 호환 상황어 매핑 (SITUATION_CONCURRENT 등)
+                if rule_cond in ["SITUATION_CONCURRENT", "병용", "동시", "함께"] and s_id in ["SITUATION_CONCURRENT", "SITUATION_DRUG_DUPLICATION", "SITUATION_DUPLICATION"]:
+                    cond_match = True
+                    break
+                if rule_cond in ["SITUATION_DEHYDRATION", "탈수", "땀", "사우나"] and s_id == "SITUATION_DEHYDRATION":
+                    cond_match = True
+                    break
+                if rule_cond in ["SITUATION_FASTING", "공복", "식사", "미섭취", "거름"] and s_id == "SITUATION_FASTING":
+                    cond_match = True
+                    break
+        
             if not cond_match:
-                for s in situations:
-                    s_id = s.get("entity_id", "")
-                    # 병용/동시/함께
-                    if any(x in rule_cond for x in ["병용", "동시", "함께"]) and s_id in ["SITUATION_CONCURRENT", "SITUATION_DRUG_DUPLICATION"]:
-                        cond_match = True
-                    # 탈수/땀/사우나
-                    elif any(x in rule_cond for x in ["탈수", "땀", "사우나"]) and s_id == "SITUATION_DEHYDRATION":
-                        cond_match = True
-                    # 공복/식사/미섭취/거름
-                    elif any(x in rule_cond for x in ["공복", "식사", "미섭취", "거름"]) and s_id == "SITUATION_FASTING":
-                        cond_match = True
-                    
-                    if cond_match: break
-            
-            if not cond_match:
+                print(f"DEBUG: Rule {rule.get('rule_id')} condition match failed (rule_cond: {rule_cond})")
                 continue
 
         for pd in primary_drugs:
