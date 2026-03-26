@@ -62,7 +62,7 @@ from rapidfuzz import process, fuzz
 HIGH_RISK_FOOD_IDS = ["FOOD_GRAPEFRUIT", "FOOD_ALCOHOL", "FOOD_CAFFEINE", "FOOD_LICORICE"]
 
 import unicodedata
-from src.rules.evaluator import ID_TO_CATEGORY
+from src.constants import ID_TO_CATEGORY
 
 def to_jamo(text):
     return unicodedata.normalize('NFKD', text)

@@ -2,32 +2,9 @@ import re
 import logging
 from typing import Dict, List
 
-logger = logging.getLogger(__name__)
+from src.constants import ID_TO_CATEGORY
 
-# 약물 ID -> 계열 매핑
-ID_TO_CATEGORY = {
-    "DRUG_LOSARTAN": "ACE/ARB",
-    "DRUG_ENALAPRIL": "ACE/ARB",
-    "DRUG_ACE_ARB": "ACE/ARB",
-    "DRUG_AMLODIPINE": "CCB",
-    "DRUG_CCB": "CCB",
-    "DRUG_HYDROCHLOROTHIAZIDE": "이뇨제",
-    "DRUG_DIURETIC_LOOP": "이뇨제",
-    "DRUG_SPIRONOLACTONE": "이뇨제",
-    "DRUG_SULFONYLUREA": "설폰요소제",
-    "DRUG_METFORMIN": "비구아나이드",
-    "DRUG_DAPAGLIFLOZIN": "SGLT2",
-    "DRUG_EMPAGLIFLOZIN": "SGLT2",
-    "DRUG_SGLT2": "SGLT2",
-    "DRUG_IBUPROFEN": "NSAIDs",
-    "DRUG_NAPROXEN": "NSAIDs",
-    "DRUG_NSAID": "NSAIDs",
-    # 제네릭 약물 ID → 계열 매핑 (Context Gate 통과를 위해 필수)
-    "DRUG_HYPERTENSION_GENERIC": "ACE/ARB|CCB|이뇨제",
-    "DRUG_DIABETES_GENERIC": "비구아나이드|설폰요소제|SGLT2",
-    "DRUG_DIURETIC_GENERIC": "이뇨제",
-    "DRUG_PAINKILLER_GENERIC": "NSAIDs",
-}
+logger = logging.getLogger(__name__)
 
 def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
     """

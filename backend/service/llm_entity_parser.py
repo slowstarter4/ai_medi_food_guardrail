@@ -1,10 +1,13 @@
 import os
 import json
 import logging
+import threading
 from typing import Dict, List
 from dotenv import load_dotenv
 from openai import OpenAI
 from pathlib import Path
+
+from src.constants import CLASS_TO_DRUG_ID
 
 # 환경 변수 로드
 load_dotenv()
@@ -18,13 +21,16 @@ ENTITY_INDEX_PATH = BASE_DIR / "data" / "normalization" / "entity_index.json"
 
 # 인덱스 캐시 (파일 중복 로딩 방지)
 _INDEX_CACHE: Dict = None
+_INDEX_CACHE_LOCK = threading.Lock()
 
 
 def _load_entity_index() -> Dict:
     global _INDEX_CACHE
     if _INDEX_CACHE is None:
-        with open(ENTITY_INDEX_PATH, "r", encoding="utf-8") as f:
-            _INDEX_CACHE = json.load(f)
+        with _INDEX_CACHE_LOCK:
+            if _INDEX_CACHE is None:
+                with open(ENTITY_INDEX_PATH, "r", encoding="utf-8") as f:
+                    _INDEX_CACHE = json.load(f)
     return _INDEX_CACHE
 
 
@@ -103,31 +109,7 @@ def _normalize_to_ids(extracted: Dict) -> Dict[str, List[Dict]]:
         
         # 1-2. 매칭 실패 시 계열 기반 폴백
         if not matched_id and inferred_class != "UNKNOWN":
-            class_to_id_map = {
-                # 고혈압약 세분화 (기존 HTN_MED→DRUG_AMLODIPINE 버그 제거)
-                "HTN_ARB": "DRUG_ACE_ARB",       # 로사르탄, 발사르탄 등 ARB
-                "HTN_ACE": "DRUG_ACE_ARB",        # 에날라프릴 등 ACE억제제
-                "HTN_CCB": "DRUG_CCB",            # 암로디핀 등 칼슘채널차단제
-                "HTN_DIURETIC": "DRUG_DIURETIC_GENERIC",
-                # 구버전 HTN_MED도 generic ID로 폴백 (하위 호환)
-                "HTN_MED": "DRUG_HYPERTENSION_GENERIC",
-                # 당뇨약 세분화
-                "DM_METFORMIN": "DRUG_METFORMIN",
-                "DM_SULFONYLUREA": "DRUG_SULFONYLUREA",
-                "DM_SGLT2": "DRUG_SGLT2",
-                "DM_DPP4": "DRUG_SITAGLIPTIN",
-                "DIABETES_MED": "DRUG_DIABETES_GENERIC",
-                # 기타
-                "NSAID": "DRUG_NSAID",
-                "PAINKILLER": "DRUG_PAINKILLER_GENERAL",
-                "STATIN": "DRUG_STATIN",
-                "ANTIHISTAMINE": "DRUG_ANTIHISTAMINE",
-                "ANTIBIOTIC": "DRUG_ANTIBIOTIC",
-                "DECONGESTANT": "DRUG_DECONGESTANT",
-                "ANTICOAGULANT": "DRUG_ANTICOAGULANT",
-                "DIGESTIVE": "DRUG_DIGESTIVE_GENERAL",
-            }
-            matched_id = class_to_id_map.get(inferred_class)
+            matched_id = CLASS_TO_DRUG_ID.get(inferred_class)
 
         normalized["drugs"].append({
             "raw": raw_name,
