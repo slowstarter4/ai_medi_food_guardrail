@@ -1,8 +1,11 @@
 import os
+import logging
 import requests
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
 from urllib.parse import unquote
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -65,8 +68,6 @@ def get_drug_interaction(drug_names: List[str]) -> List[Dict]:
                         "source": "식약처 e약은요"
                     })
         except Exception as e:
-            print(f"[API 보조 체크 실패] {target_drug}: {str(e)}")
-                
-    return interactions
-                
+            logger.warning(f"[API 보조 체크 실패] {target_drug}: {str(e)}")
+
     return interactions

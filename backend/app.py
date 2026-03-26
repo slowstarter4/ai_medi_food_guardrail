@@ -3,10 +3,13 @@ import json
 import shutil
 import tempfile
 import logging
+import traceback
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
+
+logger = logging.getLogger(__name__)
 
 from src.rules.loader import load_ruleset
 from src.rules.evaluator import evaluate_rules
@@ -176,7 +179,7 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
             if sid == "UNKNOWN":
                 sid = entity_index.get("foods", {}).get(s_clean, "UNKNOWN")
             
-            print(f"DEBUG: Processing user_situation: '{s_clean}' -> ID: {sid}")
+            logger.debug(f"Processing user_situation: '{s_clean}' -> ID: {sid}")
             if sid == "UNKNOWN":
                 # 직접 ID로 왔을 가능성 대비 (예: SITUATION_FASTING)
                 sid = situ if situ.startswith("SITUATION_") else "UNKNOWN"
@@ -217,18 +220,18 @@ def _run_pipeline(input_text: str, user_meds: list = None, user_conditions: list
             )
 
     # 6. 규칙 매칭 & 위험도 평가 (Tier 1: 자체 룰셋)
-    print(f"DEBUG: Starting evaluate_rules...")
-    print(f"DEBUG: Drugs to check: {[d['entity_id'] for d in normalized.get('drugs', [])]}")
-    print(f"DEBUG: Foods to check: {[f['entity_id'] for f in normalized.get('foods', [])]}")
-    print(f"DEBUG: Situations to check: {[s['entity_id'] for s in normalized.get('situations', [])]}")
-    
+    logger.debug("Starting evaluate_rules...")
+    logger.debug(f"Drugs to check: {[d['entity_id'] for d in normalized.get('drugs', [])]}")
+    logger.debug(f"Foods to check: {[f['entity_id'] for f in normalized.get('foods', [])]}")
+    logger.debug(f"Situations to check: {[s['entity_id'] for s in normalized.get('situations', [])]}")
+
     matched_rules = evaluate_rules(normalized, rules)
-    print(f"DEBUG: matched_rules count: {len(matched_rules)}")
+    logger.debug(f"matched_rules count: {len(matched_rules)}")
     for r in matched_rules:
-        print(f"DEBUG: Matched Rule ID: {r['rule_id']} (Level: {r.get('level')}, Risk: {r.get('risk_level_hint')})")
+        logger.debug(f"Matched Rule ID: {r['rule_id']} (Level: {r.get('level')}, Risk: {r.get('risk_level_hint')})")
 
     risk_result = assess_risk(normalized, matched_rules)
-    print(f"DEBUG: Final Risk Result: {risk_result.get('risk_level')}")
+    logger.debug(f"Final Risk Result: {risk_result.get('risk_level')}")
 
     # 7. DUR 상호작용 체크 (Tier 2: 보조 정보)
     drug_names = [d["raw"] for d in normalized.get("drugs", [])]
@@ -346,9 +349,7 @@ async def api_analyze_text(request: TextAnalysisRequest):
         
         return result
     except Exception as e:
-        import traceback
-        print(f"[ERROR] API analyze/text failed: {str(e)}")
-        traceback.print_exc()
+        logger.error(f"API analyze/text failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/analyze/image")
@@ -362,26 +363,23 @@ async def api_analyze_image(
     user_meds = []
     if medications:
         try:
-            import json
             user_meds = json.loads(medications)
-        except:
-            pass
-            
+        except Exception as e:
+            logger.warning(f"medications JSON 파싱 실패: {e}")
+
     user_conditions = []
     if conditions:
         try:
-            import json
             user_conditions = json.loads(conditions)
-        except:
-            pass
+        except Exception as e:
+            logger.warning(f"conditions JSON 파싱 실패: {e}")
 
     user_situations = []
     if manual_situations:
         try:
-            import json
             user_situations = json.loads(manual_situations)
-        except:
-            pass
+        except Exception as e:
+            logger.warning(f"manual_situations JSON 파싱 실패: {e}")
 
     try:
         suffix = os.path.splitext(file.filename)[1]
@@ -411,9 +409,7 @@ async def api_analyze_image(
                 os.remove(tmp_path)
                 
     except Exception as e:
-        import traceback
-        print(f"[ERROR] API analyze/image failed: {str(e)}")
-        traceback.print_exc()
+        logger.error(f"API analyze/image failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/ocr/prescription")
@@ -425,18 +421,18 @@ async def api_ocr_prescription(file: UploadFile = File(...)):
             tmp_path = tmp.name
 
         try:
-            print(f"[OCR_API] 이미지 분석 시작: {tmp_path}")
+            logger.info(f"[OCR_API] 이미지 분석 시작: {tmp_path}")
             # 1. OCR 텍스트 추출
             extracted_text = extract_text_from_image(tmp_path)
-            print(f"[OCR_API] 추출된 텍스트: {extracted_text[:150]}...")
+            logger.info(f"[OCR_API] 추출된 텍스트: {extracted_text[:150]}...")
             if not extracted_text:
-                print("[OCR_API] 추출된 텍스트가 없습니다.")
+                logger.warning("[OCR_API] 추출된 텍스트가 없습니다.")
                 return {"prescriptions": [], "drugs": [], "unknown_drugs": [], "status": "FAIL"}
 
             # 2. 처방전 파서: 약물별 용법/용량 1:1 매핑
             from service.prescription_parser import parse_prescription
             prescriptions = parse_prescription(extracted_text)
-            print(f"[OCR_API] 파싱 결과: {prescriptions}")
+            logger.info(f"[OCR_API] 파싱 결과: {prescriptions}")
 
             # 3. known/unknown 분리
             known_drugs = [p["drug_name"] for p in prescriptions if not p["is_unknown"]]
@@ -454,9 +450,7 @@ async def api_ocr_prescription(file: UploadFile = File(...)):
                 os.remove(tmp_path)
 
     except Exception as e:
-        import traceback
-        print(f"[ERROR] API ocr/prescription failed: {str(e)}")
-        traceback.print_exc()
+        logger.error(f"API ocr/prescription failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -466,9 +460,7 @@ async def api_weekly_report():
         report = generate_weekly_report()
         return report
     except Exception as e:
-        import traceback
-        print(f"[ERROR] API report/weekly failed: {str(e)}")
-        traceback.print_exc()
+        logger.error(f"API report/weekly failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

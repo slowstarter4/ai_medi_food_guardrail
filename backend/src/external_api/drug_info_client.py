@@ -1,8 +1,11 @@
 import os
 import json
+import logging
 import requests
 from typing import Dict, List, Optional
 from dotenv import load_dotenv
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -14,7 +17,7 @@ def fetch_drug_info_from_api(drug_name: str) -> Optional[Dict]:
     """
     service_key = os.getenv("DATA_GO_KR_API_KEY")
     if not service_key:
-        print("[WARNING] DATA_GO_KR_API_KEY not found in environment variables.")
+        logger.warning("DATA_GO_KR_API_KEY not found in environment variables.")
         return None
 
     # URL Decode key if necessary (requests might handle it, but public keys often need unquoting)
@@ -38,15 +41,15 @@ def fetch_drug_info_from_api(drug_name: str) -> Optional[Dict]:
         try:
             data = response.json()
         except json.JSONDecodeError:
-            print(f"[ERROR] Failed to parse JSON response for {drug_name}")
+            logger.error(f"Failed to parse JSON response for {drug_name}")
             return None
 
         return extract_drug_fields(data, drug_name)
 
     except requests.exceptions.RequestException as e:
-        print(f"[ERROR] API Request failed for {drug_name}: {e}")
+        logger.error(f"API Request failed for {drug_name}: {e}")
         if hasattr(e, 'response') and e.response:
-             print(f"[DEBUG] Response Body: {e.response.text}")
+            logger.debug(f"Response Body: {e.response.text}")
         return None
 
 def extract_drug_fields(json_data: Dict, drug_name: str) -> Optional[Dict]:

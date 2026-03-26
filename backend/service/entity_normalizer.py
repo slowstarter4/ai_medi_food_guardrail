@@ -1,12 +1,17 @@
 import json
+import logging
+import threading
 from pathlib import Path
 from typing import Dict, List
+
+logger = logging.getLogger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 ENTITY_INDEX_PATH = BASE_DIR / "data" / "normalization" / "entity_index.json"
 
 # 모듈 레벨 캐시 (파일 반복 로딩 방지)
 _INDEX_CACHE: Dict = None
+_INDEX_CACHE_LOCK = threading.Lock()
 
 FOOD_SUFFIXES = ["주스", "즙", "차", "분말", "환", "정", "캡슐", "보충제"]
 
@@ -39,8 +44,10 @@ def load_entity_index() -> Dict[str, Dict[str, str]]:
     """
     global _INDEX_CACHE
     if _INDEX_CACHE is None:
-        with open(ENTITY_INDEX_PATH, encoding="utf-8") as f:
-            _INDEX_CACHE = json.load(f)
+        with _INDEX_CACHE_LOCK:
+            if _INDEX_CACHE is None:
+                with open(ENTITY_INDEX_PATH, encoding="utf-8") as f:
+                    _INDEX_CACHE = json.load(f)
     return _INDEX_CACHE
 
 # =========================
@@ -134,10 +141,10 @@ def normalize_entities(
                         top2_score = results[1][1]
                         if (score - top2_score) < 5:
                             is_ambiguous = True
-                            print(f"DEBUG: Ambiguous drug match [{surface}]: '{original_best_match}'({score}) vs '{jamo_to_original[results[1][0]]}'({top2_score})")
+                            logger.debug(f"Ambiguous drug match [{surface}]: '{original_best_match}'({score}) vs '{jamo_to_original[results[1][0]]}'({top2_score})")
 
                     if not is_ambiguous:
-                        print(f"DEBUG: Fuzzy match found [{entity_type}/{source}]: '{surface}' -> '{original_best_match}' (Score: {score:.1f}, ID: {matched_id})")
+                        logger.debug(f"Fuzzy match found [{entity_type}/{source}]: '{surface}' -> '{original_best_match}' (Score: {score:.1f}, ID: {matched_id})")
                         
                         item = {
                             "raw": raw,
@@ -162,7 +169,7 @@ def normalize_entities(
                             })
                     
                     if candidates:
-                        print(f"DEBUG: Candidate drug found [{surface}]: {candidates}")
+                        logger.debug(f"Candidate drug found [{surface}]: {candidates}")
                         normalized[entity_type].append({
                             "raw": raw,
                             "entity_id": "UNKNOWN",

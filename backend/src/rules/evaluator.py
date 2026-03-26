@@ -1,5 +1,8 @@
 import re
+import logging
 from typing import Dict, List
+
+logger = logging.getLogger(__name__)
 
 # 약물 ID -> 계열 매핑
 ID_TO_CATEGORY = {
@@ -84,7 +87,7 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
 
         # 1. 페르소나 체크
         rule_persona = rule.get("persona", "").strip()
-        print(f"DEBUG: Rule {rule.get('rule_id')} persona: {rule_persona}, user raws: {user_persona_raws}, ids: {user_persona_ids}")
+        logger.debug(f"Rule {rule.get('rule_id')} persona: {rule_persona}, user raws: {user_persona_raws}, ids: {user_persona_ids}")
         if rule_persona and rule_persona not in ["API_DEFAULT", "ALL"]:
             persona_parts = set(rule_persona.split("_"))
             is_persona_match = False
@@ -96,7 +99,7 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
             if not is_persona_match:
                 continue
         
-        print(f"DEBUG: Rule {rule.get('rule_id')} persona matched")
+        logger.debug(f"Rule {rule.get('rule_id')} persona matched")
 
         # 2. 약물 매칭
         rule_cat = rule.get("drug_category", "ALL")
@@ -124,10 +127,10 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                     primary_drugs.append(d)
         
         if not primary_drugs:
-            print(f"DEBUG: Rule {rule.get('rule_id')} drug match failed")
+            logger.debug(f"Rule {rule.get('rule_id')} drug match failed")
             continue
-        
-        print(f"DEBUG: Rule {rule.get('rule_id')} drug matched: {[d['raw'] for d in primary_drugs]}")
+
+        logger.debug(f"Rule {rule.get('rule_id')} drug matched: {[d['raw'] for d in primary_drugs]}")
 
         # 3. 타겟 매칭 (food_keyword_match)
         rule_target = rule.get("food_keyword_match", "ALL")
@@ -164,7 +167,7 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                         break
 
             if not target_match:
-                print(f"DEBUG: Rule {rule.get('rule_id')} target match failed (rule_target: {rule_target})")
+                logger.debug(f"Rule {rule.get('rule_id')} target match failed (rule_target: {rule_target})")
                 for d in drugs:
                     d_text = d.get("raw", "") + "|" + d.get("entity_id", "")
                     if re.search(rule_target, d_text, re.I):
@@ -207,7 +210,7 @@ def evaluate_rules(entities: Dict, rules: List[Dict]) -> List[Dict]:
                     break
         
             if not cond_match:
-                print(f"DEBUG: Rule {rule.get('rule_id')} condition match failed (rule_cond: {rule_cond})")
+                logger.debug(f"Rule {rule.get('rule_id')} condition match failed (rule_cond: {rule_cond})")
                 continue
 
         for pd in primary_drugs:
