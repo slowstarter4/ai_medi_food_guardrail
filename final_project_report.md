@@ -71,10 +71,5 @@
   - 처방전 특화 OCR 파인튜닝 모델 통합.
   - 도메인 특화 메디컬 LLM 파인튜닝을 통한 의학적 추론 전문성 강화.
 
-## 8. 관련 링크
-- **데모영상**: [SafeEat 데모 영상 링크]
-- **GitHub Repository**: [SafeEat Github](https://github.com/safeeat-team/ai_medi_food_guardrail)
-- **최종 발표 슬라이드**: [최종 발표 ppt 링크]
-
 ---
 **SAFEAT 팀 일동** (2026. 03. 20)
